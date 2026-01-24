@@ -192,7 +192,7 @@ export function sortByAxis(
 }
 
 /**
- * TOP N パターンを取得
+ * TOP N パターンを取得（重複排除）
  */
 export function getTopPatterns(
   patterns: EvaluatedPattern[],
@@ -201,5 +201,28 @@ export function getTopPatterns(
   limit = 5
 ): EvaluatedPattern[] {
   const sorted = sortByAxis(patterns, axis, formation);
-  return sorted.slice(0, limit);
+
+  // 実際に発生した撃墜順で重複を排除
+  const seen = new Set<string>();
+  const unique: EvaluatedPattern[] = [];
+
+  for (const pattern of sorted) {
+    // 実際の撃墜順（敗北までの部分）を文字列化
+    const actualPattern = pattern.transitions
+      .map((t) => t.killedUnit)
+      .join('');
+
+    // 未出現のパターンのみ追加
+    if (!seen.has(actualPattern)) {
+      seen.add(actualPattern);
+      unique.push(pattern);
+
+      // 必要な数が集まったら終了
+      if (unique.length >= limit) {
+        break;
+      }
+    }
+  }
+
+  return unique;
 }
