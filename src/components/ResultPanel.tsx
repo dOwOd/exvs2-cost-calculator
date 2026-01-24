@@ -29,7 +29,7 @@ export default function ResultPanel({
     : sortedPatterns;
 
   return (
-    <div class="bg-slate-900 rounded-lg overflow-hidden">
+    <div class="bg-slate-900 rounded-lg">
       {/* 編成情報 + フィルター */}
       <div class="border-b border-slate-700 p-4 sticky top-0 bg-slate-900 z-10">
         {/* 編成情報 */}
