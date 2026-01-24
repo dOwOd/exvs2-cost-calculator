@@ -54,10 +54,10 @@ export default function PatternCard({
             <InfoIcon tooltip="リスポーン時の耐久変動を考慮した真の総耐久値。高いほど長く戦える。" />
           </div>
           <div class="text-lg font-semibold text-slate-100">
-            {pattern.totalHealth}
-          </div>
-          <div class="text-xs text-slate-400 mt-1">
-            (最短: {minimumDefeatHealth})
+            {pattern.totalHealth}{' '}
+            <span class="text-xs text-slate-400 font-normal">
+              (最短: {minimumDefeatHealth})
+            </span>
           </div>
         </div>
       </div>
