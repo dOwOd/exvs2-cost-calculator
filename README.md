@@ -1,29 +1,38 @@
-# EXVS2 コスト管理計算ツール
+# EXVS2 コスト計算機 v1.0
 
-機動戦士ガンダム エクストリームバーサス2 インフィニットブーストにおける、最適なコスト管理を支援するWebアプリケーション。
+機動戦士ガンダム EXTREME VS. 2 インフィニットブーストの最適な撃墜順パターンを計算するWebアプリケーション。
 
 ## 📋 概要
 
-編成ごとの効率的な撃墜順を可視化し、プレイヤーの戦略立案をサポートします。
+2機編成（コスト + 耐久値）を選択すると、全16通りの撃墜順パターンを評価し、TOP 5を表示します。
 
 ### 主な機能
 
-- ✅ 編成選択（2機のコスト組み合わせ）
-- ✅ 撃墜順パターンの自動計算
-- ✅ 4つの評価軸での最適パターン表示
-  - EXオーバーリミット発動保証
-  - 総耐久値最大化
-  - コストオーバー回避
-  - バランス型
-- ✅ コスト推移の可視化
+- ✅ 編成選択（コスト: 3000/2500/2000/1500、耐久値: コスト別リスト）
+- ✅ 撃墜順パターン自動生成・評価（16通り → 重複排除 → TOP 5）
+- ✅ 4つの評価軸
+  - **総耐久最大**: リスポーン耐久変動を考慮した真の総耐久値
+  - **EX発動保証**: EXオーバーリミットが確実に発動できるパターン
+  - **セオリー準拠**: 低コスト後落ちなど定石に従ったパターン
+  - **バランス重視**: コストオーバーの深さを最小化
+- ✅ リスポーン時の耐久値変動を考慮した真の総耐久計算
+- ✅ EXオーバーリミット発動判定
+- ✅ コスト推移の可視化（残コスト、リスポーン耐久、状態）
+
+### v1.0 スコープ外
+
+- バースト機能
+- コスト推移グラフ（数値テーブルのみ実装）
+- スマートフォン対応
 
 ## 🚀 技術スタック
 
 - **フレームワーク**: [Astro](https://astro.build) v5
 - **UIライブラリ**: [Preact](https://preactjs.com)
 - **スタイリング**: [Tailwind CSS](https://tailwindcss.com) v4
+- **言語**: TypeScript
+- **テスト**: Jest + ts-jest
 - **パッケージマネージャー**: [pnpm](https://pnpm.io)
-- **デプロイ**: Cloudflare Pages（予定）
 - **開発環境**: Docker
 
 ## 🐳 Docker での起動
@@ -36,33 +45,29 @@
 ### 開発環境の起動
 
 ```bash
-# 開発サーバーを起動（ホットリロード有効）
+# 開発サーバーを起動
 docker compose up dev
-
-# バックグラウンドで起動
-docker compose up -d dev
 ```
 
-アプリケーションは http://localhost:4321 で起動します。
+→ http://localhost:4321 でアクセス
 
-### 本番ビルドの起動
+### Docker環境でのコマンド実行
 
 ```bash
-# イメージをビルドして起動
-docker compose up --build app
+# 依存関係のインストール
+docker compose exec dev pnpm install
 
-# バックグラウンドで起動
-docker compose up -d --build app
+# テスト実行
+docker compose exec dev pnpm test
+
+# シェルに入る
+docker compose exec dev sh
 ```
 
 ### コンテナの停止
 
 ```bash
-# 停止
 docker compose down
-
-# ボリュームも削除して完全にクリーンアップ
-docker compose down -v
 ```
 
 ## 💻 ローカル開発（Docker なし）
@@ -71,17 +76,6 @@ docker compose down -v
 
 - Node.js 20.x 以上
 - pnpm 9.x 以上
-
-### pnpm のインストール
-
-```bash
-# corepack を使用（推奨、Node.js 16.13+ に同梱）
-corepack enable
-corepack prepare pnpm@latest --activate
-
-# または npm 経由でグローバルインストール
-npm install -g pnpm
-```
 
 ### セットアップ
 
@@ -101,68 +95,82 @@ pnpm dev
 | `pnpm dev`            | 開発サーバーを起動 (`localhost:4321`)     |
 | `pnpm build`          | 本番用にビルド (`./dist/`)                |
 | `pnpm preview`        | ビルドしたサイトをプレビュー              |
-| `pnpm astro ...`      | Astro CLI コマンドを実行                  |
-| `pnpm dlx <cmd>`      | パッケージを実行 (npx の代わり)           |
+| `pnpm test`           | テスト実行                                |
+| `pnpm test:watch`     | テスト（ウォッチモード）                  |
+| `pnpm test:coverage`  | カバレッジ計測                            |
 
 ## 📁 プロジェクト構造
 
 ```
-/
-├── public/              # 静的ファイル
-├── src/
-│   ├── components/      # Preactコンポーネント
-│   ├── layouts/         # レイアウトコンポーネント
-│   ├── pages/           # ページ（ルーティング）
-│   ├── styles/          # グローバルスタイル
-│   └── utils/           # ユーティリティ関数
-├── Dockerfile           # 本番用Dockerイメージ
-├── docker-compose.yml   # Docker Compose設定
-└── package.json
+src/
+├── lib/
+│   ├── types.ts          # 型定義
+│   ├── calculator.ts     # パターン生成・コスト計算
+│   └── evaluators.ts     # 評価関数・EX発動判定
+├── data/
+│   ├── healthData.ts     # コスト別耐久値データ
+│   └── overCostHealthTable.ts  # コストオーバー残耐久テーブル
+├── components/
+│   ├── Calculator.tsx    # メイン（状態管理）
+│   ├── FormationPanel.tsx  # 編成選択
+│   ├── ResultPanel.tsx   # 結果表示
+│   ├── PatternCard.tsx   # パターン詳細
+│   └── ...
+├── pages/
+│   └── index.astro       # トップページ
+└── styles/
+    └── global.css        # グローバルスタイル
 ```
 
-## 🎨 開発ガイドライン
+## 🎯 重要な仕様
 
-### コンポーネント作成
+### EXオーバーリミット発動条件
 
-Preactコンポーネントは `src/components/` に配置します。
-
-```tsx
-// src/components/Button.tsx
-interface Props {
-  label: string;
-  onClick?: () => void;
-}
-
-export default function Button({ label, onClick }: Props) {
-  return (
-    <button onClick={onClick} class="px-4 py-2 bg-blue-600 text-white rounded">
-      {label}
-    </button>
-  );
-}
+```
+残コスト <= min(コストA, コストB)
 ```
 
-### スタイリング
+**「自機と僚機のいずれもが撃墜されたら敗北する状況」**になると、チームとして発動可能。
 
-Tailwind CSS v4を使用しています。
+**例:**
+- **3000+3000**: 1回撃墜後（残3000 <= 3000）→ ✅ EX発動可
+- **3000+2500**: 2回撃墜後（残500 <= 2500）→ ✅ EX発動可
+- **1500+1500**: 3回撃墜後（残1500 <= 1500）→ ✅ EX発動可
 
-```tsx
-<div class="flex items-center justify-center min-h-screen bg-gray-900">
-  <h1 class="text-4xl font-bold text-white">EXVS2 Calculator</h1>
-</div>
+### コスト管理
+
+- **初期コスト**: 6000（チーム共有、A/B別管理ではない）
+- **撃墜時**: 残りコストから機体コストを減算
+- **残コスト <= 0**: 敗北（試合終了）
+- **コストオーバー**（残コスト < 機体コスト）: リスポーン耐久値が低下
+
+### リスポーン耐久値
+
+残コストに応じて変動（ゲーム内固定テーブル）:
+
+- **残コスト >= 機体コスト**: 初期耐久で復活
+- **残コスト < 機体コスト**: テーブル値で復活（コストオーバー）
+- **残コスト <= 0**: 敗北（復活なし）
+
+詳細: `src/data/overCostHealthTable.ts`
+
+### 総耐久計算
+
+```
+総耐久 = 初期耐久A + 初期耐久B + リスポーン耐久の合計
 ```
 
-## 📝 設計ドキュメント
+リスポーン時の耐久変動を考慮した**真の総耐久値**を計算。
 
-詳細な設計ドキュメントは[構想リポジトリ](https://github.com/[username]/ideas/tree/main/active/exvs2-cost-calculator)を参照してください。
+## 📝 開発ルール
 
-- [コスト計算ロジック設計](https://github.com/[username]/ideas/blob/main/active/exvs2-cost-calculator/design/cost-calculation-logic.md)
-- [UIワイヤーフレーム](https://github.com/[username]/ideas/blob/main/active/exvs2-cost-calculator/design/ui-wireframe.md)
-- [技術選定記録](https://github.com/[username]/ideas/blob/main/active/exvs2-cost-calculator/decisions/ADR-001-frontend-framework.md)
+開発時のルールは [CONTRIBUTING.md](./CONTRIBUTING.md) を参照してください。
 
-## 🤝 コントリビューション
+- コミット規約
+- テスト駆動開発（TDD）
+- コードレビュー基準
 
-このプロジェクトは現在個人開発中です。
+詳細仕様は [docs/SPECIFICATION.md](./docs/SPECIFICATION.md) を参照。
 
 ## 📄 ライセンス
 
@@ -170,7 +178,8 @@ MIT
 
 ## 🔗 関連リンク
 
-- [EXVS2 公式サイト](https://www.bandainamco-am.co.jp/am/vg/EXVS2/)
+- [リポジトリ](https://github.com/dOwOd/exvs2-cost-calculator)
+- [EXVS2 公式サイト](https://gs.bandainamco-ol.co.jp/exvs2/)
 - [Astro ドキュメント](https://docs.astro.build)
 - [Preact ドキュメント](https://preactjs.com)
 - [Tailwind CSS ドキュメント](https://tailwindcss.com)
