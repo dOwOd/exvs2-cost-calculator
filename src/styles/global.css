@@ -1,1 +1,21 @@
+/**
+ * EXVS2 Cost Calculator グローバルスタイル
+ */
+
 @import "tailwindcss";
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    @apply bg-slate-900 text-slate-100 antialiased;
+  }
+}
+
+@layer components {
+  .container {
+    @apply max-w-7xl;
+  }
+}
