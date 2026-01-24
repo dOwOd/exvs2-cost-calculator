@@ -127,6 +127,34 @@ function calculateTotalHealth(
    - `isDefeat = false` なら `respawnHealth` を加算
 3. 合計を返す
 
+### 3.3 最短での敗北時の耐久値計算
+
+```typescript
+function calculateMinimumDefeatHealth(formation: Formation): number
+```
+
+**計算式**:
+
+片方の機体だけが狙われ続けた場合の最小ダメージ。
+
+```
+Aだけ狙われる: ceil(6000 / costA) × healthA
+Bだけ狙われる: ceil(6000 / costB) × healthB
+最短での敗北時の耐久値 = min(Aだけ, Bだけ)
+```
+
+**例**:
+
+3000(750) + 2500(680) の場合:
+- Aだけ: `ceil(6000/3000) × 750 = 2 × 750 = 1500`
+- Bだけ: `ceil(6000/2500) × 680 = 3 × 680 = 2040`
+- **最短**: `min(1500, 2040) = 1500`
+
+**用途**:
+
+- ユーザーに「敵が最も効率的に攻めてきた場合の耐久値」を示す
+- 総耐久値と併せて表示（例: `総耐久 2440 (最短: 1500)`）
+
 ---
 
 ## 4. ソートとフィルタリング
@@ -242,12 +270,6 @@ export interface EvaluatedPattern {
   isEXActivationFailure: boolean;
   transitions: BattleState[];     // 実際の撃墜履歴
 }
-
-/** 評価軸 */
-export type EvaluationAxisType =
-  | 'totalHealth'
-  | 'exGuaranteed'
-  | 'theory';
 ```
 
 ### 6.2 コストオーバー耐久テーブル（src/data/overCostHealthTable.ts）
@@ -293,10 +315,50 @@ export function getRespawnHealth(
 
 ### 7.3 結果表示
 
-- **フィルター**: チェックボックス「EXオーバーリミット発動可能のみ表示」
-- **全パターン表示**: カード形式で表示（総耐久降順、重複排除後）
-- **EX発動可否**: ✅緑 / ❌赤背景
-- **コスト推移テーブル**: 各撃墜ステップの詳細
+#### フィルター機能
+
+- **チェックボックス**: 「EXオーバーリミット発動可能のみ表示」
+- チェック時: `isEXActivationFailure = false` のパターンのみ表示
+- チェック解除時: 全パターン表示
+
+#### パターンカード
+
+**全パターン表示**: カード形式で表示（総耐久降順、重複排除後）
+
+**ヘッダー部分:**
+- ランク番号（text-3xl / 30px）
+- 撃墜順パターン（text-2xl / 24px）
+- EX発動可否バッジ: ✅ EXオーバーリミット発動可（緑） / ⚠️ EX不発（赤）
+
+**評価指標:**
+- 総耐久ラベル（text-base / 16px）
+- 総耐久値（text-3xl / 30px）
+- 最短での敗北時の耐久値（text-base / 16px）- 計算式: `min(ceil(6000/costA) × healthA, ceil(6000/costB) × healthB)`
+
+**コスト推移テーブル（text-lg / 18px）:**
+
+| 列 | 内容 |
+|:---|:-----|
+| 撃墜 | 撃墜回数 |
+| 対象 | 撃墜された機体（A/B） |
+| チーム残コスト | 数値 + **コストバー**（視覚的表現） |
+| リスポーン耐久 | リスポーン時の耐久値 |
+| 状態 | ✓ 通常 / ⚠️ コストオーバー / 💀 敗北 |
+
+#### コストバーの仕様
+
+**表示:**
+- 横長バー（高さ12px、rounded-full）
+- 幅 = `(残コスト / 6000) × 100%`
+
+**色分け（優先度順）:**
+1. 🔴 **敗北**（残コスト≤0）: 赤（bg-red-500）
+2. 🟠 **EX発動可能**（残コスト≤minCost かつ >0）: オレンジ（bg-orange-500）
+3. 🟡 **コストオーバー**（isOverCost = true）: 黄（bg-yellow-500）
+4. 🔵 **通常**: 青（bg-blue-500）
+
+**アニメーション:**
+- `transition-all` で滑らかに変化
 
 ---
 
