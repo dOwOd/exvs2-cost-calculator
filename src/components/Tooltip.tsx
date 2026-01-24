@@ -25,9 +25,9 @@ export default function Tooltip({ content, children }: TooltipProps) {
         {children}
       </span>
       {isVisible && (
-        <span class="absolute z-50 bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-slate-950 text-slate-200 text-sm rounded-lg shadow-lg border border-slate-700 whitespace-nowrap">
+        <span class="absolute z-[100] top-full left-1/2 transform -translate-x-1/2 mt-2 px-3 py-2 bg-slate-950 text-slate-200 text-sm rounded-lg shadow-lg border border-slate-700 whitespace-nowrap">
           {content}
-          <span class="absolute top-full left-1/2 transform -translate-x-1/2 -mt-px border-4 border-transparent border-t-slate-950" />
+          <span class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-px border-4 border-transparent border-b-slate-950" />
         </span>
       )}
     </span>
