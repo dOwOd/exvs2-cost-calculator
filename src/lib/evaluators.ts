@@ -17,114 +17,36 @@ import {
 } from './calculator';
 
 /**
- * EXオーバーリミット発動条件をチェック
- * 条件: コストの合計が5000以上
+ * EXオーバーリミット発動条件をチェック（パターンごと）
+ * 条件: 自機と僚機のいずれもが撃墜されたら敗北する状況
+ * つまり、残コスト < min(コストA, コストB) の状態になったか
  */
-export function canActivateEXOverLimit(formation: Formation): boolean {
-  if (!formation.unitA || !formation.unitB) {
-    return false;
-  }
-  const totalCost = formation.unitA.cost + formation.unitB.cost;
-  return totalCost >= 5000;
-}
-
-/**
- * EX発動不可パターンかどうかを判定
- * （発動条件を満たさずに敗北するパターン）
- */
-export function isEXActivationFailure(
-  pattern: UnitId[],
-  formation: Formation
+export function checkEXActivation(
+  formation: Formation,
+  transitions: BattleState[]
 ): boolean {
   if (!formation.unitA || !formation.unitB) {
     return false;
   }
 
-  const costA = formation.unitA.cost;
-  const costB = formation.unitB.cost;
+  const minCost = Math.min(formation.unitA.cost, formation.unitB.cost);
 
-  // EXオーバーリミットが発動できない編成はfalse
-  if (!canActivateEXOverLimit(formation)) {
-    return false;
-  }
-
-  // 撃墜回数をカウント
-  const killCounts = { A: 0, B: 0 };
-  for (const unit of pattern) {
-    killCounts[unit]++;
-  }
-
-  // 3000+2500 または 3000+2000
-  if (
-    (costA === 3000 && (costB === 2500 || costB === 2000)) ||
-    (costB === 3000 && (costA === 2500 || costA === 2000))
-  ) {
-    const unit3000: UnitId = costA === 3000 ? 'A' : 'B';
-    const unitLow: UnitId = unit3000 === 'A' ? 'B' : 'A';
-
-    // 低コストが0落ち、3000が2落ち → EX発動不可
-    if (killCounts[unitLow] === 0 && killCounts[unit3000] === 2) {
-      return true;
-    }
-  }
-
-  // 3000+1500
-  if (
-    (costA === 3000 && costB === 1500) ||
-    (costB === 3000 && costA === 1500)
-  ) {
-    const unit3000: UnitId = costA === 3000 ? 'A' : 'B';
-    const unit1500: UnitId = unit3000 === 'A' ? 'B' : 'A';
-
-    // ①1500が0落ち、3000が2落ち → EX発動不可
-    if (killCounts[unit1500] === 0 && killCounts[unit3000] === 2) {
-      return true;
+  // 各transitionで、残コスト < minCostになったかチェック
+  for (const transition of transitions) {
+    // 敗北した場合はその前の状態でチェック済み
+    if (transition.isDefeat) {
+      break;
     }
 
-    // ②1500が2落ち後、3000が初落ち → EX発動不可
-    // パターン: [1500, 1500, 3000, ...]
-    if (
-      pattern[0] === unit1500 &&
-      pattern[1] === unit1500 &&
-      pattern[2] === unit3000
-    ) {
+    // 残コスト < minCost = どちらを撃墜しても敗北 = EX発動可能
+    if (transition.remainingCost < minCost) {
       return true;
-    }
-  }
-
-  // 2500+1500
-  if (
-    (costA === 2500 && costB === 1500) ||
-    (costB === 2500 && costA === 1500)
-  ) {
-    const unit2500: UnitId = costA === 2500 ? 'A' : 'B';
-    const unit1500: UnitId = unit2500 === 'A' ? 'B' : 'A';
-
-    // 互いに1落ち後、2500が2落ち目 → EX発動不可
-    // 例: [2500, 1500, 2500, ...] または [1500, 2500, 2500, ...]
-    let count2500 = 0;
-    let count1500 = 0;
-
-    for (let i = 0; i < pattern.length; i++) {
-      const unit = pattern[i];
-
-      if (unit === unit2500) count2500++;
-      else count1500++;
-
-      // 互いに1落ち後の状態で、次が2500の2落ち目
-      if (
-        count2500 === 1 &&
-        count1500 === 1 &&
-        i + 1 < pattern.length &&
-        pattern[i + 1] === unit2500
-      ) {
-        return true;
-      }
     }
   }
 
   return false;
 }
+
 
 /**
  * バランススコアを計算
@@ -161,21 +83,24 @@ export function evaluateAllPatterns(
   }
 
   const patterns = generatePatterns();
-  const exOverLimitPossible = canActivateEXOverLimit(formation);
 
   const evaluated: EvaluatedPattern[] = patterns.map((pattern) => {
     const transitions = calculateCostTransitions(pattern, formation);
     const totalHealth = calculateTotalHealth(formation, transitions);
     const overCostCount = countOverCosts(transitions);
     const balancedScore = calculateBalancedScore(transitions);
-    const isEXFailure = isEXActivationFailure(pattern, formation);
+
+    // このパターンでEXオーバーリミットが発動するか
+    const canActivateEX = checkEXActivation(formation, transitions);
+    // EX発動不可パターンかどうか（発動せずに敗北）
+    const isEXFailure = !canActivateEX;
 
     return {
       pattern,
       totalHealth,
       overCostCount,
       balancedScore,
-      canActivateEXOverLimit: exOverLimitPossible,
+      canActivateEXOverLimit: canActivateEX,
       isEXActivationFailure: isEXFailure,
       transitions,
     };
