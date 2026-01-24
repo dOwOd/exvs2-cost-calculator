@@ -29,8 +29,8 @@ export default function PatternCard({
       {/* ランクとパターン */}
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-3">
-          <span class="text-2xl font-bold text-blue-400">#{rank}</span>
-          <span class="text-xl font-mono text-slate-200">{patternString}</span>
+          <span class="text-3xl font-bold text-blue-400">#{rank}</span>
+          <span class="text-2xl font-mono text-slate-200">{patternString}</span>
         </div>
         <div class="flex gap-2">
           {pattern.canActivateEXOverLimit && !pattern.isEXActivationFailure && (
@@ -49,13 +49,13 @@ export default function PatternCard({
       {/* 評価指標 */}
       <div class="mb-3">
         <div class="bg-slate-700 p-3 rounded">
-          <div class="text-sm text-slate-400 flex items-center">
+          <div class="text-base text-slate-400 flex items-center">
             総耐久
             <InfoIcon tooltip="リスポーン時の耐久変動を考慮した真の総耐久値。高いほど長く戦える。" />
           </div>
-          <div class="text-2xl font-semibold text-slate-100">
+          <div class="text-3xl font-semibold text-slate-100">
             {pattern.totalHealth}{' '}
-            <span class="text-sm text-slate-400 font-normal">
+            <span class="text-base text-slate-400 font-normal">
               (最短: {minimumDefeatHealth})
             </span>
           </div>
@@ -64,7 +64,7 @@ export default function PatternCard({
 
       {/* コスト推移テーブル */}
       <div class="overflow-x-auto">
-        <table class="w-full text-base">
+        <table class="w-full text-lg">
           <thead>
             <tr class="border-b border-slate-600">
               <th class="text-left py-2 px-2 text-slate-400">撃墜</th>
