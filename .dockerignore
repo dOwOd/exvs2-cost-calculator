@@ -11,5 +11,5 @@ README.md
 .idea
 *.md
 !package.json
-!package-lock.json
+!pnpm-lock.yaml
 .astro

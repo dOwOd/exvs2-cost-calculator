@@ -1,30 +1,45 @@
 # Build stage
-FROM node:20-alpine AS builder
+FROM node:24-alpine AS builder
+
+# Enable corepack and install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Copy lockfile first for better caching
+COPY pnpm-lock.yaml ./
 
-# Install dependencies
-RUN npm ci
+# Fetch dependencies (cached layer)
+RUN pnpm fetch
+
+# Copy package files
+COPY package.json ./
+
+# Install all dependencies from cache
+RUN pnpm install --frozen-lockfile --offline
 
 # Copy source code
 COPY . .
 
 # Build the application
-RUN npm run build
+RUN pnpm build
+
+# Prune dev dependencies
+RUN pnpm install --frozen-lockfile --offline --prod
+
 
 # Runtime stage
-FROM node:20-alpine AS runtime
+FROM node:24-alpine AS runtime
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Create a non-root user
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
 
-# Install production dependencies only
-RUN npm ci --omit=dev
+# Copy production dependencies and package.json from builder
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./
 
 # Copy built application from builder
 COPY --from=builder /app/dist ./dist
