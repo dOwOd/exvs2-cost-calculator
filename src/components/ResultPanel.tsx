@@ -30,8 +30,20 @@ export default function ResultPanel({
 
   return (
     <div class="bg-slate-900 rounded-lg overflow-hidden">
-      {/* フィルター */}
-      <div class="border-b border-slate-700 p-4">
+      {/* 編成情報 + フィルター */}
+      <div class="border-b border-slate-700 p-4 sticky top-0 bg-slate-900 z-10">
+        {/* 編成情報 */}
+        {formation.unitA && formation.unitB && (
+          <div class="mb-3 pb-3 border-b border-slate-700">
+            <div class="text-sm text-slate-400 font-mono">
+              <span class="text-blue-400 font-semibold">A</span>: {formation.unitA.cost}コスト / {formation.unitA.health}耐久
+              <span class="mx-3 text-slate-600">|</span>
+              <span class="text-green-400 font-semibold">B</span>: {formation.unitB.cost}コスト / {formation.unitB.health}耐久
+            </div>
+          </div>
+        )}
+
+        {/* フィルター */}
         <label class="flex items-center gap-2 text-slate-300 cursor-pointer">
           <input
             type="checkbox"

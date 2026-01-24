@@ -48,7 +48,7 @@ export default function PatternCard({
           )}
           {pattern.isEXActivationFailure && (
             <span class="px-3 py-1 bg-red-900 text-red-300 rounded text-sm font-semibold">
-              ⚠️ EX不発
+              ⚠️ EXオーバーリミット不発
             </span>
           )}
         </div>
