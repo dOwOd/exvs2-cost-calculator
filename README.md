@@ -36,10 +36,10 @@
 
 ```bash
 # 開発サーバーを起動（ホットリロード有効）
-docker-compose up dev
+docker compose up dev
 
 # バックグラウンドで起動
-docker-compose up -d dev
+docker compose up -d dev
 ```
 
 アプリケーションは http://localhost:4321 で起動します。
@@ -48,20 +48,20 @@ docker-compose up -d dev
 
 ```bash
 # イメージをビルドして起動
-docker-compose up --build app
+docker compose up --build app
 
 # バックグラウンドで起動
-docker-compose up -d --build app
+docker compose up -d --build app
 ```
 
 ### コンテナの停止
 
 ```bash
 # 停止
-docker-compose down
+docker compose down
 
 # ボリュームも削除して完全にクリーンアップ
-docker-compose down -v
+docker compose down -v
 ```
 
 ## 💻 ローカル開発（Docker なし）
