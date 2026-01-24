@@ -18,7 +18,7 @@ const TABS: { axis: EvaluationAxisType; label: string; description: string }[] =
     },
     {
       axis: 'exGuaranteed',
-      label: 'EX発動保証',
+      label: 'EXオーバーリミット発動保証',
       description: 'EXオーバーリミットが確実に発動できるパターン',
     },
     {

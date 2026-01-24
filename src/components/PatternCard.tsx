@@ -30,7 +30,7 @@ export default function PatternCard({ pattern, rank }: PatternCardProps) {
         <div class="flex gap-2">
           {pattern.canActivateEXOverLimit && !pattern.isEXActivationFailure && (
             <span class="px-3 py-1 bg-green-900 text-green-300 rounded text-sm font-semibold">
-              ✅ EX発動可
+              ✅ EXオーバーリミット発動可
             </span>
           )}
           {pattern.isEXActivationFailure && (
