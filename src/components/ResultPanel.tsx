@@ -48,6 +48,7 @@ export default function ResultPanel({
         <PatternList
           patterns={filteredPatterns}
           minimumDefeatHealth={minimumDefeatHealth}
+          formation={formation}
         />
       </div>
     </div>

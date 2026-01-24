@@ -2,23 +2,31 @@
  * パターンカード（個別パターン表示）
  */
 
-import type { EvaluatedPattern } from '../lib/types';
+import type { EvaluatedPattern, Formation } from '../lib/types';
 import { InfoIcon } from './Tooltip';
 
 interface PatternCardProps {
   pattern: EvaluatedPattern;
   rank: number;
   minimumDefeatHealth: number;
+  formation: Formation;
 }
 
 export default function PatternCard({
   pattern,
   rank,
   minimumDefeatHealth,
+  formation,
 }: PatternCardProps) {
   // 実際に発生した撃墜のみを表示（敗北までの部分）
   const actualPattern = pattern.pattern.slice(0, pattern.transitions.length);
   const patternString = actualPattern.join(' → ');
+
+  // EX発動可能判定用のminCost計算
+  const minCost =
+    formation.unitA && formation.unitB
+      ? Math.min(formation.unitA.cost, formation.unitB.cost)
+      : 0;
 
   return (
     <div
@@ -121,6 +129,8 @@ export default function PatternCard({
                         class={`h-full transition-all ${
                           trans.isDefeat
                             ? 'bg-red-500'
+                            : trans.remainingCost <= minCost && trans.remainingCost > 0
+                            ? 'bg-orange-500'
                             : trans.isOverCost
                             ? 'bg-yellow-500'
                             : 'bg-blue-500'

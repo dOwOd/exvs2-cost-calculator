@@ -2,17 +2,19 @@
  * パターンリスト（全パターン表示）
  */
 
-import type { EvaluatedPattern } from '../lib/types';
+import type { EvaluatedPattern, Formation } from '../lib/types';
 import PatternCard from './PatternCard';
 
 interface PatternListProps {
   patterns: EvaluatedPattern[];
   minimumDefeatHealth: number;
+  formation: Formation;
 }
 
 export default function PatternList({
   patterns,
   minimumDefeatHealth,
+  formation,
 }: PatternListProps) {
   if (patterns.length === 0) {
     return (
@@ -30,6 +32,7 @@ export default function PatternList({
           pattern={pattern}
           rank={index + 1}
           minimumDefeatHealth={minimumDefeatHealth}
+          formation={formation}
         />
       ))}
     </div>
