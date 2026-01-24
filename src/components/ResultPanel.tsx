@@ -36,9 +36,9 @@ export default function ResultPanel({
         {formation.unitA && formation.unitB && (
           <div class="mb-3 pb-3 border-b border-slate-700">
             <div class="text-lg text-slate-400 font-mono">
-              <span class="text-blue-400 font-semibold">A</span>: {formation.unitA.cost}コスト / {formation.unitA.health}耐久
+              <span class="text-blue-400 font-semibold">A</span>: コスト{formation.unitA.cost} / 耐久{formation.unitA.health}
               <span class="mx-3 text-slate-600">|</span>
-              <span class="text-green-400 font-semibold">B</span>: {formation.unitB.cost}コスト / {formation.unitB.health}耐久
+              <span class="text-green-400 font-semibold">B</span>: コスト{formation.unitB.cost} / 耐久{formation.unitB.health}
             </div>
           </div>
         )}
