@@ -26,7 +26,7 @@ export default function ResultPanel({
   const [activeAxis, setActiveAxis] =
     useState<EvaluationAxisType>('totalHealth');
 
-  const topPatterns = getTopPatterns(patterns, activeAxis, formation, 5);
+  const topPatterns = getTopPatterns(patterns, activeAxis, formation);
 
   return (
     <div class="bg-slate-900 rounded-lg overflow-hidden">

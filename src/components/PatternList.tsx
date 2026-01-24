@@ -1,5 +1,5 @@
 /**
- * パターンリスト（TOP 5表示）
+ * パターンリスト（全パターン表示）
  */
 
 import type { EvaluatedPattern } from '../lib/types';

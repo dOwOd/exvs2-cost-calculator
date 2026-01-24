@@ -161,13 +161,13 @@ export function sortByAxis(
 }
 
 /**
- * TOP N パターンを取得（重複排除）
+ * 評価軸に応じてソートされたパターンを取得（重複排除）
  */
 export function getTopPatterns(
   patterns: EvaluatedPattern[],
   axis: EvaluationAxisType,
   formation: Formation,
-  limit = 5
+  limit = Infinity
 ): EvaluatedPattern[] {
   const sorted = sortByAxis(patterns, axis, formation);
 
