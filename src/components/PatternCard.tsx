@@ -88,7 +88,7 @@ export default function PatternCard({
         <table class="w-full text-lg">
           <thead>
             <tr class="border-b border-slate-600">
-              <th class="text-left py-2 px-2 text-slate-400">撃墜</th>
+              <th class="text-left py-2 px-2 text-slate-400">撃墜順</th>
               <th class="text-left py-2 px-2 text-slate-400">対象</th>
               <th class="text-right py-2 px-2 text-slate-400">
                 <span class="flex items-center justify-end">
