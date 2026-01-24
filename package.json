@@ -1,0 +1,19 @@
+{
+  "name": "exvs2-cost-calculator",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/node": "^9.5.2",
+    "@astrojs/preact": "^4.1.3",
+    "@tailwindcss/vite": "^4.1.18",
+    "astro": "^5.16.15",
+    "preact": "^10.28.2",
+    "tailwindcss": "^4.1.18"
+  }
+}
