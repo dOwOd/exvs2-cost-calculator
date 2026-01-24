@@ -42,7 +42,7 @@ export default function PatternCard({ pattern, rank }: PatternCardProps) {
       </div>
 
       {/* 評価指標 */}
-      <div class="grid grid-cols-3 gap-4 mb-3">
+      <div class="grid grid-cols-2 gap-4 mb-3">
         <div class="bg-slate-700 p-2 rounded">
           <div class="text-xs text-slate-400 flex items-center">
             総耐久
@@ -54,17 +54,8 @@ export default function PatternCard({ pattern, rank }: PatternCardProps) {
         </div>
         <div class="bg-slate-700 p-2 rounded">
           <div class="text-xs text-slate-400 flex items-center">
-            オーバー回数
-            <InfoIcon tooltip="コストオーバー（残コスト < 機体コスト）が発生する回数。多いほどリスポーン耐久が低下。" />
-          </div>
-          <div class="text-lg font-semibold text-slate-100">
-            {pattern.overCostCount}
-          </div>
-        </div>
-        <div class="bg-slate-700 p-2 rounded">
-          <div class="text-xs text-slate-400 flex items-center">
             バランス
-            <InfoIcon tooltip="コストオーバーの深さ（マイナス幅）の逆数。大きいほどバランスが良い。∞は一度もオーバーしない。" />
+            <InfoIcon tooltip="コストオーバーの深さ（マイナス幅）の逆数。大きいほどバランスが良い。∞は一度もマイナスにならない。" />
           </div>
           <div class="text-lg font-semibold text-slate-100">
             {pattern.balancedScore === Number.MAX_SAFE_INTEGER
