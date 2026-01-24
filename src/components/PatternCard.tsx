@@ -111,8 +111,24 @@ export default function PatternCard({
                     {trans.killedUnit}
                   </span>
                 </td>
-                <td class="py-2 px-2 text-right font-mono text-slate-300">
-                  {trans.remainingCost}
+                <td class="py-2 px-2">
+                  <div class="flex flex-col gap-1">
+                    <div class="text-right font-mono text-slate-300">
+                      {trans.remainingCost}
+                    </div>
+                    <div class="bg-slate-700 rounded-full h-3 overflow-hidden">
+                      <div
+                        class={`h-full transition-all ${
+                          trans.isDefeat
+                            ? 'bg-red-500'
+                            : trans.isOverCost
+                            ? 'bg-yellow-500'
+                            : 'bg-blue-500'
+                        }`}
+                        style={`width: ${Math.max(0, (trans.remainingCost / 6000) * 100)}%`}
+                      />
+                    </div>
+                  </div>
                 </td>
                 <td class="py-2 px-2 text-right font-mono text-slate-300">
                   {trans.isDefeat ? (
