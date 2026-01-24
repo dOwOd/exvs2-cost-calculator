@@ -19,7 +19,7 @@ import {
 /**
  * EXオーバーリミット発動条件をチェック（パターンごと）
  * 条件: 自機と僚機のいずれもが撃墜されたら敗北する状況
- * つまり、残コスト < min(コストA, コストB) の状態になったか
+ * つまり、残コスト <= min(コストA, コストB) の状態になったか
  */
 export function checkEXActivation(
   formation: Formation,
@@ -31,15 +31,15 @@ export function checkEXActivation(
 
   const minCost = Math.min(formation.unitA.cost, formation.unitB.cost);
 
-  // 各transitionで、残コスト < minCostになったかチェック
+  // 各transitionで、残コスト <= minCostになったかチェック
   for (const transition of transitions) {
     // 敗北した場合はその前の状態でチェック済み
     if (transition.isDefeat) {
       break;
     }
 
-    // 残コスト < minCost = どちらを撃墜しても敗北 = EX発動可能
-    if (transition.remainingCost < minCost) {
+    // 残コスト <= minCost = どちらを撃墜しても敗北 = EX発動可能
+    if (transition.remainingCost <= minCost) {
       return true;
     }
   }
