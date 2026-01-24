@@ -125,7 +125,7 @@ export default function PatternCard({
                   {trans.isDefeat ? (
                     <span class="text-red-400 font-semibold">💀 敗北</span>
                   ) : trans.isOverCost ? (
-                    <span class="text-yellow-400 font-semibold">⚠️ オーバー</span>
+                    <span class="text-yellow-400 font-semibold">⚠️ コストオーバー</span>
                   ) : (
                     <span class="text-green-400">✓</span>
                   )}
