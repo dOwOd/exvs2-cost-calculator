@@ -35,7 +35,7 @@ export default function ResultPanel({
         {/* 編成情報 */}
         {formation.unitA && formation.unitB && (
           <div class="mb-3 pb-3 border-b border-slate-700">
-            <div class="text-sm text-slate-400 font-mono">
+            <div class="text-lg text-slate-400 font-mono">
               <span class="text-blue-400 font-semibold">A</span>: {formation.unitA.cost}コスト / {formation.unitA.health}耐久
               <span class="mx-3 text-slate-600">|</span>
               <span class="text-green-400 font-semibold">B</span>: {formation.unitB.cost}コスト / {formation.unitB.health}耐久

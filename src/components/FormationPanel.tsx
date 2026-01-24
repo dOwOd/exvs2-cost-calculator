@@ -73,7 +73,7 @@ export default function FormationPanel({
 
       {/* 機体B */}
       <div class="bg-slate-800 p-4 rounded-lg">
-        <h3 class="text-lg font-bold text-red-400 mb-3">機体B</h3>
+        <h3 class="text-lg font-bold text-green-400 mb-3">機体B</h3>
         <div class="space-y-3">
           <div>
             <label class="block text-sm text-slate-400 mb-2">コスト</label>

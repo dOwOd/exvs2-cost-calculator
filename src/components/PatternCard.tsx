@@ -20,7 +20,6 @@ export default function PatternCard({
 }: PatternCardProps) {
   // 実際に発生した撃墜のみを表示（敗北までの部分）
   const actualPattern = pattern.pattern.slice(0, pattern.transitions.length);
-  const patternString = actualPattern.join(' → ');
 
   // EX発動可能判定用のminCost計算
   const minCost =
@@ -38,7 +37,21 @@ export default function PatternCard({
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-3">
           <span class="text-3xl font-bold text-blue-400">#{rank}</span>
-          <span class="text-2xl font-mono text-slate-200">{patternString}</span>
+          <div class="text-2xl font-mono flex items-center gap-2">
+            {actualPattern.map((unit, index) => (
+              <>
+                <span
+                  class={unit === 'A' ? 'text-blue-400' : 'text-green-400'}
+                  key={`${index}-unit`}
+                >
+                  {unit}
+                </span>
+                {index < actualPattern.length - 1 && (
+                  <span class="text-slate-500" key={`${index}-arrow`}>→</span>
+                )}
+              </>
+            ))}
+          </div>
         </div>
         <div class="flex gap-2">
           {pattern.canActivateEXOverLimit && !pattern.isEXActivationFailure && (
@@ -113,7 +126,7 @@ export default function PatternCard({
                 <td class="py-2 px-2">
                   <span
                     class={`font-semibold ${
-                      trans.killedUnit === 'A' ? 'text-blue-400' : 'text-red-400'
+                      trans.killedUnit === 'A' ? 'text-blue-400' : 'text-green-400'
                     }`}
                   >
                     {trans.killedUnit}
