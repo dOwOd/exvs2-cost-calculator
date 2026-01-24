@@ -52,8 +52,3 @@ export interface EvaluatedPattern {
   transitions: BattleState[];
 }
 
-/** 評価軸タイプ */
-export type EvaluationAxisType =
-  | 'totalHealth'    // 総耐久最大
-  | 'exGuaranteed'   // EX発動保証
-  | 'theory';        // セオリー準拠

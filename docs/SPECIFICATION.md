@@ -129,29 +129,31 @@ function calculateTotalHealth(
 
 ---
 
-## 4. 評価軸
+## 4. ソートとフィルタリング
 
-### 4.1 総耐久最大
+### 4.1 ソート
+
+全パターンを**総耐久降順**でソート。
 
 - **指標**: `totalHealth`（降順）
-- **優先**: リスポーン耐久変動を考慮した真の総耐久値が最大のパターン
+- **理由**: リスポーン耐久変動を考慮した真の総耐久値が最も重要な指標
 
-### 4.2 EX発動保証
+### 4.2 フィルタリング
 
-- **指標**: `isEXActivationFailure`（false優先）+ `totalHealth`（降順）
-- **優先**: EX発動条件を満たすパターンのみ表示し、その中で総耐久が高いもの
+チェックボックスによる絞り込み機能。
 
-### 4.3 セオリー準拠
+#### EXオーバーリミット発動可能フィルター
 
-- **指標**: 理論スコア（降順）
-- **計算**:
-  ```typescript
-  score = 0;
-  if (isEXActivationFailure) score -= 10000; // EX不可は大幅減点
-  if (低コスト機が最後に撃墜される) score += 1000;
-  score += totalHealth;
-  ```
-- **優先**: 低コスト後落ち、EX発動可能、総耐久が高いパターン
+- `isEXActivationFailure = false` のパターンのみ表示
+- チェック時：EX発動できないパターンを除外
+- チェック解除時：全パターン表示
+
+**実装:**
+```typescript
+const filteredPatterns = showOnlyEXAvailable
+  ? sortedPatterns.filter((p) => !p.isEXActivationFailure)
+  : sortedPatterns;
+```
 
 ---
 
@@ -291,8 +293,8 @@ export function getRespawnHealth(
 
 ### 7.3 結果表示
 
-- **タブ切り替え**: 3つの評価軸
-- **全パターン表示**: カード形式で表示（重複排除後）
+- **フィルター**: チェックボックス「EXオーバーリミット発動可能のみ表示」
+- **全パターン表示**: カード形式で表示（総耐久降順、重複排除後）
 - **EX発動可否**: ✅緑 / ❌赤背景
 - **コスト推移テーブル**: 各撃墜ステップの詳細
 

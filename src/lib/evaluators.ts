@@ -5,8 +5,6 @@
 import type {
   Formation,
   EvaluatedPattern,
-  EvaluationAxisType,
-  UnitId,
   BattleState,
 } from './types';
 import {
@@ -84,92 +82,14 @@ export function evaluateAllPatterns(
 }
 
 /**
- * セオリー準拠スコアを計算
- * 低コスト後落ち、EX発動可能を優先
- */
-function calculateTheoryScore(
-  pattern: EvaluatedPattern,
-  formation: Formation
-): number {
-  let score = 0;
-
-  // EX発動不可パターンは大幅減点
-  if (pattern.isEXActivationFailure) {
-    score -= 10000;
-  }
-
-  const unitA = formation.unitA!;
-  const unitB = formation.unitB!;
-
-  // 低コスト後落ち優先
-  // 最後の撃墜が低コスト側かをチェック
-  if (unitA.cost !== unitB.cost) {
-    const lowCostUnit: UnitId = unitA.cost < unitB.cost ? 'A' : 'B';
-    const lastKill = pattern.pattern[pattern.pattern.length - 1];
-
-    // 最後が低コストなら加点
-    if (lastKill === lowCostUnit) {
-      score += 1000;
-    }
-  }
-
-  // 総耐久も考慮
-  score += pattern.totalHealth;
-
-  return score;
-}
-
-/**
- * 評価軸に応じてパターンをソート
- */
-export function sortByAxis(
-  patterns: EvaluatedPattern[],
-  axis: EvaluationAxisType,
-  formation: Formation
-): EvaluatedPattern[] {
-  const sorted = [...patterns];
-
-  switch (axis) {
-    case 'totalHealth':
-      // 総耐久の降順
-      sorted.sort((a, b) => b.totalHealth - a.totalHealth);
-      break;
-
-    case 'exGuaranteed':
-      // EX発動保証: EX発動不可パターンを除外し、総耐久降順
-      sorted.sort((a, b) => {
-        // EX発動不可パターンを最下位に
-        if (a.isEXActivationFailure !== b.isEXActivationFailure) {
-          return a.isEXActivationFailure ? 1 : -1;
-        }
-        // 総耐久の降順
-        return b.totalHealth - a.totalHealth;
-      });
-      break;
-
-    case 'theory':
-      // セオリー準拠: 低コスト後落ち、EX発動可能を優先
-      sorted.sort((a, b) => {
-        const scoreA = calculateTheoryScore(a, formation);
-        const scoreB = calculateTheoryScore(b, formation);
-        return scoreB - scoreA;
-      });
-      break;
-  }
-
-  return sorted;
-}
-
-/**
- * 評価軸に応じてソートされたパターンを取得（重複排除）
+ * 総耐久降順でソートされたパターンを取得（重複排除）
  */
 export function getTopPatterns(
   patterns: EvaluatedPattern[],
-  axis: EvaluationAxisType,
-  formation: Formation,
   limit = Infinity
 ): EvaluatedPattern[] {
-  const sorted = sortByAxis(patterns, axis, formation);
+  // 総耐久の降順でソート
+  const sorted = [...patterns].sort((a, b) => b.totalHealth - a.totalHealth);
 
   // 実際に発生した撃墜順で重複を排除
   const seen = new Set<string>();

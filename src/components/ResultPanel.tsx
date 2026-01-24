@@ -1,14 +1,9 @@
 /**
- * 結果パネル（タブ + パターンリスト）
+ * 結果パネル（フィルター + パターンリスト）
  */
 
 import { useState } from 'preact/hooks';
-import type {
-  EvaluatedPattern,
-  EvaluationAxisType,
-  Formation,
-} from '../lib/types';
-import TabNavigation from './TabNavigation';
+import type { EvaluatedPattern, Formation } from '../lib/types';
 import PatternList from './PatternList';
 import { getTopPatterns } from '../lib/evaluators';
 
@@ -23,17 +18,35 @@ export default function ResultPanel({
   formation,
   minimumDefeatHealth,
 }: ResultPanelProps) {
-  const [activeAxis, setActiveAxis] =
-    useState<EvaluationAxisType>('totalHealth');
+  const [showOnlyEXAvailable, setShowOnlyEXAvailable] = useState(false);
 
-  const topPatterns = getTopPatterns(patterns, activeAxis, formation);
+  // 総耐久最大でソート
+  const sortedPatterns = getTopPatterns(patterns);
+
+  // フィルタリング
+  const filteredPatterns = showOnlyEXAvailable
+    ? sortedPatterns.filter((p) => !p.isEXActivationFailure)
+    : sortedPatterns;
 
   return (
     <div class="bg-slate-900 rounded-lg overflow-hidden">
-      <TabNavigation activeAxis={activeAxis} onAxisChange={setActiveAxis} />
+      {/* フィルター */}
+      <div class="border-b border-slate-700 p-4">
+        <label class="flex items-center gap-2 text-slate-300 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={showOnlyEXAvailable}
+            onChange={(e) => setShowOnlyEXAvailable(e.currentTarget.checked)}
+            class="w-4 h-4 rounded border-slate-600 bg-slate-800 text-blue-500 focus:ring-2 focus:ring-blue-500"
+          />
+          <span class="text-sm">EXオーバーリミット発動可能のみ表示</span>
+        </label>
+      </div>
+
+      {/* パターンリスト */}
       <div class="p-6">
         <PatternList
-          patterns={topPatterns}
+          patterns={filteredPatterns}
           minimumDefeatHealth={minimumDefeatHealth}
         />
       </div>
