@@ -11,7 +11,9 @@ interface PatternCardProps {
 }
 
 export default function PatternCard({ pattern, rank }: PatternCardProps) {
-  const patternString = pattern.pattern.join(' → ');
+  // 実際に発生した撃墜のみを表示（敗北までの部分）
+  const actualPattern = pattern.pattern.slice(0, pattern.transitions.length);
+  const patternString = actualPattern.join(' → ');
 
   return (
     <div
