@@ -49,30 +49,6 @@ export function checkEXActivation(
 
 
 /**
- * バランススコアを計算
- * コストオーバーの深さ（マイナス幅）の合計の逆数
- * 数値が大きいほどバランスが良い
- */
-export function calculateBalancedScore(transitions: BattleState[]): number {
-  let totalOverCostDepth = 0;
-
-  for (const transition of transitions) {
-    // 敗北時（残コスト0以下）のマイナス幅を加算
-    if (transition.remainingCost < 0) {
-      totalOverCostDepth += Math.abs(transition.remainingCost);
-    }
-  }
-
-  // マイナスになっていない場合はスコア最大
-  if (totalOverCostDepth === 0) {
-    return Number.MAX_SAFE_INTEGER;
-  }
-
-  // 深さの合計の逆数
-  return 1 / totalOverCostDepth;
-}
-
-/**
  * 全パターンを評価
  */
 export function evaluateAllPatterns(
@@ -88,7 +64,6 @@ export function evaluateAllPatterns(
     const transitions = calculateCostTransitions(pattern, formation);
     const totalHealth = calculateTotalHealth(formation, transitions);
     const overCostCount = countOverCosts(transitions);
-    const balancedScore = calculateBalancedScore(transitions);
 
     // このパターンでEXオーバーリミットが発動するか
     const canActivateEX = checkEXActivation(formation, transitions);
@@ -99,7 +74,6 @@ export function evaluateAllPatterns(
       pattern,
       totalHealth,
       overCostCount,
-      balancedScore,
       canActivateEXOverLimit: canActivateEX,
       isEXActivationFailure: isEXFailure,
       transitions,
@@ -180,11 +154,6 @@ export function sortByAxis(
         const scoreB = calculateTheoryScore(b, formation);
         return scoreB - scoreA;
       });
-      break;
-
-    case 'balanced':
-      // バランススコアの降順
-      sorted.sort((a, b) => b.balancedScore - a.balancedScore);
       break;
   }
 

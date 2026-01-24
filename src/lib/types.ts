@@ -44,8 +44,6 @@ export interface EvaluatedPattern {
   totalHealth: number;
   /** コストオーバー回数 */
   overCostCount: number;
-  /** バランススコア（コストオーバー幅の合計の逆数） */
-  balancedScore: number;
   /** EXオーバーリミット発動可能な編成か */
   canActivateEXOverLimit: boolean;
   /** EX発動不可パターンか（発動条件を満たさずに敗北） */
@@ -58,5 +56,4 @@ export interface EvaluatedPattern {
 export type EvaluationAxisType =
   | 'totalHealth'    // 総耐久最大
   | 'exGuaranteed'   // EX発動保証
-  | 'theory'         // セオリー準拠
-  | 'balanced';      // バランス重視
+  | 'theory';        // セオリー準拠

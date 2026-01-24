@@ -47,7 +47,7 @@ export default function PatternCard({
       </div>
 
       {/* 評価指標 */}
-      <div class="grid grid-cols-2 gap-4 mb-3">
+      <div class="mb-3">
         <div class="bg-slate-700 p-2 rounded">
           <div class="text-xs text-slate-400 flex items-center">
             総耐久
@@ -58,17 +58,6 @@ export default function PatternCard({
           </div>
           <div class="text-xs text-slate-400 mt-1">
             (最短: {minimumDefeatHealth})
-          </div>
-        </div>
-        <div class="bg-slate-700 p-2 rounded">
-          <div class="text-xs text-slate-400 flex items-center">
-            バランス
-            <InfoIcon tooltip="コストオーバーの深さ（マイナス幅）の逆数。大きいほどバランスが良い。∞は一度もマイナスにならない。" />
-          </div>
-          <div class="text-lg font-semibold text-slate-100">
-            {pattern.balancedScore === Number.MAX_SAFE_INTEGER
-              ? '∞'
-              : pattern.balancedScore.toFixed(4)}
           </div>
         </div>
       </div>

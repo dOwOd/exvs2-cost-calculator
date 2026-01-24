@@ -26,11 +26,6 @@ const TABS: { axis: EvaluationAxisType; label: string; description: string }[] =
       label: 'セオリー準拠',
       description: '低コスト後落ち、EX発動可能など定石に従ったパターン',
     },
-    {
-      axis: 'balanced',
-      label: 'バランス重視',
-      description: 'コストオーバーの深さを最小化し、バランスを重視',
-    },
   ];
 
 export default function TabNavigation({

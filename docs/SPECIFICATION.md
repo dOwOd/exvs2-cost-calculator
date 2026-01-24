@@ -153,18 +153,6 @@ function calculateTotalHealth(
   ```
 - **優先**: 低コスト後落ち、EX発動可能、総耐久が高いパターン
 
-### 4.4 バランス重視
-
-- **指標**: `balancedScore`（降順）
-- **計算**:
-  ```typescript
-  totalOverCostDepth = Σ(|残コスト| if 残コスト < 0)
-  balancedScore = totalOverCostDepth === 0
-    ? Number.MAX_SAFE_INTEGER
-    : 1 / totalOverCostDepth
-  ```
-- **優先**: 敗北時のコストオーバーの深さ（マイナス幅）が小さいパターン
-
 ---
 
 ## 5. パターン生成と重複排除
@@ -248,7 +236,6 @@ export interface EvaluatedPattern {
   pattern: UnitId[];              // 想定撃墜順（4回分）
   totalHealth: number;
   overCostCount: number;
-  balancedScore: number;
   canActivateEXOverLimit: boolean;
   isEXActivationFailure: boolean;
   transitions: BattleState[];     // 実際の撃墜履歴
@@ -258,8 +245,7 @@ export interface EvaluatedPattern {
 export type EvaluationAxisType =
   | 'totalHealth'
   | 'exGuaranteed'
-  | 'theory'
-  | 'balanced';
+  | 'theory';
 ```
 
 ### 6.2 コストオーバー耐久テーブル（src/data/overCostHealthTable.ts）
