@@ -90,16 +90,22 @@ export function calculateCostTransitions(
 
 /**
  * 総耐久値を計算（リスポーン耐久変動を考慮）
+ * @param formation 編成
  * @param transitions コスト推移
- * @returns 総耐久値（リスポーン耐久を含む真の総耐久）
+ * @returns 総耐久値（初期耐久 + リスポーン耐久の合計）
  */
-export function calculateTotalHealth(transitions: BattleState[]): number {
-  if (transitions.length === 0) {
+export function calculateTotalHealth(
+  formation: Formation,
+  transitions: BattleState[]
+): number {
+  if (!formation.unitA || !formation.unitB || transitions.length === 0) {
     return 0;
   }
 
-  let total = 0;
+  // 初期耐久（1回目の出撃）を加算
+  let total = formation.unitA.health + formation.unitB.health;
 
+  // リスポーン耐久を加算
   for (const transition of transitions) {
     // 敗北した場合、それ以降の耐久は加算しない
     if (transition.isDefeat) {

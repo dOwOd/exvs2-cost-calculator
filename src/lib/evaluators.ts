@@ -165,7 +165,7 @@ export function evaluateAllPatterns(
 
   const evaluated: EvaluatedPattern[] = patterns.map((pattern) => {
     const transitions = calculateCostTransitions(pattern, formation);
-    const totalHealth = calculateTotalHealth(transitions);
+    const totalHealth = calculateTotalHealth(formation, transitions);
     const overCostCount = countOverCosts(transitions);
     const balancedScore = calculateBalancedScore(transitions);
     const isEXFailure = isEXActivationFailure(pattern, formation);
