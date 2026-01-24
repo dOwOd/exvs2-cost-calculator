@@ -79,15 +79,28 @@ describe('calculateCostTransitions', () => {
       });
     });
 
-    test('A→A→B: 3回撃墜で敗北', () => {
-      const transitions = calculateCostTransitions(['A', 'A', 'B'], formation);
+    test('A→B→A: 3回撃墜で敗北', () => {
+      const transitions = calculateCostTransitions(['A', 'B', 'A'], formation);
 
       expect(transitions).toHaveLength(3);
 
-      // 3回目: B(2500)撃墜 → 残-2500（敗北）
+      // 1回目: A(3000)撃墜 → 残3000
+      expect(transitions[0]).toMatchObject({
+        remainingCost: 3000,
+        isDefeat: false,
+      });
+
+      // 2回目: B(2500)撃墜 → 残500（コストオーバー）
+      expect(transitions[1]).toMatchObject({
+        remainingCost: 500,
+        isOverCost: true,
+        isDefeat: false,
+      });
+
+      // 3回目: A(3000)撃墜 → 残-2500（敗北）
       expect(transitions[2]).toMatchObject({
         killCount: 3,
-        killedUnit: 'B',
+        killedUnit: 'A',
         remainingCost: -2500,
         isOverCost: false,
         isDefeat: true,
