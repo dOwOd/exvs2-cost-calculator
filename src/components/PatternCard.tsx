@@ -127,9 +127,9 @@ export default function PatternCard({
                     <div class="bg-slate-700 rounded-full h-3 overflow-hidden">
                       <div
                         class={`h-full transition-all ${
-                          trans.isDefeat
+                          trans.remainingCost <= minCost && trans.remainingCost > 0
                             ? 'bg-red-500'
-                            : trans.remainingCost <= minCost && trans.remainingCost > 0
+                            : trans.remainingCost <= 3000 && trans.remainingCost > 0
                             ? 'bg-orange-500'
                             : trans.isOverCost
                             ? 'bg-yellow-500'
