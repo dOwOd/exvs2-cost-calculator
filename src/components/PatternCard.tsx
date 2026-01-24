@@ -8,9 +8,14 @@ import { InfoIcon } from './Tooltip';
 interface PatternCardProps {
   pattern: EvaluatedPattern;
   rank: number;
+  minimumDefeatHealth: number;
 }
 
-export default function PatternCard({ pattern, rank }: PatternCardProps) {
+export default function PatternCard({
+  pattern,
+  rank,
+  minimumDefeatHealth,
+}: PatternCardProps) {
   // 実際に発生した撃墜のみを表示（敗北までの部分）
   const actualPattern = pattern.pattern.slice(0, pattern.transitions.length);
   const patternString = actualPattern.join(' → ');
@@ -50,6 +55,9 @@ export default function PatternCard({ pattern, rank }: PatternCardProps) {
           </div>
           <div class="text-lg font-semibold text-slate-100">
             {pattern.totalHealth}
+          </div>
+          <div class="text-xs text-slate-400 mt-1">
+            (最短: {minimumDefeatHealth})
           </div>
         </div>
         <div class="bg-slate-700 p-2 rounded">

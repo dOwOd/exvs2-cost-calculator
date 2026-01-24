@@ -15,9 +15,14 @@ import { getTopPatterns } from '../lib/evaluators';
 interface ResultPanelProps {
   patterns: EvaluatedPattern[];
   formation: Formation;
+  minimumDefeatHealth: number;
 }
 
-export default function ResultPanel({ patterns, formation }: ResultPanelProps) {
+export default function ResultPanel({
+  patterns,
+  formation,
+  minimumDefeatHealth,
+}: ResultPanelProps) {
   const [activeAxis, setActiveAxis] =
     useState<EvaluationAxisType>('totalHealth');
 
@@ -27,7 +32,10 @@ export default function ResultPanel({ patterns, formation }: ResultPanelProps) {
     <div class="bg-slate-900 rounded-lg overflow-hidden">
       <TabNavigation activeAxis={activeAxis} onAxisChange={setActiveAxis} />
       <div class="p-6">
-        <PatternList patterns={topPatterns} />
+        <PatternList
+          patterns={topPatterns}
+          minimumDefeatHealth={minimumDefeatHealth}
+        />
       </div>
     </div>
   );

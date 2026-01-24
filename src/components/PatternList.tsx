@@ -7,9 +7,13 @@ import PatternCard from './PatternCard';
 
 interface PatternListProps {
   patterns: EvaluatedPattern[];
+  minimumDefeatHealth: number;
 }
 
-export default function PatternList({ patterns }: PatternListProps) {
+export default function PatternList({
+  patterns,
+  minimumDefeatHealth,
+}: PatternListProps) {
   if (patterns.length === 0) {
     return (
       <div class="text-center py-12 text-slate-400">
@@ -21,7 +25,12 @@ export default function PatternList({ patterns }: PatternListProps) {
   return (
     <div class="space-y-4">
       {patterns.map((pattern, index) => (
-        <PatternCard key={index} pattern={pattern} rank={index + 1} />
+        <PatternCard
+          key={index}
+          pattern={pattern}
+          rank={index + 1}
+          minimumDefeatHealth={minimumDefeatHealth}
+        />
       ))}
     </div>
   );

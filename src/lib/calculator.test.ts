@@ -3,7 +3,11 @@
  */
 
 import type { Formation } from './types';
-import { calculateCostTransitions, calculateTotalHealth } from './calculator';
+import {
+  calculateCostTransitions,
+  calculateTotalHealth,
+  calculateMinimumDefeatHealth,
+} from './calculator';
 
 describe('calculateCostTransitions', () => {
   describe('3000+3000の場合', () => {
@@ -221,5 +225,79 @@ describe('calculateTotalHealth', () => {
     // 4回目: 敗北（加算しない）
     // 合計: 1040 + 520 + 520 + 520 = 2600
     expect(totalHealth).toBe(2600);
+  });
+});
+
+describe('calculateMinimumDefeatHealth', () => {
+  test('3000(750) + 2500(680): Aだけ狙われる方が早い（1500）', () => {
+    const formation: Formation = {
+      unitA: { cost: 3000, health: 750 },
+      unitB: { cost: 2500, health: 680 },
+    };
+
+    // Aだけ: ceil(6000/3000) × 750 = 2 × 750 = 1500
+    // Bだけ: ceil(6000/2500) × 680 = 3 × 680 = 2040
+    // 最短: 1500
+    expect(calculateMinimumDefeatHealth(formation)).toBe(1500);
+  });
+
+  test('3000(800) + 3000(800): どちらも同じ（1600）', () => {
+    const formation: Formation = {
+      unitA: { cost: 3000, health: 800 },
+      unitB: { cost: 3000, health: 800 },
+    };
+
+    // Aだけ: ceil(6000/3000) × 800 = 2 × 800 = 1600
+    // Bだけ: ceil(6000/3000) × 800 = 2 × 800 = 1600
+    // 最短: 1600
+    expect(calculateMinimumDefeatHealth(formation)).toBe(1600);
+  });
+
+  test('2500(700) + 2500(700): どちらも同じ（2100）', () => {
+    const formation: Formation = {
+      unitA: { cost: 2500, health: 700 },
+      unitB: { cost: 2500, health: 700 },
+    };
+
+    // Aだけ: ceil(6000/2500) × 700 = 3 × 700 = 2100
+    // Bだけ: ceil(6000/2500) × 700 = 3 × 700 = 2100
+    // 最短: 2100
+    expect(calculateMinimumDefeatHealth(formation)).toBe(2100);
+  });
+
+  test('1500(520) + 1500(520): どちらも同じ（2080）', () => {
+    const formation: Formation = {
+      unitA: { cost: 1500, health: 520 },
+      unitB: { cost: 1500, health: 520 },
+    };
+
+    // Aだけ: ceil(6000/1500) × 520 = 4 × 520 = 2080
+    // Bだけ: ceil(6000/1500) × 520 = 4 × 520 = 2080
+    // 最短: 2080
+    expect(calculateMinimumDefeatHealth(formation)).toBe(2080);
+  });
+
+  test('3000(800) + 2000(680): Bだけ狙われる方が早い（2040）', () => {
+    const formation: Formation = {
+      unitA: { cost: 3000, health: 800 },
+      unitB: { cost: 2000, health: 680 },
+    };
+
+    // Aだけ: ceil(6000/3000) × 800 = 2 × 800 = 1600
+    // Bだけ: ceil(6000/2000) × 680 = 3 × 680 = 2040
+    // 最短: 1600
+    expect(calculateMinimumDefeatHealth(formation)).toBe(1600);
+  });
+
+  test('2500(700) + 1500(520): Bだけ狙われる方が早い（2080）', () => {
+    const formation: Formation = {
+      unitA: { cost: 2500, health: 700 },
+      unitB: { cost: 1500, health: 520 },
+    };
+
+    // Aだけ: ceil(6000/2500) × 700 = 3 × 700 = 2100
+    // Bだけ: ceil(6000/1500) × 520 = 4 × 520 = 2080
+    // 最短: 2080
+    expect(calculateMinimumDefeatHealth(formation)).toBe(2080);
   });
 });

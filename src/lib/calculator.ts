@@ -125,3 +125,26 @@ export function calculateTotalHealth(
 export function countOverCosts(transitions: BattleState[]): number {
   return transitions.filter((t) => t.isOverCost).length;
 }
+
+/**
+ * 最短での敗北時の耐久値を計算
+ * 片方の機体だけが狙われ続けた場合の最小ダメージ
+ * @param formation 編成
+ * @returns 最短での敗北耐久値
+ */
+export function calculateMinimumDefeatHealth(formation: Formation): number {
+  if (!formation.unitA || !formation.unitB) {
+    return 0;
+  }
+
+  // Aだけが狙われ続けた場合
+  const killsA = Math.ceil(INITIAL_COST / formation.unitA.cost);
+  const damageA = killsA * formation.unitA.health;
+
+  // Bだけが狙われ続けた場合
+  const killsB = Math.ceil(INITIAL_COST / formation.unitB.cost);
+  const damageB = killsB * formation.unitB.health;
+
+  // 最短（最小ダメージで敗北）
+  return Math.min(damageA, damageB);
+}

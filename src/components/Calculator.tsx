@@ -7,6 +7,7 @@ import type { Formation, UnitConfig, EvaluatedPattern } from '../lib/types';
 import FormationPanel from './FormationPanel';
 import ResultPanel from './ResultPanel';
 import { evaluateAllPatterns } from '../lib/evaluators';
+import { calculateMinimumDefeatHealth } from '../lib/calculator';
 
 export default function Calculator() {
   const [formation, setFormation] = useState<Formation>({
@@ -18,13 +19,18 @@ export default function Calculator() {
     EvaluatedPattern[]
   >([]);
 
+  const [minimumDefeatHealth, setMinimumDefeatHealth] = useState<number>(0);
+
   // 編成変更時に自動計算
   useEffect(() => {
     if (formation.unitA && formation.unitB) {
       const patterns = evaluateAllPatterns(formation);
       setEvaluatedPatterns(patterns);
+      const minHealth = calculateMinimumDefeatHealth(formation);
+      setMinimumDefeatHealth(minHealth);
     } else {
       setEvaluatedPatterns([]);
+      setMinimumDefeatHealth(0);
     }
   }, [formation]);
 
@@ -61,7 +67,11 @@ export default function Calculator() {
 
           {/* 右カラム: 結果表示 */}
           <main>
-            <ResultPanel patterns={evaluatedPatterns} formation={formation} />
+            <ResultPanel
+              patterns={evaluatedPatterns}
+              formation={formation}
+              minimumDefeatHealth={minimumDefeatHealth}
+            />
           </main>
         </div>
       </div>
