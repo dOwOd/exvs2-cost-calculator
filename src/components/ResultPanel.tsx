@@ -4,20 +4,20 @@
 
 import { useState } from 'preact/hooks';
 import type { EvaluatedPattern, Formation } from '../lib/types';
-import PatternList from './PatternList';
+import { PatternList } from './PatternList';
 import { getTopPatterns } from '../lib/evaluators';
 
-interface ResultPanelProps {
+type ResultPanelType = {
   patterns: EvaluatedPattern[];
   formation: Formation;
   minimumDefeatHealth: number;
 }
 
-export default function ResultPanel({
+export const ResultPanel = ({
   patterns,
   formation,
   minimumDefeatHealth,
-}: ResultPanelProps) {
+}: ResultPanelType) => {
   const [showOnlyEXAvailable, setShowOnlyEXAvailable] = useState(false);
 
   // 総耐久最大でソート

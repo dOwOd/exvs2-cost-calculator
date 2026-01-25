@@ -4,22 +4,22 @@
 
 import { useState } from 'preact/hooks';
 import type { CostType, UnitConfig } from '../lib/types';
-import CostSelector from './CostSelector';
-import HealthSelector from './HealthSelector';
+import { CostSelector } from './CostSelector';
+import { HealthSelector } from './HealthSelector';
 
-interface FormationPanelProps {
+type FormationPanelType = {
   unitA: UnitConfig | null;
   unitB: UnitConfig | null;
   onUnitAChange: (unit: UnitConfig) => void;
   onUnitBChange: (unit: UnitConfig) => void;
 }
 
-export default function FormationPanel({
+export const FormationPanel = ({
   unitA,
   unitB,
   onUnitAChange,
   onUnitBChange,
-}: FormationPanelProps) {
+}: FormationPanelType) => {
   const [costA, setCostA] = useState<CostType | null>(unitA?.cost ?? null);
   const [costB, setCostB] = useState<CostType | null>(unitB?.cost ?? null);
 

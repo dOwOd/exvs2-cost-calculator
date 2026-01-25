@@ -240,19 +240,19 @@ export type CostType = 1500 | 2000 | 2500 | 3000;
 export type UnitId = 'A' | 'B';
 
 /** 機体設定（コスト + 耐久の組み合わせ） */
-export interface UnitConfig {
+export type UnitConfig = {
   cost: CostType;
   health: number;
 }
 
 /** 編成（2機） */
-export interface Formation {
+export type Formation = {
   unitA: UnitConfig;
   unitB: UnitConfig;
 }
 
 /** 戦闘状態（各撃墜ステップ） */
-export interface BattleState {
+export type BattleState = {
   killCount: number;
   killedUnit: UnitId;
   remainingCost: number;      // チーム共有
@@ -262,7 +262,7 @@ export interface BattleState {
 }
 
 /** 評価済みパターン */
-export interface EvaluatedPattern {
+export type EvaluatedPattern = {
   pattern: UnitId[];              // 想定撃墜順（4回分）
   totalHealth: number;
   overCostCount: number;

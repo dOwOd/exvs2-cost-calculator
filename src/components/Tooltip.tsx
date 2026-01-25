@@ -5,7 +5,7 @@
 
 import { useState } from 'preact/hooks';
 
-interface TooltipProps {
+type TooltipType = {
   /** ツールチップの内容 */
   content: string;
   /** 子要素 */
@@ -14,7 +14,7 @@ interface TooltipProps {
   align?: 'center' | 'left' | 'right';
 }
 
-export default function Tooltip({ content, children, align = 'center' }: TooltipProps) {
+export const Tooltip = ({ content, children, align = 'center' }: TooltipType) => {
   const [isVisible, setIsVisible] = useState(false);
 
   // 位置に応じたスタイル
@@ -49,7 +49,7 @@ export default function Tooltip({ content, children, align = 'center' }: Tooltip
   );
 }
 
-interface InfoIconProps {
+type InfoIconType = {
   /** ツールチップの内容 */
   tooltip: string;
   /** 表示位置 */
@@ -59,7 +59,7 @@ interface InfoIconProps {
 /**
  * 情報アイコン（ⓘ）+ ツールチップ
  */
-export function InfoIcon({ tooltip, align = 'center' }: InfoIconProps) {
+export const InfoIcon = ({ tooltip, align = 'center' }: InfoIconType) => {
   return (
     <Tooltip content={tooltip} align={align}>
       <span class="inline-flex items-center justify-center w-4 h-4 ml-1 text-xs text-slate-400 hover:text-blue-400 transition-colors">

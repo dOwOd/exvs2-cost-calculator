@@ -4,12 +4,12 @@
 
 import { useState, useEffect } from 'preact/hooks';
 import type { Formation, UnitConfig, EvaluatedPattern } from '../lib/types';
-import FormationPanel from './FormationPanel';
-import ResultPanel from './ResultPanel';
+import { FormationPanel } from './FormationPanel';
+import { ResultPanel } from './ResultPanel';
 import { evaluateAllPatterns } from '../lib/evaluators';
 import { calculateMinimumDefeatHealth } from '../lib/calculator';
 
-export default function Calculator() {
+export const Calculator = () => {
   const [formation, setFormation] = useState<Formation>({
     unitA: null,
     unitB: null,
@@ -77,4 +77,4 @@ export default function Calculator() {
       </div>
     </div>
   );
-}
+};

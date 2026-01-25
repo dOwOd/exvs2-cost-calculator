@@ -5,19 +5,19 @@
 import type { EvaluatedPattern, Formation } from '../lib/types';
 import { InfoIcon } from './Tooltip';
 
-interface PatternCardProps {
+type PatternCardType = {
   pattern: EvaluatedPattern;
   rank: number;
   minimumDefeatHealth: number;
   formation: Formation;
 }
 
-export default function PatternCard({
+export const PatternCard = ({
   pattern,
   rank,
   minimumDefeatHealth,
   formation,
-}: PatternCardProps) {
+}: PatternCardType) => {
   // 実際に発生した撃墜のみを表示（敗北までの部分）
   const actualPattern = pattern.pattern.slice(0, pattern.transitions.length);
 
@@ -105,7 +105,7 @@ export default function PatternCard({
               <th class="text-right py-2 px-2 text-slate-400">
                 <span class="flex items-center justify-end">
                   リスポーン耐久
-                  <InfoIcon tooltip="撃墜後のリスポーン時の耐久値。残コストが少ないほど低下。" align="right" />
+                  <InfoIcon tooltip="撃墜後のリスポーン時の耐久値。" align="right" />
                 </span>
               </th>
               <th class="text-center py-2 px-2 text-slate-400">

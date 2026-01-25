@@ -5,17 +5,17 @@
 import type { CostType } from '../lib/types';
 import { getHealthOptions } from '../data/healthData';
 
-interface HealthSelectorProps {
+type HealthSelectorType = {
   cost: CostType;
   selectedHealth: number | null;
   onSelect: (health: number) => void;
 }
 
-export default function HealthSelector({
+export const HealthSelector = ({
   cost,
   selectedHealth,
   onSelect,
-}: HealthSelectorProps) {
+}: HealthSelectorType) => {
   const healthOptions = getHealthOptions(cost);
 
   return (
