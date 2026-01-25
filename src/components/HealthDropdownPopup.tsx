@@ -27,7 +27,7 @@ export const HealthDropdownPopup = ({
 
   return (
     <div
-      class="fixed bg-slate-800 border border-slate-600 rounded shadow-lg p-3 z-50 min-w-[200px]"
+      class="fixed bg-slate-800 border border-slate-600 rounded shadow-lg p-3 z-50 min-w-[200px] max-w-[300px] max-h-[200px] overflow-auto"
       style={{
         top: `${position.top}px`,
         left: `${position.left}px`,

@@ -23,6 +23,7 @@ export const HealthSelector = ({
   const [hoveredHealth, setHoveredHealth] = useState<HealthType | null>(null);
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
+  const [dropdownDirection, setDropdownDirection] = useState<'down' | 'up'>('down');
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -43,8 +44,23 @@ export const HealthSelector = ({
   }, [isOpen]);
 
   const handleToggle = () => {
-    setIsOpen(!isOpen);
-    if (!isOpen) {
+    const newIsOpen = !isOpen;
+    setIsOpen(newIsOpen);
+
+    if (newIsOpen && buttonRef.current) {
+      // ドロップダウンの表示方向を決定
+      const rect = buttonRef.current.getBoundingClientRect();
+      const dropdownHeight = 240; // max-h-60 の推定高さ
+      const spaceBelow = window.innerHeight - rect.bottom;
+      const spaceAbove = rect.top;
+
+      if (spaceBelow < dropdownHeight && spaceAbove > spaceBelow) {
+        setDropdownDirection('up');
+      } else {
+        setDropdownDirection('down');
+      }
+      setFocusedIndex(-1);
+    } else if (!newIsOpen) {
       setFocusedIndex(-1);
     }
   };
@@ -59,13 +75,27 @@ export const HealthSelector = ({
   const handleMouseEnter = (health: HealthType, event: MouseEvent) => {
     setHoveredHealth(health);
 
-    // ポップアップ位置を計算
+    // ポップアップ位置を計算（ビューポート境界を考慮）
     const target = event.currentTarget as HTMLElement;
     const rect = target.getBoundingClientRect();
-    setPopupPosition({
-      top: rect.top,
-      left: rect.right + 8, // ドロップダウンの右側に8pxの余白
-    });
+    const popupWidth = 200; // min-w-[200px]
+    const popupHeight = 150; // 推定高さ
+    const padding = 8;
+
+    let top = rect.top;
+    let left = rect.right + padding;
+
+    // 右側にスペースがない場合は左側に表示
+    if (left + popupWidth > window.innerWidth) {
+      left = rect.left - popupWidth - padding;
+    }
+
+    // 下側にスペースがない場合は上側に調整
+    if (top + popupHeight > window.innerHeight) {
+      top = Math.max(padding, window.innerHeight - popupHeight - padding);
+    }
+
+    setPopupPosition({ top, left });
   };
 
   const handleMouseLeave = () => {
@@ -133,7 +163,9 @@ export const HealthSelector = ({
       {isOpen && (
         <ul
           role="listbox"
-          class="absolute z-40 w-full mt-1 bg-slate-700 border border-slate-600 rounded shadow-lg max-h-60 overflow-auto"
+          class={`absolute z-40 w-full bg-slate-700 border border-slate-600 rounded shadow-lg max-h-60 overflow-auto ${
+            dropdownDirection === 'up' ? 'bottom-full mb-1' : 'top-full mt-1'
+          }`}
         >
           {healthOptions.map((health, index) => (
             <li
