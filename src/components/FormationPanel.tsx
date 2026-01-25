@@ -6,6 +6,8 @@ import { useState } from 'preact/hooks';
 import type { CostType, UnitConfig, HealthType } from '../lib/types';
 import { CostSelector } from './CostSelector';
 import { HealthSelector } from './HealthSelector';
+import { MobileSuitSearch } from './MobileSuitSearch';
+import type { MobileSuitInfo } from '../data/mobileSuitsData';
 
 type FormationPanelType = {
   unitA: UnitConfig | null;
@@ -43,12 +45,26 @@ export const FormationPanel = ({
     }
   };
 
+  const handleSuitASelect = (suit: MobileSuitInfo) => {
+    setCostA(suit.cost);
+    onUnitAChange({ cost: suit.cost, health: suit.health });
+  };
+
+  const handleSuitBSelect = (suit: MobileSuitInfo) => {
+    setCostB(suit.cost);
+    onUnitBChange({ cost: suit.cost, health: suit.health });
+  };
+
   return (
     <div class="space-y-6">
       {/* 機体A */}
       <div class="bg-slate-800 p-4 rounded-lg">
         <h3 class="text-lg font-bold text-blue-400 mb-3">機体A</h3>
         <div class="space-y-3">
+          <div>
+            <label class="block text-sm text-slate-400 mb-2">機体名で検索</label>
+            <MobileSuitSearch onSelect={handleSuitASelect} placeholder="機体名で検索..." />
+          </div>
           <div>
             <label class="block text-sm text-slate-400 mb-2">コスト</label>
             <CostSelector selectedCost={costA} onSelect={handleCostASelect} />
@@ -75,6 +91,10 @@ export const FormationPanel = ({
       <div class="bg-slate-800 p-4 rounded-lg">
         <h3 class="text-lg font-bold text-green-400 mb-3">機体B</h3>
         <div class="space-y-3">
+          <div>
+            <label class="block text-sm text-slate-400 mb-2">機体名で検索</label>
+            <MobileSuitSearch onSelect={handleSuitBSelect} placeholder="機体名で検索..." />
+          </div>
           <div>
             <label class="block text-sm text-slate-400 mb-2">コスト</label>
             <CostSelector selectedCost={costB} onSelect={handleCostBSelect} />
