@@ -47,14 +47,6 @@ const mobileSuitsDataConst = {
 } as const;
 
 /**
- * 機体名マッピング
- *
- * 使い方:
- * mobileSuitsData[3000][800] // => ['νガンダム', 'Hi-νガンダム']
- */
-export const mobileSuitsData: Record<CostType, Partial<Record<HealthType, readonly string[]>>> = mobileSuitsDataConst;
-
-/**
  * 機体名リテラル型を抽出
  */
 type MobileSuitsDataType = typeof mobileSuitsDataConst;
@@ -73,6 +65,14 @@ export type MobileSuitName = {
 }[CostKeys];
 
 /**
+ * 機体名マッピング
+ *
+ * 使い方:
+ * mobileSuitsData[3000][800] // => ['νガンダム', 'Hi-νガンダム']
+ */
+export const mobileSuitsData: Record<CostType, Partial<Record<HealthType, readonly MobileSuitName[]>>> = mobileSuitsDataConst;
+
+/**
  * 機体名を取得
  * @param cost - コスト
  * @param health - 耐久値
@@ -81,7 +81,7 @@ export type MobileSuitName = {
 export function getMobileSuitNames(
   cost: CostType,
   health: HealthType
-): { names: readonly string[]; remaining: number } {
+): { names: readonly MobileSuitName[]; remaining: number } {
   const suits = mobileSuitsData[cost]?.[health] || [];
 
   // 最初の2つまで取得
@@ -116,7 +116,7 @@ export function formatMobileSuitNames(cost: CostType, health: HealthType): strin
  * @param health - 耐久値
  * @returns すべての機体名の配列
  */
-export const getAllMobileSuitNames = (cost: CostType, health: HealthType): readonly string[] => {
+export const getAllMobileSuitNames = (cost: CostType, health: HealthType): readonly MobileSuitName[] => {
   return mobileSuitsData[cost]?.[health] || [];
 };
 
