@@ -33,7 +33,7 @@ export const HealthDropdownPopup = ({
         left: `${position.left}px`,
       }}
     >
-      <div class="text-sm text-slate-400 mb-1">機体名</div>
+      <div class="text-sm text-slate-400 mb-1">該当機体</div>
       <ul class="text-slate-200 space-y-1">
         {mobileSuits.map((suit) => (
           <li key={suit} class="text-sm">
