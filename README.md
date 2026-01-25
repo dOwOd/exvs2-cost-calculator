@@ -182,7 +182,7 @@ MIT
 ## 🔗 関連リンク
 
 - [リポジトリ](https://github.com/dOwOd/exvs2-cost-calculator)
-- [EXVS2 公式サイト](https://gs.bandainamco-ol.co.jp/exvs2/)
+- [機動戦士ガンダム エクストリームバーサス２ インフィニットブースト 公式サイト【アーケード】](https://gundam-vs.jp/extreme/ac2ib/)
 - [Astro ドキュメント](https://docs.astro.build)
 - [Preact ドキュメント](https://preactjs.com)
 - [Tailwind CSS ドキュメント](https://tailwindcss.com)
