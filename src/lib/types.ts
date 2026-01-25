@@ -17,6 +17,14 @@ export const HEALTH_VALUES = [
   650, 660, 680, 700, 720, 740, 750, 760, 800
 ] as const;
 
+/** CostType の全値を配列として保持（ランタイム検証用） */
+export const COST_VALUES = [1500, 2000, 2500, 3000] as const;
+
+/** CostType の型ガード関数 */
+export const isCostType = (value: number): value is CostType => {
+  return COST_VALUES.some(v => v === value);
+};
+
 /** 型ガード関数（asを使わず some で比較） */
 export const isHealthType = (value: number): value is HealthType => {
   return HEALTH_VALUES.some(v => v === value);

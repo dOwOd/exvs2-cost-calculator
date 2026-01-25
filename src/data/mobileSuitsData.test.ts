@@ -8,6 +8,7 @@ import {
   getAllMobileSuitNames,
   getAvailableHealthOptions,
   hasMobileSuitsForHealth,
+  type MobileSuitInfo,
 } from './mobileSuitsData';
 
 describe('getMobileSuitNames', () => {
@@ -155,14 +156,14 @@ describe('searchMobileSuits', () => {
     const { searchMobileSuits } = require('./mobileSuitsData');
     const results = searchMobileSuits('ゴッド');
     expect(results.length).toBeGreaterThan(0);
-    expect(results.some(r => r.name === 'ゴッドガンダム')).toBe(true);
+    expect(results.some((r: MobileSuitInfo) => r.name === 'ゴッドガンダム')).toBe(true);
   });
 
   test('ひらがなで検索できる', () => {
     const { searchMobileSuits } = require('./mobileSuitsData');
     const results = searchMobileSuits('ごっど');
     expect(results.length).toBeGreaterThan(0);
-    expect(results.some(r => r.name === 'ゴッドガンダム')).toBe(true);
+    expect(results.some((r: MobileSuitInfo) => r.name === 'ゴッドガンダム')).toBe(true);
   });
 
   test('部分一致で検索できる', () => {

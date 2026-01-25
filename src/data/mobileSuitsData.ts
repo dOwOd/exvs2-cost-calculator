@@ -3,7 +3,7 @@
  * コスト×耐久値ごとの代表的な機体名
  */
 
-import { isHealthType, type CostType, type HealthType } from '../lib/types';
+import { isCostType, isHealthType, type CostType, type HealthType } from '../lib/types';
 
 /**
  * 機体名マッピング（as const で定義してリテラル型を抽出可能にする）
@@ -164,11 +164,17 @@ export type MobileSuitInfo = {
 export const mobileSuitsList: MobileSuitInfo[] = (() => {
   const list: MobileSuitInfo[] = [];
 
-  Object.keys(mobileSuitsDataConst).forEach((costStr) => {
-    const cost = Number(costStr) as CostType;
-    const healthRecord = mobileSuitsDataConst[cost];
+  Object.keys(mobileSuitsData).forEach((costStr) => {
+    const cost = Number(costStr);
+    if (!isCostType(cost)) return;
+
+    const healthRecord = mobileSuitsData[cost];
+    if (!healthRecord) return;
+
     Object.keys(healthRecord).forEach((healthStr) => {
-      const health = Number(healthStr) as HealthType;
+      const health = Number(healthStr);
+      if (!isHealthType(health)) return;
+
       const suits = healthRecord[health];
       if (suits) {
         suits.forEach((name) => {
