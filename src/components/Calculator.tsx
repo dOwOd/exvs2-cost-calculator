@@ -34,11 +34,11 @@ export const Calculator = () => {
     }
   }, [formation]);
 
-  const handleUnitAChange = (unit: UnitConfig) => {
+  const handleUnitAChange = (unit: UnitConfig | null) => {
     setFormation((prev) => ({ ...prev, unitA: unit }));
   };
 
-  const handleUnitBChange = (unit: UnitConfig) => {
+  const handleUnitBChange = (unit: UnitConfig | null) => {
     setFormation((prev) => ({ ...prev, unitB: unit }));
   };
 

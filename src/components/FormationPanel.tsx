@@ -12,8 +12,8 @@ import type { MobileSuitInfo } from '../data/mobileSuitsData';
 type FormationPanelType = {
   unitA: UnitConfig | null;
   unitB: UnitConfig | null;
-  onUnitAChange: (unit: UnitConfig) => void;
-  onUnitBChange: (unit: UnitConfig) => void;
+  onUnitAChange: (unit: UnitConfig | null) => void;
+  onUnitBChange: (unit: UnitConfig | null) => void;
 }
 
 export const FormationPanel = ({
@@ -26,10 +26,18 @@ export const FormationPanel = ({
   const [costB, setCostB] = useState<CostType | null>(unitB?.cost ?? null);
 
   const handleCostASelect = (cost: CostType) => {
+    // コストが変更された場合、耐久値選択をリセット
+    if (unitA && unitA.cost !== cost) {
+      onUnitAChange(null);
+    }
     setCostA(cost);
   };
 
   const handleCostBSelect = (cost: CostType) => {
+    // コストが変更された場合、耐久値選択をリセット
+    if (unitB && unitB.cost !== cost) {
+      onUnitBChange(null);
+    }
     setCostB(cost);
   };
 
