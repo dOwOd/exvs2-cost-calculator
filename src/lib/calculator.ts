@@ -12,7 +12,7 @@ const INITIAL_COST = 6000;
  * 撃墜順パターンを生成（4回撃墜まで）
  * 例: ['A', 'A', 'B', 'B'], ['A', 'B', 'A', 'B'], ...
  */
-export function generatePatterns(): UnitId[][] {
+export const generatePatterns = (): UnitId[][] => {
   const patterns: UnitId[][] = [];
   const units: UnitId[] = ['A', 'B'];
 
@@ -36,10 +36,10 @@ export function generatePatterns(): UnitId[][] {
  * @param formation 編成
  * @returns コスト推移の配列
  */
-export function calculateCostTransitions(
+export const calculateCostTransitions = (
   pattern: UnitId[],
   formation: Formation
-): BattleState[] {
+): BattleState[] => {
   if (!formation.unitA || !formation.unitB) {
     return [];
   }
@@ -94,10 +94,10 @@ export function calculateCostTransitions(
  * @param transitions コスト推移
  * @returns 総耐久値（初期耐久 + リスポーン耐久の合計）
  */
-export function calculateTotalHealth(
+export const calculateTotalHealth = (
   formation: Formation,
   transitions: BattleState[]
-): number {
+): number => {
   if (!formation.unitA || !formation.unitB || transitions.length === 0) {
     return 0;
   }
@@ -122,7 +122,7 @@ export function calculateTotalHealth(
 /**
  * コストオーバー回数をカウント
  */
-export function countOverCosts(transitions: BattleState[]): number {
+export const countOverCosts = (transitions: BattleState[]): number => {
   return transitions.filter((t) => t.isOverCost).length;
 }
 
@@ -132,7 +132,7 @@ export function countOverCosts(transitions: BattleState[]): number {
  * @param formation 編成
  * @returns 最短での敗北耐久値
  */
-export function calculateMinimumDefeatHealth(formation: Formation): number {
+export const calculateMinimumDefeatHealth = (formation: Formation): number => {
   if (!formation.unitA || !formation.unitB) {
     return 0;
   }

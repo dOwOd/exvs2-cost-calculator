@@ -19,10 +19,10 @@ import {
  * 条件: 自機と僚機のいずれもが撃墜されたら敗北する状況
  * つまり、残コスト <= min(コストA, コストB) の状態になったか
  */
-export function checkEXActivation(
+export const checkEXActivation = (
   formation: Formation,
   transitions: BattleState[]
-): boolean {
+): boolean => {
   if (!formation.unitA || !formation.unitB) {
     return false;
   }
@@ -49,9 +49,9 @@ export function checkEXActivation(
 /**
  * 全パターンを評価
  */
-export function evaluateAllPatterns(
+export const evaluateAllPatterns = (
   formation: Formation
-): EvaluatedPattern[] {
+): EvaluatedPattern[] => {
   if (!formation.unitA || !formation.unitB) {
     return [];
   }
@@ -84,10 +84,10 @@ export function evaluateAllPatterns(
 /**
  * 総耐久降順でソートされたパターンを取得（重複排除）
  */
-export function getTopPatterns(
+export const getTopPatterns = (
   patterns: EvaluatedPattern[],
   limit = Infinity
-): EvaluatedPattern[] {
+): EvaluatedPattern[] => {
   // 総耐久の降順でソート
   const sorted = [...patterns].sort((a, b) => b.totalHealth - a.totalHealth);
 

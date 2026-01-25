@@ -78,10 +78,7 @@ export const mobileSuitsData: Record<CostType, Partial<Record<HealthType, readon
  * @param health - 耐久値
  * @returns 機体名の配列（最大2つまで）+ 残り機体数
  */
-export function getMobileSuitNames(
-  cost: CostType,
-  health: HealthType
-): { names: readonly MobileSuitName[]; remaining: number } {
+export const getMobileSuitNames = (cost: CostType, health: HealthType) => {
   const suits = mobileSuitsData[cost]?.[health] || [];
 
   // 最初の2つまで取得
@@ -97,7 +94,7 @@ export function getMobileSuitNames(
  * @param health - 耐久値
  * @returns 「νガンダム、Hi-νガンダム 他1機」のような文字列
  */
-export function formatMobileSuitNames(cost: CostType, health: HealthType): string {
+export const formatMobileSuitNames = (cost: CostType, health: HealthType) => {
   const { names, remaining } = getMobileSuitNames(cost, health);
 
   if (names.length === 0) {
@@ -126,11 +123,11 @@ export const getAllMobileSuitNames = (cost: CostType, health: HealthType): reado
  * @param cost - コスト
  * @returns 耐久値の配列（降順ソート）
  */
-export function getAvailableHealthOptions(cost: CostType): HealthType[] {
+export const getAvailableHealthOptions = (cost: CostType) => {
   const healthRecord = mobileSuitsDataConst[cost];
   if (!healthRecord) return [];
 
-  const healthValues = (Object.keys(healthRecord) as unknown as HealthType[])
+  const healthValues = (Object.keys(healthRecord))
     .map(Number)
     .sort((a, b) => b - a); // 降順ソート
 
@@ -143,6 +140,6 @@ export function getAvailableHealthOptions(cost: CostType): HealthType[] {
  * @param health - 耐久値
  * @returns 機体が存在する場合true
  */
-export function hasMobileSuitsForHealth(cost: CostType, health: HealthType): boolean {
+export const hasMobileSuitsForHealth = (cost: CostType, health: HealthType): boolean => {
   return mobileSuitsDataConst[cost]?.[health as keyof typeof mobileSuitsDataConst[typeof cost]] !== undefined;
 }

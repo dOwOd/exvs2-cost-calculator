@@ -57,7 +57,6 @@ export const overCostHealthTable: OverCostHealthTable = {
     480: { 500: 160, 1000: 320 },
     460: { 500: 160, 1000: 310 },
     440: { 500: 150, 1000: 300 },
-    420: { 500: 140, 1000: 280 },
   },
 };
 
@@ -68,11 +67,11 @@ export const overCostHealthTable: OverCostHealthTable = {
  * @param remainingCost 残コスト
  * @returns リスポーン時の耐久値（残コストが十分な場合は初期耐久、敗北条件の場合は0）
  */
-export function getRespawnHealth(
+export const getRespawnHealth = (
   cost: CostType,
   initialHealth: HealthType,
   remainingCost: number
-): number {
+): number => {
   // 残コストが0以下 → 敗北
   if (remainingCost <= 0) {
     return 0;
