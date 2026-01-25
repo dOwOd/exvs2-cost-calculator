@@ -3,7 +3,7 @@
  * コスト×耐久値ごとの代表的な機体名
  */
 
-import type { CostType, HealthType } from '../lib/types';
+import { isHealthType, type CostType, type HealthType } from '../lib/types';
 
 /**
  * 機体名マッピング（as const で定義してリテラル型を抽出可能にする）
@@ -123,15 +123,16 @@ export const getAllMobileSuitNames = (cost: CostType, health: HealthType): reado
  * @param cost - コスト
  * @returns 耐久値の配列（降順ソート）
  */
-export const getAvailableHealthOptions = (cost: CostType) => {
+export const getAvailableHealthOptions = (cost: CostType): HealthType[] => {
   const healthRecord = mobileSuitsDataConst[cost];
   if (!healthRecord) return [];
 
-  const healthValues = (Object.keys(healthRecord))
+  const healthValues = Object.keys(healthRecord)
     .map(Number)
+    .filter(isHealthType) // 型ガードでフィルタリング
     .sort((a, b) => b - a); // 降順ソート
 
-  return healthValues as HealthType[];
+  return healthValues;
 }
 
 /**
@@ -141,5 +142,9 @@ export const getAvailableHealthOptions = (cost: CostType) => {
  * @returns 機体が存在する場合true
  */
 export const hasMobileSuitsForHealth = (cost: CostType, health: HealthType): boolean => {
-  return mobileSuitsDataConst[cost]?.[health as keyof typeof mobileSuitsDataConst[typeof cost]] !== undefined;
+  const healthRecord = mobileSuitsDataConst[cost];
+  if (!healthRecord) return false;
+
+  // 文字列キーの存在確認（asアサーション不要）
+  return Object.keys(healthRecord).includes(String(health));
 }

@@ -11,6 +11,17 @@ export type { MobileSuitName } from '../data/mobileSuitsData';
 /** 耐久値タイプ（overCostHealthTable.tsで使用されているすべての値） */
 export type HealthType = 440 | 460 | 480 | 500 | 520 | 540 | 580 | 600 | 620 | 640 | 650 | 660 | 680 | 700 | 720 | 740 | 750 | 760 | 800;
 
+/** HealthType の全値を配列として保持（ランタイム検証用） */
+export const HEALTH_VALUES = [
+  440, 460, 480, 500, 520, 540, 580, 600, 620, 640,
+  650, 660, 680, 700, 720, 740, 750, 760, 800
+] as const;
+
+/** 型ガード関数（asを使わず some で比較） */
+export const isHealthType = (value: number): value is HealthType => {
+  return HEALTH_VALUES.some(v => v === value);
+};
+
 /** 機体ID */
 export type UnitId = 'A' | 'B';
 
