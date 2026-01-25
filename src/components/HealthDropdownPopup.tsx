@@ -20,6 +20,7 @@ export const HealthDropdownPopup = ({
 }: HealthDropdownPopupProps) => {
   const popupRef = useRef<HTMLDivElement>(null);
   const [adjustedPosition, setAdjustedPosition] = useState(position);
+  const [maxHeight, setMaxHeight] = useState<number>(400);
 
   useEffect(() => {
     if (!popupRef.current) return;
@@ -29,6 +30,10 @@ export const HealthDropdownPopup = ({
     const padding = 8;
 
     let { top, left } = position;
+
+    // 利用可能な高さを計算（画面下端までの高さ - padding）
+    const availableHeight = window.innerHeight - top - padding;
+    setMaxHeight(Math.max(150, availableHeight)); // 最低150px確保
 
     // 右側にはみ出す場合は左に調整
     if (left + rect.width > window.innerWidth) {
@@ -64,10 +69,11 @@ export const HealthDropdownPopup = ({
   return (
     <div
       ref={popupRef}
-      class="fixed bg-slate-800 border border-slate-600 rounded shadow-lg p-3 z-50 min-w-[200px] max-w-[300px] max-h-[200px] overflow-auto"
+      class="fixed bg-slate-800 border border-slate-600 rounded shadow-lg p-3 z-50 min-w-[200px] max-w-[300px] overflow-auto"
       style={{
         top: `${adjustedPosition.top}px`,
         left: `${adjustedPosition.left}px`,
+        maxHeight: `${maxHeight}px`,
       }}
     >
       <div class="text-sm text-slate-400 mb-1">該当機体</div>
