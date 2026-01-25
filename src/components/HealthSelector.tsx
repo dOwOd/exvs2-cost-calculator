@@ -4,7 +4,7 @@
 
 import { useState, useRef, useEffect } from 'preact/hooks';
 import type { CostType, HealthType } from '../lib/types';
-import { getHealthOptions } from '../data/healthData';
+import { getAvailableHealthOptions } from '../data/mobileSuitsData';
 import { HealthDropdownPopup } from './HealthDropdownPopup';
 
 type HealthSelectorType = {
@@ -18,7 +18,7 @@ export const HealthSelector = ({
   selectedHealth,
   onSelect,
 }: HealthSelectorType) => {
-  const healthOptions = getHealthOptions(cost);
+  const healthOptions = getAvailableHealthOptions(cost);
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredHealth, setHoveredHealth] = useState<HealthType | null>(null);
   const [focusedIndex, setFocusedIndex] = useState(-1);

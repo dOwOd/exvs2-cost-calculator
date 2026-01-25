@@ -118,4 +118,31 @@ export function formatMobileSuitNames(cost: CostType, health: HealthType): strin
  */
 export const getAllMobileSuitNames = (cost: CostType, health: HealthType): readonly string[] => {
   return mobileSuitsData[cost]?.[health] || [];
+};
+
+/**
+ * 指定コストで利用可能な耐久値リストを取得
+ * mobileSuitsDataConstに機体が存在する耐久値のみを返す
+ * @param cost - コスト
+ * @returns 耐久値の配列（降順ソート）
+ */
+export function getAvailableHealthOptions(cost: CostType): HealthType[] {
+  const healthRecord = mobileSuitsDataConst[cost];
+  if (!healthRecord) return [];
+
+  const healthValues = (Object.keys(healthRecord) as unknown as HealthType[])
+    .map(Number)
+    .sort((a, b) => b - a); // 降順ソート
+
+  return healthValues as HealthType[];
+}
+
+/**
+ * コストと耐久値の組み合わせに機体が存在するかチェック
+ * @param cost - コスト
+ * @param health - 耐久値
+ * @returns 機体が存在する場合true
+ */
+export function hasMobileSuitsForHealth(cost: CostType, health: HealthType): boolean {
+  return mobileSuitsDataConst[cost]?.[health as keyof typeof mobileSuitsDataConst[typeof cost]] !== undefined;
 }
