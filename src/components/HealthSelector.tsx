@@ -75,27 +75,15 @@ export const HealthSelector = ({
   const handleMouseEnter = (health: HealthType, event: MouseEvent) => {
     setHoveredHealth(health);
 
-    // ポップアップ位置を計算（ビューポート境界を考慮）
+    // ポップアップの初期位置を設定（ドロップダウンの右側）
     const target = event.currentTarget as HTMLElement;
     const rect = target.getBoundingClientRect();
-    const popupWidth = 200; // min-w-[200px]
-    const popupHeight = 150; // 推定高さ
     const padding = 8;
 
-    let top = rect.top;
-    let left = rect.right + padding;
-
-    // 右側にスペースがない場合は左側に表示
-    if (left + popupWidth > window.innerWidth) {
-      left = rect.left - popupWidth - padding;
-    }
-
-    // 下側にスペースがない場合は上側に調整
-    if (top + popupHeight > window.innerHeight) {
-      top = Math.max(padding, window.innerHeight - popupHeight - padding);
-    }
-
-    setPopupPosition({ top, left });
+    setPopupPosition({
+      top: rect.top,
+      left: rect.right + padding,
+    });
   };
 
   const handleMouseLeave = () => {

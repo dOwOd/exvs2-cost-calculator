@@ -3,6 +3,7 @@
  * ホバー中の耐久値に対応する機体名リストを表示
  */
 
+import { useRef, useEffect, useState } from 'preact/hooks';
 import type { CostType, HealthType } from '../lib/types';
 import { getAllMobileSuitNames } from '../data/mobileSuitsData';
 
@@ -17,6 +18,41 @@ export const HealthDropdownPopup = ({
   health,
   position,
 }: HealthDropdownPopupProps) => {
+  const popupRef = useRef<HTMLDivElement>(null);
+  const [adjustedPosition, setAdjustedPosition] = useState(position);
+
+  useEffect(() => {
+    if (!popupRef.current) return;
+
+    const popup = popupRef.current;
+    const rect = popup.getBoundingClientRect();
+    const padding = 8;
+
+    let { top, left } = position;
+
+    // 右側にはみ出す場合は左に調整
+    if (left + rect.width > window.innerWidth) {
+      left = Math.max(padding, window.innerWidth - rect.width - padding);
+    }
+
+    // 下側にはみ出す場合は上に調整
+    if (top + rect.height > window.innerHeight) {
+      top = Math.max(padding, window.innerHeight - rect.height - padding);
+    }
+
+    // 左側にはみ出す場合は右に調整
+    if (left < 0) {
+      left = padding;
+    }
+
+    // 上側にはみ出す場合は下に調整
+    if (top < 0) {
+      top = padding;
+    }
+
+    setAdjustedPosition({ top, left });
+  }, [position, health]);
+
   if (health === null) return null;
 
   const mobileSuits = getAllMobileSuitNames(cost, health);
@@ -27,10 +63,11 @@ export const HealthDropdownPopup = ({
 
   return (
     <div
+      ref={popupRef}
       class="fixed bg-slate-800 border border-slate-600 rounded shadow-lg p-3 z-50 min-w-[200px] max-w-[300px] max-h-[200px] overflow-auto"
       style={{
-        top: `${position.top}px`,
-        left: `${position.left}px`,
+        top: `${adjustedPosition.top}px`,
+        left: `${adjustedPosition.left}px`,
       }}
     >
       <div class="text-sm text-slate-400 mb-1">該当機体</div>
