@@ -44,14 +44,45 @@ export const ResultPanel = ({
         )}
 
         {/* フィルター */}
-        <label class="flex items-center gap-2 text-slate-300 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={showOnlyEXAvailable}
-            onChange={(e) => setShowOnlyEXAvailable(e.currentTarget.checked)}
-            class="w-4 h-4 rounded border-slate-600 bg-slate-800 text-blue-500 focus:ring-2 focus:ring-blue-500"
-          />
-          <span class="text-sm">EXオーバーリミット発動可能のみ表示</span>
+        <label class="flex items-center gap-3 cursor-pointer group">
+          <div class="relative">
+            <input
+              type="checkbox"
+              checked={showOnlyEXAvailable}
+              onChange={(e) => setShowOnlyEXAvailable(e.currentTarget.checked)}
+              class="sr-only peer"
+            />
+            <div class="w-6 h-6 border-2 border-slate-600 rounded-md bg-slate-800 peer-checked:bg-blue-600 peer-checked:border-blue-600 transition-all duration-200 group-hover:border-slate-500">
+              <svg
+                class={`w-full h-full text-white transition-all duration-200 ${showOnlyEXAvailable ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={3}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            </div>
+          </div>
+          <span class="text-sm text-slate-300 font-medium flex items-center gap-2 group-hover:text-slate-200">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              class="w-4 h-4"
+            >
+              <path
+                fillRule="evenodd"
+                d="M2.628 1.601C5.028 1.206 7.49 1 10 1s4.973.206 7.372.601a.75.75 0 01.628.74v2.288a2.25 2.25 0 01-.659 1.59l-4.682 4.683a2.25 2.25 0 00-.659 1.59v3.037c0 .684-.31 1.33-.844 1.757l-1.937 1.55A.75.75 0 018 18.25v-5.757a2.25 2.25 0 00-.659-1.591L2.659 6.22A2.25 2.25 0 012 4.629V2.34a.75.75 0 01.628-.74z"
+                clipRule="evenodd"
+              />
+            </svg>
+            EXオーバーリミット発動可能のみ表示
+          </span>
         </label>
       </div>
 
