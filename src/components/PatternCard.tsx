@@ -29,9 +29,8 @@ export default function PatternCard({
 
   return (
     <div
-      class={`bg-slate-800 p-4 rounded-lg border-l-4 ${
-        pattern.isEXActivationFailure ? 'border-red-500' : 'border-blue-500'
-      }`}
+      class={`bg-slate-800 p-4 rounded-lg border-l-4 ${pattern.isEXActivationFailure ? 'border-red-500' : 'border-blue-500'
+        }`}
     >
       {/* ランクとパターン */}
       <div class="flex items-center justify-between mb-3">
@@ -90,8 +89,8 @@ export default function PatternCard({
             <col class="w-20" />  {/* 撃墜順 */}
             <col class="w-16" />  {/* 対象 */}
             <col class="w-auto" /> {/* チーム残コスト（可変・メイン） */}
-            <col class="w-32" />  {/* リスポーン耐久 */}
-            <col class="w-20" />  {/* 状態 */}
+            <col class="w-50" />  {/* リスポーン耐久 */}
+            <col class="w-60" />  {/* 状態 */}
           </colgroup>
           <thead>
             <tr class="border-b border-slate-600">
@@ -121,20 +120,18 @@ export default function PatternCard({
             {pattern.transitions.map((trans) => (
               <tr
                 key={trans.killCount}
-                class={`border-b border-slate-700 ${
-                  trans.isDefeat
-                    ? 'bg-red-900/40'
-                    : trans.isOverCost
+                class={`border-b border-slate-700 ${trans.isDefeat
+                  ? 'bg-red-900/40'
+                  : trans.isOverCost
                     ? 'bg-yellow-900/20'
                     : ''
-                }`}
+                  }`}
               >
                 <td class="py-2 px-2 text-slate-300">{trans.killCount}</td>
                 <td class="py-2 px-2">
                   <span
-                    class={`font-semibold ${
-                      trans.killedUnit === 'A' ? 'text-blue-400' : 'text-green-400'
-                    }`}
+                    class={`font-semibold ${trans.killedUnit === 'A' ? 'text-blue-400' : 'text-green-400'
+                      }`}
                   >
                     {trans.killedUnit}
                   </span>
@@ -146,15 +143,14 @@ export default function PatternCard({
                     </div>
                     <div class="bg-slate-700 rounded-full h-3 overflow-hidden">
                       <div
-                        class={`h-full transition-all ${
-                          trans.remainingCost <= minCost && trans.remainingCost > 0
-                            ? 'bg-red-500'
-                            : trans.remainingCost <= 3000 && trans.remainingCost > 0
+                        class={`h-full transition-all ${trans.remainingCost <= minCost && trans.remainingCost > 0
+                          ? 'bg-red-500'
+                          : trans.remainingCost <= 3000 && trans.remainingCost > 0
                             ? 'bg-orange-500'
                             : trans.isOverCost
-                            ? 'bg-yellow-500'
-                            : 'bg-blue-500'
-                        }`}
+                              ? 'bg-yellow-500'
+                              : 'bg-blue-500'
+                          }`}
                         style={`width: ${Math.max(0, (trans.remainingCost / 6000) * 100)}%`}
                       />
                     </div>
