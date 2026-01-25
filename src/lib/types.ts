@@ -5,13 +5,16 @@
 /** コストタイプ */
 export type CostType = 1500 | 2000 | 2500 | 3000;
 
+/** 耐久値タイプ（overCostHealthTable.tsで使用されているすべての値） */
+export type HealthType = 420 | 440 | 460 | 480 | 500 | 520 | 580 | 600 | 620 | 640 | 650 | 660 | 680 | 700 | 720 | 740 | 750 | 760 | 800;
+
 /** 機体ID */
 export type UnitId = 'A' | 'B';
 
 /** 機体設定（コスト+耐久の組み合わせ） */
 export type UnitConfig = {
   cost: CostType;
-  health: number;
+  health: HealthType;
 }
 
 /** 編成（機体A, B） */

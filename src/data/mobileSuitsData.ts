@@ -3,7 +3,7 @@
  * コスト×耐久値ごとの代表的な機体名
  */
 
-import type { CostType } from '../lib/types';
+import type { CostType, HealthType } from '../lib/types';
 
 /**
  * 機体名マッピング
@@ -11,25 +11,21 @@ import type { CostType } from '../lib/types';
  * 使い方:
  * mobileSuitsData[3000][800] // => ['νガンダム', 'Hi-νガンダム']
  */
-export const mobileSuitsData: Record<CostType, Record<number, string[]>> = {
+export const mobileSuitsData: Record<CostType, Partial<Record<HealthType, string[]>>> = {
   3000: {
     // サンプルデータ（動作確認用）
     // TODO: 実際の機体名に置き換えてください
-    800: ['サンプル機体A', 'サンプル機体B', 'サンプル機体C'],
+    800: ['ゴッドガンダム', 'マスターガンダム'],
     // 以下、実際のデータを追加してください
-  },
+  } as Partial<Record<HealthType, string[]>>,
   2500: {
     // サンプルデータ（動作確認用）
     // TODO: 実際の機体名に置き換えてください
     700: ['サンプル機体D'],
     // 以下、実際のデータを追加してください
-  },
-  2000: {
-    // TODO: 機体名を追加してください
-  },
-  1500: {
-    // TODO: 機体名を追加してください
-  },
+  } as Partial<Record<HealthType, string[]>>,
+  2000: {} as Partial<Record<HealthType, string[]>>,
+  1500: {} as Partial<Record<HealthType, string[]>>,
 };
 
 /**
@@ -40,7 +36,7 @@ export const mobileSuitsData: Record<CostType, Record<number, string[]>> = {
  */
 export function getMobileSuitNames(
   cost: CostType,
-  health: number
+  health: HealthType
 ): { names: string[]; remaining: number } {
   const suits = mobileSuitsData[cost]?.[health] || [];
 
@@ -57,7 +53,7 @@ export function getMobileSuitNames(
  * @param health - 耐久値
  * @returns 「νガンダム、Hi-νガンダム 他1機」のような文字列
  */
-export function formatMobileSuitNames(cost: CostType, health: number): string {
+export function formatMobileSuitNames(cost: CostType, health: HealthType): string {
   const { names, remaining } = getMobileSuitNames(cost, health);
 
   if (names.length === 0) {
@@ -68,4 +64,14 @@ export function formatMobileSuitNames(cost: CostType, health: number): string {
   const remainingPart = remaining > 0 ? ` 他${remaining}機` : '';
 
   return `${namesPart}${remainingPart}`;
+}
+
+/**
+ * すべての機体名を取得（制限なし）
+ * @param cost - コスト
+ * @param health - 耐久値
+ * @returns すべての機体名の配列
+ */
+export function getAllMobileSuitNames(cost: CostType, health: HealthType): string[] {
+  return mobileSuitsData[cost]?.[health] || [];
 }

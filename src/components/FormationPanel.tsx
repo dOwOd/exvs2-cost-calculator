@@ -3,7 +3,7 @@
  */
 
 import { useState } from 'preact/hooks';
-import type { CostType, UnitConfig } from '../lib/types';
+import type { CostType, UnitConfig, HealthType } from '../lib/types';
 import { CostSelector } from './CostSelector';
 import { HealthSelector } from './HealthSelector';
 
@@ -31,13 +31,13 @@ export const FormationPanel = ({
     setCostB(cost);
   };
 
-  const handleHealthASelect = (health: number) => {
+  const handleHealthASelect = (health: HealthType) => {
     if (costA) {
       onUnitAChange({ cost: costA, health });
     }
   };
 
-  const handleHealthBSelect = (health: number) => {
+  const handleHealthBSelect = (health: HealthType) => {
     if (costB) {
       onUnitBChange({ cost: costB, health });
     }

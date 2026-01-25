@@ -9,7 +9,7 @@
  * → 3000コスト・初期耐久800の機体が残コスト500でリスポーン時、残耐久140
  */
 
-import type { CostType } from '../lib/types';
+import type { CostType, HealthType } from '../lib/types';
 
 /** 残コストの種類 */
 export type RemainingCostType = 500 | 1000 | 1500 | 2000;
@@ -17,7 +17,7 @@ export type RemainingCostType = 500 | 1000 | 1500 | 2000;
 /** コストオーバー時の残耐久テーブル */
 type OverCostHealthTable = Record<
   CostType,
-  Record<number, Partial<Record<RemainingCostType, number>>>
+  Partial<Record<HealthType, Partial<Record<RemainingCostType, number>>>>
 >;
 
 export const overCostHealthTable: OverCostHealthTable = {
@@ -70,7 +70,7 @@ export const overCostHealthTable: OverCostHealthTable = {
  */
 export function getRespawnHealth(
   cost: CostType,
-  initialHealth: number,
+  initialHealth: HealthType,
   remainingCost: number
 ): number {
   // 残コストが0以下 → 敗北
