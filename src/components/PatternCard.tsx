@@ -85,7 +85,14 @@ export default function PatternCard({
 
       {/* コスト推移テーブル */}
       <div class="overflow-x-auto">
-        <table class="w-full text-lg">
+        <table class="w-full text-lg table-fixed">
+          <colgroup>
+            <col class="w-20" />  {/* 撃墜順 */}
+            <col class="w-16" />  {/* 対象 */}
+            <col class="w-auto" /> {/* チーム残コスト（可変・メイン） */}
+            <col class="w-32" />  {/* リスポーン耐久 */}
+            <col class="w-20" />  {/* 状態 */}
+          </colgroup>
           <thead>
             <tr class="border-b border-slate-600">
               <th class="text-left py-2 px-2 text-slate-400">撃墜順</th>
