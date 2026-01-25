@@ -20,7 +20,7 @@ export const HealthDropdownPopup = ({
 }: HealthDropdownPopupProps) => {
   const popupRef = useRef<HTMLDivElement>(null);
   const [adjustedPosition, setAdjustedPosition] = useState(position);
-  const [maxHeight, setMaxHeight] = useState<number>(400);
+  const [maxHeight, setMaxHeight] = useState<number>(window.innerHeight - 16); // 初期値を画面高さ - padding
 
   useEffect(() => {
     if (!popupRef.current) return;
@@ -30,10 +30,6 @@ export const HealthDropdownPopup = ({
     const padding = 8;
 
     let { top, left } = position;
-
-    // 利用可能な高さを計算（画面下端までの高さ - padding）
-    const availableHeight = window.innerHeight - top - padding;
-    setMaxHeight(Math.max(150, availableHeight)); // 最低150px確保
 
     // 右側にはみ出す場合は左に調整
     if (left + rect.width > window.innerWidth) {
@@ -54,6 +50,10 @@ export const HealthDropdownPopup = ({
     if (top < 0) {
       top = padding;
     }
+
+    // 位置調整後に利用可能な高さを計算
+    const availableHeight = window.innerHeight - top - padding;
+    setMaxHeight(Math.max(150, availableHeight));
 
     setAdjustedPosition({ top, left });
   }, [position, health]);
