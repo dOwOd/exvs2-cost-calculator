@@ -127,3 +127,77 @@ describe('hasMobileSuitsForHealth', () => {
     expect(hasMobileSuitsForHealth(9999 as any, 800)).toBe(false);
   });
 });
+
+describe('normalizeString', () => {
+  test('ひらがなをカタカナに変換', () => {
+    const { normalizeString } = require('./mobileSuitsData');
+    expect(normalizeString('ごっどがんだむ')).toBe('ゴッドガンダム');
+  });
+
+  test('全角英数字を半角に変換', () => {
+    const { normalizeString } = require('./mobileSuitsData');
+    expect(normalizeString('ＡＢＣ１２３')).toBe('abc123');
+  });
+
+  test('大文字を小文字に変換', () => {
+    const { normalizeString } = require('./mobileSuitsData');
+    expect(normalizeString('ABC')).toBe('abc');
+  });
+
+  test('複合的な変換', () => {
+    const { normalizeString } = require('./mobileSuitsData');
+    expect(normalizeString('がんだむえっくす')).toBe('ガンダムエックス');
+  });
+});
+
+describe('searchMobileSuits', () => {
+  test('カタカナで検索できる', () => {
+    const { searchMobileSuits } = require('./mobileSuitsData');
+    const results = searchMobileSuits('ゴッド');
+    expect(results.length).toBeGreaterThan(0);
+    expect(results.some(r => r.name === 'ゴッドガンダム')).toBe(true);
+  });
+
+  test('ひらがなで検索できる', () => {
+    const { searchMobileSuits } = require('./mobileSuitsData');
+    const results = searchMobileSuits('ごっど');
+    expect(results.length).toBeGreaterThan(0);
+    expect(results.some(r => r.name === 'ゴッドガンダム')).toBe(true);
+  });
+
+  test('部分一致で検索できる', () => {
+    const { searchMobileSuits } = require('./mobileSuitsData');
+    const results = searchMobileSuits('ガンダム');
+    expect(results.length).toBeGreaterThanOrEqual(10);
+  });
+
+  test('最大10件まで返す', () => {
+    const { searchMobileSuits } = require('./mobileSuitsData');
+    const results = searchMobileSuits('ガンダム');
+    expect(results.length).toBeLessThanOrEqual(10);
+  });
+
+  test('空文字列で空配列を返す', () => {
+    const { searchMobileSuits } = require('./mobileSuitsData');
+    const results = searchMobileSuits('');
+    expect(results).toEqual([]);
+  });
+
+  test('該当なしで空配列を返す', () => {
+    const { searchMobileSuits } = require('./mobileSuitsData');
+    const results = searchMobileSuits('存在しない機体名xyz');
+    expect(results).toEqual([]);
+  });
+
+  test('検索結果にコストと耐久値が含まれる', () => {
+    const { searchMobileSuits } = require('./mobileSuitsData');
+    const results = searchMobileSuits('ゴッドガンダム');
+    expect(results.length).toBeGreaterThan(0);
+    expect(results[0]).toHaveProperty('name');
+    expect(results[0]).toHaveProperty('cost');
+    expect(results[0]).toHaveProperty('health');
+    expect(results[0].name).toBe('ゴッドガンダム');
+    expect(results[0].cost).toBe(3000);
+    expect(results[0].health).toBe(800);
+  });
+});

@@ -148,3 +148,75 @@ export const hasMobileSuitsForHealth = (cost: CostType, health: HealthType): boo
   // 文字列キーの存在確認（asアサーション不要）
   return Object.keys(healthRecord).includes(String(health));
 }
+
+/**
+ * 機体情報(名前、コスト、耐久値)
+ */
+export type MobileSuitInfo = {
+  name: MobileSuitName;
+  cost: CostType;
+  health: HealthType;
+};
+
+/**
+ * 全機体のフラットリスト(検索用)
+ */
+export const mobileSuitsList: MobileSuitInfo[] = (() => {
+  const list: MobileSuitInfo[] = [];
+
+  Object.keys(mobileSuitsDataConst).forEach((costStr) => {
+    const cost = Number(costStr) as CostType;
+    const healthRecord = mobileSuitsDataConst[cost];
+    Object.keys(healthRecord).forEach((healthStr) => {
+      const health = Number(healthStr) as HealthType;
+      const suits = healthRecord[health];
+      if (suits) {
+        suits.forEach((name) => {
+          list.push({ name, cost, health });
+        });
+      }
+    });
+  });
+
+  return list;
+})();
+
+/**
+ * 文字列を正規化(ひらがな→カタカナ、全角→半角、小文字化)
+ * @param str - 正規化する文字列
+ * @returns 正規化された文字列
+ */
+export const normalizeString = (str: string): string => {
+  return str
+    // ひらがなをカタカナに変換
+    .replace(/[\u3041-\u3096]/g, (match) => {
+      return String.fromCharCode(match.charCodeAt(0) + 0x60);
+    })
+    // 全角英数字を半角に変換
+    .replace(/[Ａ-Ｚａ-ｚ０-９]/g, (s) => {
+      return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+    })
+    // 小文字化
+    .toLowerCase();
+};
+
+/**
+ * 機体名を検索
+ * @param query - 検索クエリ
+ * @returns 検索結果(最大10件)
+ */
+export const searchMobileSuits = (query: string): MobileSuitInfo[] => {
+  if (!query || query.trim() === '') {
+    return [];
+  }
+
+  const normalizedQuery = normalizeString(query);
+
+  const results = mobileSuitsList.filter((suit) => {
+    const normalizedName = normalizeString(suit.name);
+    return normalizedName.includes(normalizedQuery);
+  });
+
+  // 最大10件まで返す
+  return results.slice(0, 10);
+};
