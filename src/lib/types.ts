@@ -5,6 +5,9 @@
 /** コストタイプ */
 export type CostType = 1500 | 2000 | 2500 | 3000;
 
+/** 機体名リテラル型（mobileSuitsDataから再エクスポート） */
+export type { MobileSuitName } from '../data/mobileSuitsData';
+
 /** 耐久値タイプ（overCostHealthTable.tsで使用されているすべての値） */
 export type HealthType = 440 | 460 | 480 | 500 | 520 | 540 | 580 | 600 | 620 | 640 | 650 | 660 | 680 | 700 | 720 | 740 | 750 | 760 | 800;
 

@@ -6,12 +6,9 @@
 import type { CostType, HealthType } from '../lib/types';
 
 /**
- * 機体名マッピング
- *
- * 使い方:
- * mobileSuitsData[3000][800] // => ['νガンダム', 'Hi-νガンダム']
+ * 機体名マッピング（as const で定義してリテラル型を抽出可能にする）
  */
-export const mobileSuitsData: Record<CostType, Partial<Record<HealthType, string[]>>> = {
+const mobileSuitsDataConst = {
   3000: {
     800: ['ゴッドガンダム', 'マスターガンダム'],
     760: ['ガンダム・バエル', 'スタービルドストライクガンダム'],
@@ -47,7 +44,33 @@ export const mobileSuitsData: Record<CostType, Partial<Record<HealthType, string
     480: ['ガンキャノン', 'シャア専用ザクⅡ', 'キュベレイMk-Ⅱ(プルツー)', 'ベルガ・ギロス', 'ザクⅡ改', 'ケンプファー', 'カプル', 'ラゴゥ', 'N-EXTREMEガンダム スプレマシー'],
     440: ['リ・ガズィ', 'アレックス'],
   },
-};
+} as const;
+
+/**
+ * 機体名マッピング
+ *
+ * 使い方:
+ * mobileSuitsData[3000][800] // => ['νガンダム', 'Hi-νガンダム']
+ */
+export const mobileSuitsData: Record<CostType, Partial<Record<HealthType, readonly string[]>>> = mobileSuitsDataConst;
+
+/**
+ * 機体名リテラル型を抽出
+ */
+type MobileSuitsDataType = typeof mobileSuitsDataConst;
+type CostKeys = keyof MobileSuitsDataType;
+type HealthRecord<C extends CostKeys> = MobileSuitsDataType[C];
+type HealthKeys<C extends CostKeys> = keyof HealthRecord<C>;
+type ExtractNames<C extends CostKeys, H extends HealthKeys<C>> = HealthRecord<C>[H] extends readonly (infer U)[] ? U : never;
+
+/**
+ * すべての機体名のリテラル型
+ */
+export type MobileSuitName = {
+  [C in CostKeys]: {
+    [H in HealthKeys<C>]: ExtractNames<C, H>;
+  }[HealthKeys<C>];
+}[CostKeys];
 
 /**
  * 機体名を取得
@@ -58,7 +81,7 @@ export const mobileSuitsData: Record<CostType, Partial<Record<HealthType, string
 export function getMobileSuitNames(
   cost: CostType,
   health: HealthType
-): { names: string[]; remaining: number } {
+): { names: readonly string[]; remaining: number } {
   const suits = mobileSuitsData[cost]?.[health] || [];
 
   // 最初の2つまで取得
@@ -93,6 +116,6 @@ export function formatMobileSuitNames(cost: CostType, health: HealthType): strin
  * @param health - 耐久値
  * @returns すべての機体名の配列
  */
-export function getAllMobileSuitNames(cost: CostType, health: HealthType): string[] {
+export const getAllMobileSuitNames = (cost: CostType, health: HealthType): readonly string[] => {
   return mobileSuitsData[cost]?.[health] || [];
 }
