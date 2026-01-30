@@ -175,6 +175,23 @@ src/
 
 詳細仕様は [docs/SPECIFICATION.md](./docs/SPECIFICATION.md) を参照。
 
+### 🔍 実装理解度チェック（pre-commitフック）
+
+コミット時に自動的に実装内容の理解度をチェックするpre-commitフックが設定されています。
+
+**自動実行条件:**
+- 15行以上の変更がある場合に自動実行
+- Claude CLIで実装意図に関する質問を生成
+- 質問を確認し、ブロッカー行を削除するとコミット続行
+
+**スキップ方法:**
+```bash
+SKIP_COMMIT_CHECK=1 git commit -m "message"
+```
+
+**閾値のカスタマイズ:**
+`.git/hooks/pre-commit` の `LINE_THRESHOLD` を編集してください。
+
 ## 📄 ライセンス
 
 MIT
