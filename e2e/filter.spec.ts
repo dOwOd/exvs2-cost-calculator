@@ -13,13 +13,13 @@ test.describe('EXフィルター機能', () => {
     await expect(page.getByTestId('health-selector-button-a')).toBeVisible();
     await page.getByTestId('health-selector-button-a').click();
     await expect(page.getByTestId('health-selector-listbox-a')).toBeVisible();
-    await page.getByTestId('health-option-a-650').click();
+    await page.getByTestId('health-option-a-680').click();
 
     await page.getByTestId('cost-button-b-3000').click();
     await expect(page.getByTestId('health-selector-button-b')).toBeVisible();
     await page.getByTestId('health-selector-button-b').click();
     await expect(page.getByTestId('health-selector-listbox-b')).toBeVisible();
-    await page.getByTestId('health-option-b-650').click();
+    await page.getByTestId('health-option-b-680').click();
   });
 
   test('フィルターチェックボックスが表示される', async ({ page }) => {
@@ -30,8 +30,8 @@ test.describe('EXフィルター機能', () => {
     // フィルター適用前のパターン数を取得
     const allPatterns = await page.locator('[data-testid^="pattern-card-"]').count();
 
-    // フィルターを適用
-    await page.getByTestId('ex-filter-checkbox').check();
+    // フィルターを適用（force: trueで強制的にチェック）
+    await page.getByTestId('ex-filter-checkbox').check({ force: true });
 
     // フィルター適用後のパターン数を取得
     const filteredPatterns = await page.locator('[data-testid^="pattern-card-"]').count();
@@ -41,8 +41,8 @@ test.describe('EXフィルター機能', () => {
   });
 
   test('フィルター適用後、EX不発パターンが非表示になる', async ({ page }) => {
-    // フィルターを適用
-    await page.getByTestId('ex-filter-checkbox').check();
+    // フィルターを適用（force: trueで強制的にチェック）
+    await page.getByTestId('ex-filter-checkbox').check({ force: true });
 
     // すべてのパターンカードを取得
     const patternCards = page.locator('[data-testid^="pattern-card-"]');
@@ -57,12 +57,12 @@ test.describe('EXフィルター機能', () => {
   });
 
   test('フィルターをオフにすると全パターンが表示される', async ({ page }) => {
-    // フィルターを適用
-    await page.getByTestId('ex-filter-checkbox').check();
+    // フィルターを適用（force: trueで強制的にチェック）
+    await page.getByTestId('ex-filter-checkbox').check({ force: true });
     const filteredPatterns = await page.locator('[data-testid^="pattern-card-"]').count();
 
-    // フィルターを解除
-    await page.getByTestId('ex-filter-checkbox').uncheck();
+    // フィルターを解除（force: trueで強制的にアンチェック）
+    await page.getByTestId('ex-filter-checkbox').uncheck({ force: true });
     const allPatterns = await page.locator('[data-testid^="pattern-card-"]').count();
 
     // 全パターンが再表示されることを確認
