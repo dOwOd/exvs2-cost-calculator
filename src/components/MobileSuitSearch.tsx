@@ -4,6 +4,7 @@
 
 import { useState, useRef, useEffect } from 'preact/hooks';
 import { searchMobileSuits, type MobileSuitInfo } from '../data/mobileSuitsData';
+import { getRecentSuits, addToRecentSuits } from '../lib/recentHistory';
 
 type MobileSuitSearchProps = {
   onSelect: (suit: MobileSuitInfo) => void;
@@ -18,9 +19,27 @@ export const MobileSuitSearch = ({
   const [results, setResults] = useState<MobileSuitInfo[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
+  const [recentSuits, setRecentSuits] = useState<MobileSuitInfo[]>([]);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // マウント時に履歴を読み込み
+  useEffect(() => {
+    setRecentSuits(getRecentSuits());
+  }, []);
+
+  // 履歴更新イベントをリッスン（他のコンポーネントインスタンスとの同期）
+  useEffect(() => {
+    const handleHistoryUpdate = () => {
+      setRecentSuits(getRecentSuits());
+    };
+
+    window.addEventListener('recent-suits-updated', handleHistoryUpdate);
+    return () => {
+      window.removeEventListener('recent-suits-updated', handleHistoryUpdate);
+    };
+  }, []);
 
   // 検索実行
   useEffect(() => {
@@ -52,6 +71,11 @@ export const MobileSuitSearch = ({
   }, [isOpen]);
 
   const handleSelect = (suit: MobileSuitInfo) => {
+    // 履歴に追加
+    addToRecentSuits(suit);
+    setRecentSuits(getRecentSuits());
+
+    // 親コンポーネントに通知
     onSelect(suit);
     setQuery('');
     setResults([]);
@@ -124,6 +148,24 @@ export const MobileSuitSearch = ({
             </li>
           ))}
         </ul>
+      )}
+
+      {!isOpen && recentSuits.length > 0 && (
+        <div class="mt-2">
+          <div class="text-xs text-slate-500 mb-1">最近使用</div>
+          <div class="flex flex-wrap gap-1">
+            {recentSuits.map((suit) => (
+              <button
+                key={`${suit.name}-${suit.cost}-${suit.health}`}
+                type="button"
+                onClick={() => handleSelect(suit)}
+                class="px-2 py-1 text-xs bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600"
+              >
+                {suit.name}
+              </button>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   );
