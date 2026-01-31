@@ -116,6 +116,7 @@ export const MobileSuitSearch = ({
       <input
         ref={inputRef}
         type="text"
+        data-testid={placeholder.includes('A') ? 'mobile-suit-search-a' : 'mobile-suit-search-b'}
         value={query}
         onInput={(e) => setQuery((e.target as HTMLInputElement).value)}
         onKeyDown={handleKeyDown}
@@ -126,12 +127,14 @@ export const MobileSuitSearch = ({
       {isOpen && results.length > 0 && (
         <ul
           role="listbox"
+          data-testid="mobile-suit-search-results"
           class="absolute z-40 w-full mt-1 bg-slate-700 border border-slate-600 rounded shadow-lg max-h-60 overflow-auto"
         >
           {results.map((suit, index) => (
             <li
               key={`${suit.name}-${suit.cost}-${suit.health}`}
               role="option"
+              data-testid={`mobile-suit-option-${suit.name}-${suit.cost}`}
               onClick={() => handleSelect(suit)}
               class={`px-4 py-2 cursor-pointer ${
                 index === focusedIndex
@@ -158,6 +161,7 @@ export const MobileSuitSearch = ({
               <button
                 key={`${suit.name}-${suit.cost}-${suit.health}`}
                 type="button"
+                data-testid={`recent-suit-${suit.name}-${suit.cost}`}
                 onClick={() => handleSelect(suit)}
                 class="px-2 py-1 text-xs bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600"
               >

@@ -48,6 +48,7 @@ export const ResultPanel = ({
           <div class="relative">
             <input
               type="checkbox"
+              data-testid="ex-filter-checkbox"
               checked={showOnlyEXAvailable}
               onChange={(e) => setShowOnlyEXAvailable(e.currentTarget.checked)}
               class="sr-only peer"

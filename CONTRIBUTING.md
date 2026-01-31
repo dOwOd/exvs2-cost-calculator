@@ -91,12 +91,35 @@ pnpm test:watch
 pnpm test:coverage
 ```
 
+### E2Eテスト
+
+E2Eテストは[Playwright](https://playwright.dev)を使用しています。
+
+**テストの実行:**
+```bash
+# すべてのE2Eテストを実行
+pnpm test:e2e
+
+# UIモードで実行（デバッグに便利）
+pnpm test:e2e:ui
+
+# ヘッドモードで実行（ブラウザを表示）
+pnpm test:e2e:headed
+```
+
+**テストの書き方:**
+- テストファイルは`e2e/`ディレクトリに配置
+- ファイル名は`*.spec.ts`形式
+- `data-testid`属性を使用して要素を特定
+- 主要なユーザーフローをテストする
+
 ### テストの必須チェック項目
 
 - [ ] 新しいロジックには必ずテストを追加
 - [ ] すべてのテストがパスすることを確認
 - [ ] エッジケース・境界値をテスト
 - [ ] コミット前に`pnpm test`を実行
+- [ ] UI変更時はE2Eテストも更新する
 
 ---
 
@@ -129,8 +152,12 @@ pnpm install
 # 開発サーバー起動
 pnpm dev
 
-# テスト実行
+# ユニットテスト実行
 pnpm test
+
+# E2Eテスト実行
+pnpm build  # E2Eテストの前にビルドが必要
+pnpm test:e2e
 
 # ビルド
 pnpm build
@@ -148,6 +175,10 @@ docker compose exec dev sh
 # コンテナ内でコマンド実行
 docker compose exec dev pnpm install
 docker compose exec dev pnpm test
+
+# E2Eテスト（ビルドが必要）
+docker compose exec dev pnpm build
+docker compose exec dev pnpm test:e2e
 
 # コンテナ停止
 docker compose down

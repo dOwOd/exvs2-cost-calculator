@@ -71,11 +71,11 @@ export const FormationPanel = ({
         <div class="space-y-3">
           <div>
             <label class="block text-sm text-slate-400 mb-2">機体名で検索</label>
-            <MobileSuitSearch onSelect={handleSuitASelect} placeholder="機体名で検索..." />
+            <MobileSuitSearch onSelect={handleSuitASelect} placeholder="機体A名で検索..." />
           </div>
           <div>
             <label class="block text-sm text-slate-400 mb-2">コスト</label>
-            <CostSelector selectedCost={costA} onSelect={handleCostASelect} />
+            <CostSelector selectedCost={costA} onSelect={handleCostASelect} testIdPrefix="a" />
           </div>
           {costA && (
             <div>
@@ -84,6 +84,7 @@ export const FormationPanel = ({
                 cost={costA}
                 selectedHealth={unitA?.health ?? null}
                 onSelect={handleHealthASelect}
+                testIdPrefix="a"
               />
             </div>
           )}
@@ -101,11 +102,11 @@ export const FormationPanel = ({
         <div class="space-y-3">
           <div>
             <label class="block text-sm text-slate-400 mb-2">機体名で検索</label>
-            <MobileSuitSearch onSelect={handleSuitBSelect} placeholder="機体名で検索..." />
+            <MobileSuitSearch onSelect={handleSuitBSelect} placeholder="機体B名で検索..." />
           </div>
           <div>
             <label class="block text-sm text-slate-400 mb-2">コスト</label>
-            <CostSelector selectedCost={costB} onSelect={handleCostBSelect} />
+            <CostSelector selectedCost={costB} onSelect={handleCostBSelect} testIdPrefix="b" />
           </div>
           {costB && (
             <div>
@@ -114,6 +115,7 @@ export const FormationPanel = ({
                 cost={costB}
                 selectedHealth={unitB?.health ?? null}
                 onSelect={handleHealthBSelect}
+                testIdPrefix="b"
               />
             </div>
           )}
