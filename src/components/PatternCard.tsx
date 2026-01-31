@@ -29,14 +29,15 @@ export const PatternCard = ({
 
   return (
     <div
+      data-testid={`pattern-card-${rank}`}
       class={`bg-slate-800 p-4 rounded-lg border-l-4 ${pattern.isEXActivationFailure ? 'border-red-500' : 'border-blue-500'
         }`}
     >
       {/* ランクとパターン */}
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-3">
-          <span class="text-3xl font-bold text-blue-400">#{rank}</span>
-          <div class="text-2xl font-mono flex items-center gap-2">
+          <span data-testid={`pattern-rank-${rank}`} class="text-3xl font-bold text-blue-400">#{rank}</span>
+          <div data-testid={`pattern-string-${rank}`} class="text-2xl font-mono flex items-center gap-2">
             {actualPattern.map((unit, index) => (
               <>
                 <span
@@ -73,7 +74,7 @@ export const PatternCard = ({
             総耐久
             <InfoIcon tooltip="リスポーン時の耐久変動を考慮した真の総耐久値。高いほど長く戦える。" />
           </div>
-          <div class="text-3xl font-semibold text-slate-100">
+          <div data-testid={`pattern-total-health-${rank}`} class="text-3xl font-semibold text-slate-100">
             {pattern.totalHealth}{' '}
             <span class="text-base text-slate-400 font-normal">
               (最短: {minimumDefeatHealth})

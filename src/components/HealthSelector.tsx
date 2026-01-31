@@ -11,12 +11,14 @@ type HealthSelectorType = {
   cost: CostType;
   selectedHealth: HealthType | null;
   onSelect: (health: HealthType) => void;
+  testIdPrefix?: string;
 }
 
 export const HealthSelector = ({
   cost,
   selectedHealth,
   onSelect,
+  testIdPrefix = '',
 }: HealthSelectorType) => {
   const healthOptions = getAvailableHealthOptions(cost);
   const [isOpen, setIsOpen] = useState(false);
@@ -131,6 +133,7 @@ export const HealthSelector = ({
       <button
         ref={buttonRef}
         type="button"
+        data-testid={testIdPrefix ? `health-selector-button-${testIdPrefix}` : 'health-selector-button'}
         onClick={handleToggle}
         onKeyDown={handleKeyDown}
         aria-expanded={isOpen}
@@ -151,6 +154,7 @@ export const HealthSelector = ({
       {isOpen && (
         <ul
           role="listbox"
+          data-testid={testIdPrefix ? `health-selector-listbox-${testIdPrefix}` : 'health-selector-listbox'}
           class={`absolute z-40 w-full bg-slate-700 border border-slate-600 rounded shadow-lg max-h-60 overflow-auto ${
             dropdownDirection === 'up' ? 'bottom-full mb-1' : 'top-full mt-1'
           }`}
@@ -159,6 +163,7 @@ export const HealthSelector = ({
             <li
               key={health}
               role="option"
+              data-testid={testIdPrefix ? `health-option-${testIdPrefix}-${health}` : `health-option-${health}`}
               aria-selected={health === selectedHealth}
               onClick={() => handleSelect(health)}
               onMouseEnter={(e) => handleMouseEnter(health, e as unknown as MouseEvent)}
