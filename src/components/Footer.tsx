@@ -24,7 +24,7 @@ export const Footer = () => {
             class="flex items-center gap-2 hover:text-blue-400 transition-colors"
           >
             <GitHubIcon />
-            GitHub
+            Developer
           </a>
 
           <span class="text-slate-600">·</span>
