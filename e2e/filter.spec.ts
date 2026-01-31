@@ -30,8 +30,8 @@ test.describe('EXフィルター機能', () => {
     // フィルター適用前のパターン数を取得
     const allPatterns = await page.locator('[data-testid^="pattern-card-"]').count();
 
-    // フィルターを適用（force: trueで強制的にチェック）
-    await page.getByTestId('ex-filter-checkbox').check({ force: true });
+    // フィルターを適用（ラベル全体をクリック - 実際のユーザー操作）
+    await page.locator('label:has([data-testid="ex-filter-checkbox"])').click();
 
     // フィルター適用後のパターン数を取得
     const filteredPatterns = await page.locator('[data-testid^="pattern-card-"]').count();
@@ -41,8 +41,8 @@ test.describe('EXフィルター機能', () => {
   });
 
   test('フィルター適用後、EX不発パターンが非表示になる', async ({ page }) => {
-    // フィルターを適用（force: trueで強制的にチェック）
-    await page.getByTestId('ex-filter-checkbox').check({ force: true });
+    // フィルターを適用（ラベル全体をクリック）
+    await page.locator('label:has([data-testid="ex-filter-checkbox"])').click();
 
     // すべてのパターンカードを取得
     const patternCards = page.locator('[data-testid^="pattern-card-"]');
@@ -57,12 +57,12 @@ test.describe('EXフィルター機能', () => {
   });
 
   test('フィルターをオフにすると全パターンが表示される', async ({ page }) => {
-    // フィルターを適用（force: trueで強制的にチェック）
-    await page.getByTestId('ex-filter-checkbox').check({ force: true });
+    // フィルターを適用（ラベル全体をクリック）
+    await page.locator('label:has([data-testid="ex-filter-checkbox"])').click();
     const filteredPatterns = await page.locator('[data-testid^="pattern-card-"]').count();
 
-    // フィルターを解除（force: trueで強制的にアンチェック）
-    await page.getByTestId('ex-filter-checkbox').uncheck({ force: true });
+    // フィルターを解除（再度クリック）
+    await page.locator('label:has([data-testid="ex-filter-checkbox"])').click();
     const allPatterns = await page.locator('[data-testid^="pattern-card-"]').count();
 
     // 全パターンが再表示されることを確認

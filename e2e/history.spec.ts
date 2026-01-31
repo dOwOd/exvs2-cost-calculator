@@ -13,28 +13,39 @@ test.describe('最近使用した機体の履歴', () => {
   });
 
   test('機体選択後に履歴が表示される', async ({ page }) => {
-    // 機体名検索を使用してガンダムを選択
-    await page.getByTestId('mobile-suit-search-a').fill('ガンダム');
-    await expect(page.getByTestId('mobile-suit-search-results')).toBeVisible({ timeout: 10000 });
+    // 機体名検索を使用してνガンダムを選択
+    const searchInput = page.getByTestId('mobile-suit-search-a');
+    await searchInput.click();
+    await searchInput.fill('νガンダム');
 
-    const firstResult = page.getByTestId('mobile-suit-search-results').locator('li').first();
+    // 検索結果が表示されるまで待機
+    const searchResults = page.getByTestId('mobile-suit-search-results');
+    await expect(searchResults).toBeVisible({ timeout: 10000 });
+
+    const firstResult = searchResults.locator('li').first();
     await firstResult.click();
 
     // 検索フィールドをクリアして履歴を確認
-    await page.getByTestId('mobile-suit-search-a').clear();
+    await searchInput.clear();
 
     // 「最近使用」セクションが表示されることを確認（.first()で最初の要素のみ）
     await expect(page.locator('text=最近使用').first()).toBeVisible();
 
-    // 履歴ボタンが表示されることを確認（ガンダムを含む）
-    await expect(page.locator('[data-testid^="recent-suit-"]').first()).toBeVisible();
+    // νガンダムの履歴ボタンが表示されることを確認
+    const recentButton = page.locator('[data-testid^="recent-suit-"]').first();
+    await expect(recentButton).toBeVisible();
+    await expect(recentButton).toContainText('ガンダム');
   });
 
   test('LocalStorageに履歴が保存される', async ({ page }) => {
-    // ガンダムを選択
-    await page.getByTestId('mobile-suit-search-a').fill('ガンダム');
-    await expect(page.getByTestId('mobile-suit-search-results')).toBeVisible({ timeout: 10000 });
-    await page.getByTestId('mobile-suit-search-results').locator('li').first().click();
+    // νガンダムを選択
+    const searchInput = page.getByTestId('mobile-suit-search-a');
+    await searchInput.click();
+    await searchInput.fill('νガンダム');
+
+    const searchResults = page.getByTestId('mobile-suit-search-results');
+    await expect(searchResults).toBeVisible({ timeout: 10000 });
+    await searchResults.locator('li').first().click();
 
     // LocalStorageに保存されていることを確認
     const recentSuits = await page.evaluate(() => {
@@ -42,22 +53,28 @@ test.describe('最近使用した機体の履歴', () => {
     });
 
     expect(recentSuits).toBeTruthy();
-    // 「ガンダム」を含む機体名が保存されていることを確認
+    // νガンダムまたはガンダムを含む機体名が保存されていることを確認
     expect(recentSuits).toMatch(/ガンダム/);
   });
 
   test('ページリロード後も履歴が保持される', async ({ page }) => {
-    // ガンダムを選択
-    await page.getByTestId('mobile-suit-search-a').fill('ガンダム');
-    await expect(page.getByTestId('mobile-suit-search-results')).toBeVisible({ timeout: 10000 });
-    await page.getByTestId('mobile-suit-search-results').locator('li').first().click();
-    await page.getByTestId('mobile-suit-search-a').clear();
+    // νガンダムを選択
+    const searchInput = page.getByTestId('mobile-suit-search-a');
+    await searchInput.click();
+    await searchInput.fill('νガンダム');
+
+    const searchResults = page.getByTestId('mobile-suit-search-results');
+    await expect(searchResults).toBeVisible({ timeout: 10000 });
+    await searchResults.locator('li').first().click();
+    await searchInput.clear();
 
     // ページをリロード
     await page.reload();
 
     // 履歴が保持されていることを確認（.first()で最初の要素のみ）
     await expect(page.locator('text=最近使用').first()).toBeVisible();
-    await expect(page.locator('[data-testid^="recent-suit-"]').first()).toBeVisible();
+    const recentButton = page.locator('[data-testid^="recent-suit-"]').first();
+    await expect(recentButton).toBeVisible();
+    await expect(recentButton).toContainText('ガンダム');
   });
 });

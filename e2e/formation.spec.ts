@@ -63,20 +63,24 @@ test.describe('編成選択と結果表示', () => {
   });
 
   test('機体名検索で機体を選択できる', async ({ page }) => {
-    // A機: 機体名検索を使用
-    await page.getByTestId('mobile-suit-search-a').fill('ガンダム');
+    // A機: 機体名検索を使用（νガンダムで検索）
+    const searchInput = page.getByTestId('mobile-suit-search-a');
+    await searchInput.click();
+    await searchInput.fill('νガンダム');
 
-    // 検索結果が表示されることを確認（タイムアウトを延長）
-    await expect(page.getByTestId('mobile-suit-search-results')).toBeVisible({ timeout: 10000 });
+    // 検索結果が表示されるまで待機
+    const searchResults = page.getByTestId('mobile-suit-search-results');
+    await expect(searchResults).toBeVisible({ timeout: 10000 });
+
+    // 検索結果にνガンダムが含まれることを確認
+    const firstResult = searchResults.locator('li').first();
+    await expect(firstResult).toContainText('ガンダム');
 
     // 検索結果から選択
-    const firstResult = page.getByTestId('mobile-suit-search-results').locator('li').first();
     await firstResult.click();
 
-    // コストボタンが選択されることを確認（任意のコスト）
-    await page.waitForTimeout(500);  // UI更新を待つ
-    const selectedButton = page.locator('[data-testid^="cost-button-a-"].bg-blue-600');
-    await expect(selectedButton).toBeVisible();
+    // コスト3000が選択されることを確認（νガンダムはコスト3000）
+    await expect(page.getByTestId('cost-button-a-3000')).toHaveClass(/bg-blue-600/);
   });
 
   test('異なるコストの組み合わせで結果が表示される', async ({ page }) => {
