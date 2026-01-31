@@ -14,7 +14,8 @@ export default defineConfig({
   // CI環境での設定
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  // LocalStorage競合を避けるため、常にシングルワーカーで実行
+  workers: 1,
 
   // レポーター設定
   reporter: 'html',

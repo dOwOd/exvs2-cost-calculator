@@ -20,6 +20,9 @@ test.describe('EXフィルター機能', () => {
     await page.getByTestId('health-selector-button-b').click();
     await expect(page.getByTestId('health-selector-listbox-b')).toBeVisible();
     await page.getByTestId('health-option-b-680').click();
+
+    // パターンカードが表示されるまで待機
+    await expect(page.locator('[data-testid^="pattern-card-"]').first()).toBeVisible();
   });
 
   test('フィルターチェックボックスが表示される', async ({ page }) => {

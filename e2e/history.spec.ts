@@ -47,9 +47,13 @@ test.describe('最近使用した機体の履歴', () => {
     await expect(searchResults).toBeVisible({ timeout: 10000 });
     await searchResults.locator('li').first().click();
 
+    // 検索フィールドをクリアして履歴が表示されるまで待機
+    await searchInput.clear();
+    await expect(page.locator('[data-testid^="recent-suit-"]').first()).toBeVisible();
+
     // LocalStorageに保存されていることを確認
     const recentSuits = await page.evaluate(() => {
-      return localStorage.getItem('recentSuits');
+      return localStorage.getItem('exvs2-recent-suits');
     });
 
     expect(recentSuits).toBeTruthy();
