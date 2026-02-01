@@ -63,6 +63,9 @@ test.describe('編成選択と結果表示', () => {
   });
 
   test('機体名検索で機体を選択できる', async ({ page }) => {
+    // A機: 検索パネルを展開
+    await page.getByTestId('search-toggle-a').click();
+
     // A機: 機体名検索を使用（νガンダムで検索）
     const searchInput = page.getByTestId('mobile-suit-search-a');
     await searchInput.click();

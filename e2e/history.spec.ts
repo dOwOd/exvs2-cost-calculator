@@ -13,6 +13,9 @@ test.describe('最近使用した機体の履歴', () => {
   });
 
   test('機体選択後に履歴が表示される', async ({ page }) => {
+    // 検索パネルを展開
+    await page.getByTestId('search-toggle-a').click();
+
     // 機体名検索を使用してνガンダムを選択
     const searchInput = page.getByTestId('mobile-suit-search-a');
     await searchInput.click();
@@ -38,6 +41,9 @@ test.describe('最近使用した機体の履歴', () => {
   });
 
   test('LocalStorageに履歴が保存される', async ({ page }) => {
+    // 検索パネルを展開
+    await page.getByTestId('search-toggle-a').click();
+
     // νガンダムを選択
     const searchInput = page.getByTestId('mobile-suit-search-a');
     await searchInput.click();
@@ -62,6 +68,9 @@ test.describe('最近使用した機体の履歴', () => {
   });
 
   test('ページリロード後も履歴が保持される', async ({ page }) => {
+    // 検索パネルを展開
+    await page.getByTestId('search-toggle-a').click();
+
     // νガンダムを選択
     const searchInput = page.getByTestId('mobile-suit-search-a');
     await searchInput.click();
@@ -74,6 +83,9 @@ test.describe('最近使用した機体の履歴', () => {
 
     // ページをリロード
     await page.reload();
+
+    // 検索パネルを再度展開
+    await page.getByTestId('search-toggle-a').click();
 
     // 履歴が保持されていることを確認（.first()で最初の要素のみ）
     await expect(page.locator('text=最近使用').first()).toBeVisible();
