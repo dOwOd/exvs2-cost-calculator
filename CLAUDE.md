@@ -147,6 +147,15 @@ docs/簡潔な説明
 - **PRテンプレート**（`.github/PULL_REQUEST_TEMPLATE.md`）を必ず使用
 - タイトル: コミットメッセージ形式に従う
 - 本文: PRテンプレートに従って記入
+- **Issueの自動クローズ**: 本文の「## 概要」セクションに以下のキーワードを含める
+  ```markdown
+  Closes #123
+  Fixes #123
+  Resolves #123
+  ```
+  例: `Closes #17: Storybookの導入`
+  - マージ時に自動的にIssueがクローズされる
+  - 複数のIssueを閉じる場合: `Closes #17, Closes #18`
   - **必須**: `Closes #番号` で関連Issueと紐づける
   - 変更内容、テスト結果を記載
   - チェックリストを完了させる
