@@ -70,13 +70,15 @@ export const PatternCard = ({
       {/* 評価指標 */}
       <div class="mb-3">
         <div class="bg-slate-700 p-3 rounded">
-          <div class="text-base text-slate-400 flex items-center">
-            総耐久
-            <InfoIcon tooltip="リスポーン時の耐久変動を考慮した真の総耐久値。高いほど長く戦える。" />
-          </div>
-          <div data-testid={`pattern-total-health-${rank}`} class="text-3xl font-semibold text-slate-100">
-            {pattern.totalHealth}{' '}
-            <span class="text-base text-slate-400 font-normal">
+          <div data-testid={`pattern-total-health-${rank}`} class="flex items-baseline justify-center gap-2">
+            <span class="text-base text-slate-400 flex items-center">
+              総耐久
+              <InfoIcon tooltip="リスポーン時の耐久変動を考慮した真の総耐久値。高いほど長く戦える。" />
+            </span>
+            <span class="text-3xl font-semibold text-slate-100">
+              {pattern.totalHealth}
+            </span>
+            <span class="text-base text-slate-400">
               (最短: {minimumDefeatHealth})
             </span>
           </div>
