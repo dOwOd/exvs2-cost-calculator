@@ -21,6 +21,7 @@
     - 🔵 通常
 - ✅ リスポーン時の耐久値変動を考慮した真の総耐久計算
 - ✅ EXオーバーリミット発動判定
+- ✅ PWA対応（オフライン動作可能、ホーム画面に追加可能）
 
 ### v1.0 スコープ外
 
@@ -35,6 +36,7 @@
 - **スタイリング**: [Tailwind CSS](https://tailwindcss.com) v4
 - **言語**: TypeScript
 - **テスト**: Jest + ts-jest（ユニットテスト）、Playwright（E2Eテスト）
+- **UIカタログ**: [Storybook](https://storybook.js.org)
 - **パッケージマネージャー**: [pnpm](https://pnpm.io)
 - **開発環境**: Docker
 
@@ -104,6 +106,8 @@ pnpm dev
 | `pnpm test:e2e`       | E2Eテスト実行                             |
 | `pnpm test:e2e:ui`    | E2EテストUI モードで実行                  |
 | `pnpm test:e2e:headed`| E2Eテストヘッドモードで実行（デバッグ用） |
+| `pnpm storybook`      | Storybookを起動 (`localhost:6006`)        |
+| `pnpm build-storybook`| Storybookをビルド                         |
 
 ## 📁 プロジェクト構造
 
