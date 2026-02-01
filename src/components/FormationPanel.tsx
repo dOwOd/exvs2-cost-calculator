@@ -70,8 +70,11 @@ export const FormationPanel = ({
         <h3 class="text-lg font-bold text-blue-400 mb-3">機体A</h3>
         <div class="space-y-3">
           <div>
-            <label class="block text-sm text-slate-400 mb-2">機体名で検索</label>
-            <MobileSuitSearch onSelect={handleSuitASelect} placeholder="機体A名で検索..." />
+            <MobileSuitSearch
+              onSelect={handleSuitASelect}
+              placeholder="機体A名で検索..."
+              toggleTestId="search-toggle-a"
+            />
           </div>
           <div>
             <label class="block text-sm text-slate-400 mb-2">コスト</label>
@@ -101,8 +104,11 @@ export const FormationPanel = ({
         <h3 class="text-lg font-bold text-green-400 mb-3">機体B</h3>
         <div class="space-y-3">
           <div>
-            <label class="block text-sm text-slate-400 mb-2">機体名で検索</label>
-            <MobileSuitSearch onSelect={handleSuitBSelect} placeholder="機体B名で検索..." />
+            <MobileSuitSearch
+              onSelect={handleSuitBSelect}
+              placeholder="機体B名で検索..."
+              toggleTestId="search-toggle-b"
+            />
           </div>
           <div>
             <label class="block text-sm text-slate-400 mb-2">コスト</label>
