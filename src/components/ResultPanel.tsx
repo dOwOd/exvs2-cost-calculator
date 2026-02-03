@@ -50,7 +50,7 @@ export const ResultPanel = ({
   return (
     <div class="bg-slate-900 rounded-lg">
       {/* 編成情報 + フィルター */}
-      <div class="border-b border-slate-700 p-4 sticky top-0 bg-slate-900 z-10">
+      <div class="border-b border-slate-700 p-3 sm:p-4 sticky top-0 bg-slate-900 z-10">
         {/* ガイダンスメッセージ */}
         {guidanceMessage && (
           <div
@@ -63,14 +63,14 @@ export const ResultPanel = ({
 
         {/* 編成情報（常時表示） */}
         <div class="mb-3 pb-3 border-b border-slate-700">
-          <div class="text-lg text-slate-400 font-mono">
+          <div class="text-sm sm:text-lg text-slate-400 font-mono flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-0">
             <span data-testid="formation-status-a">
               <span class="text-blue-400 font-semibold">A</span>:{' '}
               {formation.unitA
                 ? `コスト${formation.unitA.cost} / 耐久${formation.unitA.health}`
                 : '未選択'}
             </span>
-            <span class="mx-3 text-slate-600">|</span>
+            <span class="hidden sm:inline mx-3 text-slate-600">|</span>
             <span data-testid="formation-status-b">
               <span class="text-green-400 font-semibold">B</span>:{' '}
               {formation.unitB
@@ -127,7 +127,7 @@ export const ResultPanel = ({
       </div>
 
       {/* パターンリスト */}
-      <div class="p-6">
+      <div class="p-3 sm:p-4 md:p-6">
         <PatternList
           patterns={filteredPatterns}
           minimumDefeatHealth={minimumDefeatHealth}

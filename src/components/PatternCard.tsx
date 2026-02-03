@@ -30,14 +30,14 @@ export const PatternCard = ({
   return (
     <div
       data-testid={`pattern-card-${rank}`}
-      class={`bg-slate-800 p-4 rounded-lg border-l-4 ${pattern.isEXActivationFailure ? 'border-red-500' : 'border-blue-500'
+      class={`bg-slate-800 p-3 sm:p-4 rounded-lg border-l-4 ${pattern.isEXActivationFailure ? 'border-red-500' : 'border-blue-500'
         }`}
     >
       {/* ランクとパターン */}
-      <div class="flex items-center justify-between mb-3">
-        <div class="flex items-center gap-3">
-          <span data-testid={`pattern-rank-${rank}`} class="text-3xl font-bold text-blue-400">#{rank}</span>
-          <div data-testid={`pattern-string-${rank}`} class="text-2xl font-mono flex items-center gap-2">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
+        <div class="flex items-center gap-2 sm:gap-3">
+          <span data-testid={`pattern-rank-${rank}`} class="text-2xl sm:text-3xl font-bold text-blue-400">#{rank}</span>
+          <div data-testid={`pattern-string-${rank}`} class="text-lg sm:text-2xl font-mono flex items-center gap-1 sm:gap-2">
             {actualPattern.map((unit, index) => (
               <>
                 <span
@@ -55,13 +55,13 @@ export const PatternCard = ({
         </div>
         <div class="flex gap-2">
           {pattern.canActivateEXOverLimit && !pattern.isEXActivationFailure && (
-            <span class="px-3 py-1 bg-green-900 text-green-300 rounded text-sm font-semibold">
-              ✅ EXオーバーリミット発動可
+            <span class="px-2 sm:px-3 py-1 bg-green-900 text-green-300 rounded text-xs sm:text-sm font-semibold">
+              ✅ <span class="hidden sm:inline">EXオーバーリミット</span>発動可
             </span>
           )}
           {pattern.isEXActivationFailure && (
-            <span class="px-3 py-1 bg-red-900 text-red-300 rounded text-sm font-semibold">
-              ⚠️ EXオーバーリミット不発
+            <span class="px-2 sm:px-3 py-1 bg-red-900 text-red-300 rounded text-xs sm:text-sm font-semibold">
+              ⚠️ <span class="hidden sm:inline">EXオーバーリミット</span>不発
             </span>
           )}
         </div>
@@ -69,16 +69,16 @@ export const PatternCard = ({
 
       {/* 評価指標 */}
       <div class="mb-3">
-        <div class="bg-slate-700 p-3 rounded">
-          <div data-testid={`pattern-total-health-${rank}`} class="flex items-baseline justify-center gap-2">
-            <span class="text-base text-slate-400 flex items-center">
+        <div class="bg-slate-700 p-2 sm:p-3 rounded">
+          <div data-testid={`pattern-total-health-${rank}`} class="flex flex-wrap items-baseline justify-center gap-1 sm:gap-2">
+            <span class="text-sm sm:text-base text-slate-400 flex items-center">
               総耐久
               <InfoIcon tooltip="リスポーン時の耐久変動を考慮した真の総耐久値。高いほど長く戦える。" />
             </span>
-            <span class="text-3xl font-semibold text-slate-100">
+            <span class="text-2xl sm:text-3xl font-semibold text-slate-100">
               {pattern.totalHealth}
             </span>
-            <span class="text-base text-slate-400">
+            <span class="text-sm sm:text-base text-slate-400">
               (最短: {minimumDefeatHealth})
             </span>
           </div>
@@ -86,32 +86,27 @@ export const PatternCard = ({
       </div>
 
       {/* コスト推移テーブル */}
-      <div class="overflow-x-auto">
-        <table class="w-full text-lg table-fixed">
-          <colgroup>
-            <col class="w-20" />  {/* 撃墜順 */}
-            <col class="w-16" />  {/* 対象 */}
-            <col class="w-auto" /> {/* チーム残コスト（可変・メイン） */}
-            <col class="w-50" />  {/* リスポーン耐久 */}
-            <col class="w-60" />  {/* 状態 */}
-          </colgroup>
+      <div data-testid={`pattern-table-container-${rank}`} class="overflow-x-auto -mx-3 px-3 sm:mx-0 sm:px-0">
+        <table class="w-full text-sm sm:text-lg min-w-[500px]">
           <thead>
             <tr class="border-b border-slate-600">
-              <th class="text-left py-2 px-2 text-slate-400">撃墜順</th>
-              <th class="text-left py-2 px-2 text-slate-400">対象</th>
-              <th class="text-right py-2 px-2 text-slate-400">
-                <span class="flex items-center justify-end">
-                  チーム残コスト
+              <th class="text-left py-2 px-1 sm:px-2 text-slate-400 whitespace-nowrap">撃墜順</th>
+              <th class="text-left py-2 px-1 sm:px-2 text-slate-400">対象</th>
+              <th class="text-right py-2 px-1 sm:px-2 text-slate-400">
+                <span class="flex items-center justify-end whitespace-nowrap">
+                  <span class="sm:hidden">残コスト</span>
+                  <span class="hidden sm:inline">チーム残コスト</span>
                   <InfoIcon tooltip="チーム全体の残りコスト（6000から開始、A/B共有）。0以下で敗北。" />
                 </span>
               </th>
-              <th class="text-right py-2 px-2 text-slate-400">
-                <span class="flex items-center justify-end">
-                  リスポーン耐久
+              <th class="text-right py-2 px-1 sm:px-2 text-slate-400">
+                <span class="flex items-center justify-end whitespace-nowrap">
+                  <span class="sm:hidden">耐久</span>
+                  <span class="hidden sm:inline">リスポーン耐久</span>
                   <InfoIcon tooltip="撃墜後のリスポーン時の耐久値。" align="right" />
                 </span>
               </th>
-              <th class="text-center py-2 px-2 text-slate-400">
+              <th class="text-center py-2 px-1 sm:px-2 text-slate-400">
                 <span class="flex items-center justify-center">
                   状態
                   <InfoIcon tooltip="✓=通常 ⚠️=コストオーバー 💀=敗北" align="right" />
@@ -130,8 +125,8 @@ export const PatternCard = ({
                     : ''
                   }`}
               >
-                <td class="py-2 px-2 text-slate-300">{trans.killCount}</td>
-                <td class="py-2 px-2">
+                <td class="py-2 px-1 sm:px-2 text-slate-300">{trans.killCount}</td>
+                <td class="py-2 px-1 sm:px-2">
                   <span
                     class={`font-semibold ${trans.killedUnit === 'A' ? 'text-blue-400' : 'text-green-400'
                       }`}
@@ -139,12 +134,12 @@ export const PatternCard = ({
                     {trans.killedUnit}
                   </span>
                 </td>
-                <td class="py-2 px-2">
+                <td class="py-2 px-1 sm:px-2">
                   <div class="flex flex-col gap-1">
                     <div class="text-right font-mono text-slate-300">
                       {trans.remainingCost}
                     </div>
-                    <div class="bg-slate-700 rounded-full h-3 overflow-hidden">
+                    <div class="bg-slate-700 rounded-full h-2 sm:h-3 overflow-hidden">
                       <div
                         class={`h-full transition-all ${trans.remainingCost <= minCost && trans.remainingCost > 0
                           ? 'bg-red-500'
@@ -159,18 +154,18 @@ export const PatternCard = ({
                     </div>
                   </div>
                 </td>
-                <td class="py-2 px-2 text-right font-mono text-slate-300">
+                <td class="py-2 px-1 sm:px-2 text-right font-mono text-slate-300">
                   {trans.isDefeat ? (
                     <span class="text-red-400">-</span>
                   ) : (
                     trans.respawnHealth
                   )}
                 </td>
-                <td class="py-2 px-2 text-center">
+                <td class="py-2 px-1 sm:px-2 text-center whitespace-nowrap">
                   {trans.isDefeat ? (
-                    <span class="text-red-400 font-semibold">💀 敗北</span>
+                    <span class="text-red-400 font-semibold">💀 <span class="hidden sm:inline">敗北</span></span>
                   ) : trans.isOverCost ? (
-                    <span class="text-yellow-400 font-semibold">⚠️ コストオーバー</span>
+                    <span class="text-yellow-400 font-semibold">⚠️ <span class="hidden sm:inline">コストオーバー</span></span>
                   ) : (
                     <span class="text-green-400">✓</span>
                   )}

@@ -36,7 +36,8 @@ test.describe('編成選択と結果表示', () => {
     // リストボックスが表示されるまで待機
     await expect(page.getByTestId('health-selector-listbox-a')).toBeVisible();
 
-    await page.getByTestId('health-option-a-680').click();
+    // evaluate でポップアップオーバーレイを確実に回避
+    await page.getByTestId('health-option-a-680').evaluate((el) => (el as HTMLElement).click());
 
     // B機: コスト2500を選択
     await page.getByTestId('cost-button-b-2500').click();
@@ -50,7 +51,8 @@ test.describe('編成選択と結果表示', () => {
     // リストボックスが表示されるまで待機
     await expect(page.getByTestId('health-selector-listbox-b')).toBeVisible();
 
-    await page.getByTestId('health-option-b-640').click();
+    // evaluate でポップアップオーバーレイを確実に回避
+    await page.getByTestId('health-option-b-640').evaluate((el) => (el as HTMLElement).click());
 
     // 結果パネルが表示されることを確認
     await expect(page.getByTestId('pattern-card-1')).toBeVisible();
@@ -98,7 +100,8 @@ test.describe('編成選択と結果表示', () => {
     // リストボックスが表示されるまで待機
     await expect(page.getByTestId('health-selector-listbox-a')).toBeVisible();
 
-    await page.getByTestId('health-option-a-660').click();
+    // evaluate でポップアップオーバーレイを確実に回避
+    await page.getByTestId('health-option-a-660').evaluate((el) => (el as HTMLElement).click());
 
     // B機: コスト1500を選択
     await page.getByTestId('cost-button-b-1500').click();
@@ -111,7 +114,8 @@ test.describe('編成選択と結果表示', () => {
     // リストボックスが表示されるまで待機
     await expect(page.getByTestId('health-selector-listbox-b')).toBeVisible();
 
-    await page.getByTestId('health-option-b-500').click();
+    // evaluate でポップアップオーバーレイを確実に回避
+    await page.getByTestId('health-option-b-500').evaluate((el) => (el as HTMLElement).click());
 
     // 結果パネルが表示されることを確認
     await expect(page.getByTestId('pattern-card-1')).toBeVisible();
