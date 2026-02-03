@@ -94,15 +94,15 @@ export const PatternCard = ({
               <th class="text-left py-2 px-1 sm:px-2 text-slate-400">対象</th>
               <th class="text-right py-2 px-1 sm:px-2 text-slate-400">
                 <span class="flex items-center justify-end whitespace-nowrap">
-                  <span class="sm:hidden">残コスト</span>
-                  <span class="hidden sm:inline">チーム残コスト</span>
+                  <span class="lg:hidden">残コスト</span>
+                  <span class="hidden lg:inline">チーム残コスト</span>
                   <InfoIcon tooltip="チーム全体の残りコスト（6000から開始、A/B共有）。0以下で敗北。" />
                 </span>
               </th>
               <th class="text-right py-2 px-1 sm:px-2 text-slate-400">
                 <span class="flex items-center justify-end whitespace-nowrap">
-                  <span class="sm:hidden">耐久</span>
-                  <span class="hidden sm:inline">リスポーン耐久</span>
+                  <span class="lg:hidden">耐久</span>
+                  <span class="hidden lg:inline">リスポーン耐久</span>
                   <InfoIcon tooltip="撃墜後のリスポーン時の耐久値。" align="right" />
                 </span>
               </th>
