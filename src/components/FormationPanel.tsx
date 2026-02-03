@@ -64,9 +64,9 @@ export const FormationPanel = ({
   };
 
   return (
-    <div class="space-y-6">
+    <div class="space-y-4 md:space-y-6">
       {/* 機体A */}
-      <div class="bg-slate-800 p-4 rounded-lg">
+      <div data-testid="formation-panel-a" class="bg-slate-800 p-3 sm:p-4 rounded-lg">
         <h3 class="text-lg font-bold text-blue-400 mb-3">機体A</h3>
         <div class="space-y-3">
           <div>
@@ -100,7 +100,7 @@ export const FormationPanel = ({
       </div>
 
       {/* 機体B */}
-      <div class="bg-slate-800 p-4 rounded-lg">
+      <div data-testid="formation-panel-b" class="bg-slate-800 p-3 sm:p-4 rounded-lg">
         <h3 class="text-lg font-bold text-green-400 mb-3">機体B</h3>
         <div class="space-y-3">
           <div>

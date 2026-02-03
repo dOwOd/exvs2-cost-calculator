@@ -138,7 +138,7 @@ export const HealthSelector = ({
         onKeyDown={handleKeyDown}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
-        class="px-4 py-2 bg-slate-700 text-slate-200 rounded border border-slate-600 focus:border-blue-500 focus:outline-none w-full text-left flex justify-between items-center"
+        class="min-h-[44px] px-4 py-2 bg-slate-700 text-slate-200 rounded border border-slate-600 focus:border-blue-500 focus:outline-none w-full text-left flex justify-between items-center"
       >
         <span>{selectedHealth ?? '耐久値を選択'}</span>
         <svg
@@ -168,7 +168,7 @@ export const HealthSelector = ({
               onClick={() => handleSelect(health)}
               onMouseEnter={(e) => handleMouseEnter(health, e as unknown as MouseEvent)}
               onMouseLeave={handleMouseLeave}
-              class={`px-4 py-2 cursor-pointer ${
+              class={`min-h-[44px] px-4 py-2 cursor-pointer flex items-center ${
                 health === selectedHealth
                   ? 'bg-blue-600 text-white'
                   : index === focusedIndex

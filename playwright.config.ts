@@ -37,6 +37,7 @@ export default defineConfig({
 
   // テスト対象ブラウザ
   projects: [
+    // デスクトップブラウザ
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
@@ -50,6 +51,26 @@ export default defineConfig({
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
+    },
+
+    // モバイルデバイス（デスクトップ専用テストを除外）
+    {
+      name: 'mobile-chrome',
+      use: { ...devices['Pixel 5'] },
+      testIgnore: ['**/*.desktop.spec.ts'],
+    },
+
+    {
+      name: 'mobile-safari',
+      use: { ...devices['iPhone 12'] },
+      testIgnore: ['**/*.desktop.spec.ts'],
+    },
+
+    // タブレット（デスクトップ専用テストを除外）
+    {
+      name: 'tablet',
+      use: { ...devices['iPad (gen 7)'] },
+      testIgnore: ['**/*.desktop.spec.ts'],
     },
   ],
 
