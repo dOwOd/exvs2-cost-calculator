@@ -2,6 +2,7 @@
  * パターンカード（個別パターン表示）
  */
 
+import { useState } from 'preact/hooks';
 import type { EvaluatedPattern, Formation } from '../lib/types';
 import { InfoIcon } from './Tooltip';
 
@@ -10,6 +11,7 @@ type PatternCardType = {
   rank: number;
   minimumDefeatHealth: number;
   formation: Formation;
+  showScrollHint?: boolean;
 }
 
 export const PatternCard = ({
@@ -17,7 +19,15 @@ export const PatternCard = ({
   rank,
   minimumDefeatHealth,
   formation,
+  showScrollHint = false,
 }: PatternCardType) => {
+  const [hasScrolled, setHasScrolled] = useState(false);
+
+  const handleScroll = () => {
+    if (!hasScrolled) {
+      setHasScrolled(true);
+    }
+  };
   // 実際に発生した撃墜のみを表示（敗北までの部分）
   const actualPattern = pattern.pattern.slice(0, pattern.transitions.length);
 
@@ -87,11 +97,17 @@ export const PatternCard = ({
 
       {/* コスト推移テーブル */}
       <div class="relative">
-        {/* スクロールヒント（モバイル・タブレットのみ） */}
-        <div class="lg:hidden flex items-center justify-end gap-1 text-xs text-slate-400 mb-1">
-          <span>← スワイプで全体表示 →</span>
-        </div>
-        <div data-testid={`pattern-table-container-${rank}`} class="overflow-x-auto -mx-3 px-3 sm:mx-0 sm:px-0">
+        {/* スクロールヒント（最初のカードのみ、スクロール前のみ表示） */}
+        {showScrollHint && !hasScrolled && (
+          <div class="lg:hidden flex items-center justify-end gap-1 text-xs text-slate-400 mb-1">
+            <span>← スワイプで全体表示 →</span>
+          </div>
+        )}
+        <div
+          data-testid={`pattern-table-container-${rank}`}
+          class="overflow-x-auto -mx-3 px-3 sm:mx-0 sm:px-0"
+          onScroll={handleScroll}
+        >
           <table class="w-full text-sm sm:text-lg min-w-[500px]">
           <thead>
             <tr class="border-b border-slate-600">

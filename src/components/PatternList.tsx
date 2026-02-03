@@ -26,6 +26,7 @@ export const PatternList = ({
           rank={index + 1}
           minimumDefeatHealth={minimumDefeatHealth}
           formation={formation}
+          showScrollHint={index === 0}
         />
       ))}
     </div>
