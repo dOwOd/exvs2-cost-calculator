@@ -56,12 +56,12 @@ export const PatternCard = ({
         <div class="flex gap-2">
           {pattern.canActivateEXOverLimit && !pattern.isEXActivationFailure && (
             <span class="px-2 sm:px-3 py-1 bg-green-900 text-green-300 rounded text-xs sm:text-sm font-semibold">
-              ✅ <span class="hidden sm:inline">EXオーバーリミット</span>発動可
+              ✅ EXオーバーリミット発動可
             </span>
           )}
           {pattern.isEXActivationFailure && (
             <span class="px-2 sm:px-3 py-1 bg-red-900 text-red-300 rounded text-xs sm:text-sm font-semibold">
-              ⚠️ <span class="hidden sm:inline">EXオーバーリミット</span>不発
+              ⚠️ EXオーバーリミット不発
             </span>
           )}
         </div>
@@ -86,8 +86,13 @@ export const PatternCard = ({
       </div>
 
       {/* コスト推移テーブル */}
-      <div data-testid={`pattern-table-container-${rank}`} class="overflow-x-auto -mx-3 px-3 sm:mx-0 sm:px-0">
-        <table class="w-full text-sm sm:text-lg min-w-[500px]">
+      <div class="relative">
+        {/* スクロールヒント（モバイル・タブレットのみ） */}
+        <div class="lg:hidden flex items-center justify-end gap-1 text-xs text-slate-400 mb-1">
+          <span>← スワイプで全体表示 →</span>
+        </div>
+        <div data-testid={`pattern-table-container-${rank}`} class="overflow-x-auto -mx-3 px-3 sm:mx-0 sm:px-0">
+          <table class="w-full text-sm sm:text-lg min-w-[500px]">
           <thead>
             <tr class="border-b border-slate-600">
               <th class="text-left py-2 px-1 sm:px-2 text-slate-400 whitespace-nowrap">撃墜順</th>
@@ -174,6 +179,7 @@ export const PatternCard = ({
             ))}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );

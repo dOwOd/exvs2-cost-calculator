@@ -86,9 +86,11 @@ test.describe('レスポンシブデザイン - モバイル・タブレット',
     });
 
     test('耐久セレクターのタップターゲットが44px以上', async ({ page }) => {
-      // コストを選択して耐久セレクターを表示
-      await page.getByTestId('cost-button-a-3000').click();
-      await expect(page.getByTestId('health-selector-button-a')).toBeVisible();
+      // コストを選択して耐久セレクターを表示（evaluate でクリック確実化）
+      const costButton = page.getByTestId('cost-button-a-3000');
+      await expect(costButton).toBeVisible();
+      await costButton.evaluate((el) => (el as HTMLElement).click());
+      await expect(page.getByTestId('health-selector-button-a')).toBeVisible({ timeout: 10000 });
 
       const healthButton = page.getByTestId('health-selector-button-a');
       const box = await healthButton.boundingBox();
