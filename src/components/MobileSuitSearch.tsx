@@ -147,7 +147,7 @@ export const MobileSuitSearch = ({
             <ul
               role="listbox"
               data-testid="mobile-suit-search-results"
-              class="absolute z-40 w-full mt-1 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded shadow-lg max-h-60 overflow-auto"
+              class="absolute z-40 w-full mt-1 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded shadow-lg max-h-60 overflow-auto"
             >
               {results.map((suit, index) => (
                 <li

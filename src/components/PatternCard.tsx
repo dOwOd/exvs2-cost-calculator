@@ -40,7 +40,7 @@ export const PatternCard = ({
   return (
     <div
       data-testid={`pattern-card-${rank}`}
-      class={`bg-white dark:bg-slate-800 p-3 sm:p-4 rounded-lg border-l-4 shadow-sm dark:shadow-none ${pattern.isEXActivationFailure ? 'border-red-500' : 'border-blue-500'
+      class={`bg-slate-50 dark:bg-slate-800 p-3 sm:p-4 rounded-lg border-l-4 shadow-sm dark:shadow-none ${pattern.isEXActivationFailure ? 'border-red-500' : 'border-blue-500'
         }`}
     >
       {/* ランクとパターン */}

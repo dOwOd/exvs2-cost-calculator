@@ -12,9 +12,19 @@
     box-sizing: border-box;
   }
 
-  /* ライトモードがデフォルト */
+  /* テーマ切り替え時のトランジション */
+  html {
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  body,
+  body * {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+
+  /* ライトモードがデフォルト（少し落ち着いた色調） */
   body {
-    @apply bg-slate-50 text-slate-900 antialiased;
+    @apply bg-slate-100 text-slate-800 antialiased;
   }
 
   /* ダークモード */

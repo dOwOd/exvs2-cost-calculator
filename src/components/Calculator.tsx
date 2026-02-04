@@ -45,7 +45,7 @@ export const Calculator = () => {
   };
 
   return (
-    <div class="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+    <div class="min-h-screen bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100">
       <div class="container mx-auto p-3 sm:p-4 md:p-6">
         <header class="mb-4 md:mb-8">
           <div class="flex items-center justify-between">

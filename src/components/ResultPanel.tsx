@@ -48,9 +48,9 @@ export const ResultPanel = ({
   const guidanceMessage = getGuidanceMessage();
 
   return (
-    <div class="bg-slate-50 dark:bg-slate-900 rounded-lg">
+    <div class="bg-slate-100 dark:bg-slate-900 rounded-lg">
       {/* 編成情報 + フィルター */}
-      <div class="border-b border-slate-200 dark:border-slate-700 p-3 sm:p-4 sticky top-0 bg-slate-50 dark:bg-slate-900 z-10">
+      <div class="border-b border-slate-200 dark:border-slate-700 p-3 sm:p-4 sticky top-0 bg-slate-100 dark:bg-slate-900 z-10">
         {/* ガイダンスメッセージ */}
         {guidanceMessage && (
           <div

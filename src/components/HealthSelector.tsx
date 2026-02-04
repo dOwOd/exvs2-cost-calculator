@@ -155,7 +155,7 @@ export const HealthSelector = ({
         <ul
           role="listbox"
           data-testid={testIdPrefix ? `health-selector-listbox-${testIdPrefix}` : 'health-selector-listbox'}
-          class={`absolute z-40 w-full bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded shadow-lg max-h-60 overflow-auto ${
+          class={`absolute z-40 w-full bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded shadow-lg max-h-60 overflow-auto ${
             dropdownDirection === 'up' ? 'bottom-full mb-1' : 'top-full mt-1'
           }`}
         >
