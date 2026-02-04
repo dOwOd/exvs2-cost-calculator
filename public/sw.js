@@ -1,7 +1,7 @@
 // Service Worker for EXVS2 Cost Calculator
 // Version: 1.0.0
 
-const CACHE_NAME = 'exvs2-calculator-v1';
+const CACHE_NAME = 'exvs2-calculator-v2';
 
 // キャッシュするリソース（静的ファイル）
 const STATIC_ASSETS = [
@@ -57,9 +57,10 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 静的アセット（JS/CSS/画像）: Cache First
+  // 静的アセット（JS/CSS/画像）: Stale-While-Revalidate
+  // キャッシュから即座に返しつつ、バックグラウンドで最新を取得
   if (isStaticAsset(url.pathname)) {
-    event.respondWith(cacheFirst(request));
+    event.respondWith(staleWhileRevalidate(request));
     return;
   }
 
@@ -88,23 +89,22 @@ const networkFirst = async (request) => {
   }
 };
 
-// Cache First戦略
-const cacheFirst = async (request) => {
-  const cached = await caches.match(request);
-  if (cached) {
-    return cached;
-  }
-  // キャッシュにない場合はネットワークから取得してキャッシュ
-  try {
-    const response = await fetch(request);
+// Stale-While-Revalidate戦略
+// キャッシュから即座に返し、バックグラウンドで最新を取得してキャッシュを更新
+const staleWhileRevalidate = async (request) => {
+  const cache = await caches.open(CACHE_NAME);
+  const cached = await cache.match(request);
+
+  // バックグラウンドでネットワークから取得してキャッシュを更新
+  const fetchPromise = fetch(request).then((response) => {
     if (response.ok) {
-      const cache = await caches.open(CACHE_NAME);
       cache.put(request, response.clone());
     }
     return response;
-  } catch (error) {
-    throw error;
-  }
+  });
+
+  // キャッシュがあれば即座に返す、なければネットワークを待つ
+  return cached || fetchPromise;
 };
 
 // 静的アセットかどうかを判定
