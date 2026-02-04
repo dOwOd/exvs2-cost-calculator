@@ -58,7 +58,7 @@ docker compose exec dev pnpm test
 - [ ] テストを追加/更新した
 - [ ] すべてのテストがパスすることを確認した（`pnpm test`）
 - [ ] コミットメッセージが規約に従っている
-- [ ] Pull Requestを作成した（ユーザーがマージを行う）
+- [ ] Pull Requestを作成した（`Closes #番号`でIssueと紐づけ、ユーザーがマージ）
 
 ---
 
