@@ -4,13 +4,22 @@
 
 @import "tailwindcss";
 
+/* Tailwind CSS v4: class戦略でダークモードを設定 */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   * {
     box-sizing: border-box;
   }
 
+  /* ライトモードがデフォルト */
   body {
-    @apply bg-slate-900 text-slate-100 antialiased;
+    @apply bg-slate-50 text-slate-900 antialiased;
+  }
+
+  /* ダークモード */
+  .dark body {
+    @apply bg-slate-900 text-slate-100;
   }
 }
 

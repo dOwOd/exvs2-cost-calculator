@@ -123,7 +123,7 @@ export const MobileSuitSearch = ({
         type="button"
         data-testid={toggleTestId}
         onClick={() => setIsCollapsed(!isCollapsed)}
-        class="flex items-center gap-2 text-sm text-slate-400 hover:text-slate-200 mb-2 transition-colors"
+        class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 mb-2 transition-colors"
       >
         <span class="text-xs">{isCollapsed ? '▶' : '▼'}</span>
         <span>機体名から選択...</span>
@@ -140,14 +140,14 @@ export const MobileSuitSearch = ({
             onInput={(e) => setQuery((e.target as HTMLInputElement).value)}
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
-            class="px-4 py-2 bg-slate-700 text-slate-200 rounded border border-slate-600 focus:border-blue-500 focus:outline-none w-full"
+            class="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200 rounded border border-slate-300 dark:border-slate-600 focus:border-blue-500 focus:outline-none w-full"
           />
 
           {isOpen && results.length > 0 && (
             <ul
               role="listbox"
               data-testid="mobile-suit-search-results"
-              class="absolute z-40 w-full mt-1 bg-slate-700 border border-slate-600 rounded shadow-lg max-h-60 overflow-auto"
+              class="absolute z-40 w-full mt-1 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded shadow-lg max-h-60 overflow-auto"
             >
               {results.map((suit, index) => (
                 <li
@@ -157,13 +157,13 @@ export const MobileSuitSearch = ({
                   onClick={() => handleSelect(suit)}
                   class={`px-4 py-2 cursor-pointer ${
                     index === focusedIndex
-                      ? 'bg-slate-600 text-slate-200'
-                      : 'text-slate-200 hover:bg-slate-600'
+                      ? 'bg-slate-200 dark:bg-slate-600 text-slate-800 dark:text-slate-200'
+                      : 'text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-600'
                   }`}
                 >
                   <div class="flex justify-between items-center">
                     <span>{suit.name}</span>
-                    <span class="text-sm text-slate-400">
+                    <span class="text-sm text-slate-500 dark:text-slate-400">
                       {suit.cost}/{suit.health}
                     </span>
                   </div>
@@ -182,7 +182,7 @@ export const MobileSuitSearch = ({
                     type="button"
                     data-testid={`recent-suit-${suit.name}-${suit.cost}`}
                     onClick={() => handleSelect(suit)}
-                    class="px-2 py-1 text-xs bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600"
+                    class="px-2 py-1 text-xs bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 rounded border border-slate-300 dark:border-slate-600"
                   >
                     {suit.name}
                   </button>

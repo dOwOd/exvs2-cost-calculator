@@ -138,7 +138,7 @@ export const HealthSelector = ({
         onKeyDown={handleKeyDown}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
-        class="min-h-[44px] px-4 py-2 bg-slate-700 text-slate-200 rounded border border-slate-600 focus:border-blue-500 focus:outline-none w-full text-left flex justify-between items-center"
+        class="min-h-[44px] px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200 rounded border border-slate-300 dark:border-slate-600 focus:border-blue-500 focus:outline-none w-full text-left flex justify-between items-center"
       >
         <span>{selectedHealth ?? '耐久値を選択'}</span>
         <svg
@@ -155,7 +155,7 @@ export const HealthSelector = ({
         <ul
           role="listbox"
           data-testid={testIdPrefix ? `health-selector-listbox-${testIdPrefix}` : 'health-selector-listbox'}
-          class={`absolute z-40 w-full bg-slate-700 border border-slate-600 rounded shadow-lg max-h-60 overflow-auto ${
+          class={`absolute z-40 w-full bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded shadow-lg max-h-60 overflow-auto ${
             dropdownDirection === 'up' ? 'bottom-full mb-1' : 'top-full mt-1'
           }`}
         >
@@ -172,8 +172,8 @@ export const HealthSelector = ({
                 health === selectedHealth
                   ? 'bg-blue-600 text-white'
                   : index === focusedIndex
-                  ? 'bg-slate-600 text-slate-200'
-                  : 'text-slate-200 hover:bg-slate-600'
+                  ? 'bg-slate-200 dark:bg-slate-600 text-slate-800 dark:text-slate-200'
+                  : 'text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-600'
               }`}
             >
               {health}

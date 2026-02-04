@@ -69,15 +69,15 @@ export const HealthDropdownPopup = ({
   return (
     <div
       ref={popupRef}
-      class="fixed bg-slate-800 border border-slate-600 rounded shadow-lg p-3 z-50 min-w-[200px] max-w-[300px] overflow-auto"
+      class="fixed bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded shadow-lg p-3 z-50 min-w-[200px] max-w-[300px] overflow-auto"
       style={{
         top: `${adjustedPosition.top}px`,
         left: `${adjustedPosition.left}px`,
         maxHeight: `${maxHeight}px`,
       }}
     >
-      <div class="text-sm text-slate-400 mb-1">該当機体</div>
-      <ul class="text-slate-200 space-y-1">
+      <div class="text-sm text-slate-500 dark:text-slate-400 mb-1">該当機体</div>
+      <ul class="text-slate-800 dark:text-slate-200 space-y-1">
         {mobileSuits.map((suit) => (
           <li key={suit} class="text-sm">
             {suit}

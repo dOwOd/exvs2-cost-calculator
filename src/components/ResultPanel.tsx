@@ -48,31 +48,31 @@ export const ResultPanel = ({
   const guidanceMessage = getGuidanceMessage();
 
   return (
-    <div class="bg-slate-900 rounded-lg">
+    <div class="bg-slate-50 dark:bg-slate-900 rounded-lg">
       {/* 編成情報 + フィルター */}
-      <div class="border-b border-slate-700 p-3 sm:p-4 sticky top-0 bg-slate-900 z-10">
+      <div class="border-b border-slate-200 dark:border-slate-700 p-3 sm:p-4 sticky top-0 bg-slate-50 dark:bg-slate-900 z-10">
         {/* ガイダンスメッセージ */}
         {guidanceMessage && (
           <div
             data-testid="formation-guidance"
-            class="mb-3 pb-3 border-b border-slate-700 text-center"
+            class="mb-3 pb-3 border-b border-slate-200 dark:border-slate-700 text-center"
           >
-            <p class="text-slate-300 text-lg">{guidanceMessage}</p>
+            <p class="text-slate-700 dark:text-slate-300 text-lg">{guidanceMessage}</p>
           </div>
         )}
 
         {/* 編成情報（常時表示） */}
-        <div class="mb-3 pb-3 border-b border-slate-700">
-          <div class="text-sm sm:text-lg text-slate-400 font-mono flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-0">
+        <div class="mb-3 pb-3 border-b border-slate-200 dark:border-slate-700">
+          <div class="text-sm sm:text-lg text-slate-600 dark:text-slate-400 font-mono flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-0">
             <span data-testid="formation-status-a">
-              <span class="text-blue-400 font-semibold">A</span>:{' '}
+              <span class="text-blue-600 dark:text-blue-400 font-semibold">A</span>:{' '}
               {formation.unitA
                 ? `コスト${formation.unitA.cost} / 耐久${formation.unitA.health}`
                 : '未選択'}
             </span>
-            <span class="hidden sm:inline mx-3 text-slate-600">|</span>
+            <span class="hidden sm:inline mx-3 text-slate-400 dark:text-slate-600">|</span>
             <span data-testid="formation-status-b">
-              <span class="text-green-400 font-semibold">B</span>:{' '}
+              <span class="text-green-600 dark:text-green-400 font-semibold">B</span>:{' '}
               {formation.unitB
                 ? `コスト${formation.unitB.cost} / 耐久${formation.unitB.health}`
                 : '未選択'}
@@ -91,7 +91,7 @@ export const ResultPanel = ({
                 onChange={(e) => setShowOnlyEXAvailable(e.currentTarget.checked)}
                 class="sr-only peer"
               />
-              <div class="w-6 h-6 border-2 border-slate-600 rounded-md bg-slate-800 peer-checked:bg-blue-600 peer-checked:border-blue-600 transition-all duration-200 group-hover:border-slate-500">
+              <div class="w-6 h-6 border-2 border-slate-300 dark:border-slate-600 rounded-md bg-slate-100 dark:bg-slate-800 peer-checked:bg-blue-600 peer-checked:border-blue-600 transition-all duration-200 group-hover:border-slate-400 dark:group-hover:border-slate-500">
                 <svg
                   class={`w-full h-full text-white transition-all duration-200 ${showOnlyEXAvailable ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}
                   fill="none"
@@ -107,7 +107,7 @@ export const ResultPanel = ({
                 </svg>
               </div>
             </div>
-            <span class="text-sm text-slate-300 font-medium flex items-center gap-2 group-hover:text-slate-200">
+            <span class="text-sm text-slate-700 dark:text-slate-300 font-medium flex items-center gap-2 group-hover:text-slate-900 dark:group-hover:text-slate-200">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"

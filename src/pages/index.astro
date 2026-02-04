@@ -16,7 +16,34 @@ import '../styles/global.css';
 
 		<!-- PWA -->
 		<link rel="manifest" href="/manifest.json" />
-		<meta name="theme-color" content="#0f172a" />
+		<meta name="theme-color" content="#0f172a" id="theme-color-meta" />
+
+		<!-- テーマ初期化（FOUCを防ぐためhead内で実行） -->
+		<script is:inline>
+			(function() {
+				const stored = localStorage.getItem('theme');
+				const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+				let isDark;
+				if (stored === 'dark') {
+					isDark = true;
+				} else if (stored === 'light') {
+					isDark = false;
+				} else {
+					isDark = systemDark;
+				}
+
+				if (isDark) {
+					document.documentElement.classList.add('dark');
+				}
+
+				// theme-colorもテーマに応じて更新
+				const meta = document.getElementById('theme-color-meta');
+				if (meta) {
+					meta.setAttribute('content', isDark ? '#0f172a' : '#f8fafc');
+				}
+			})();
+		</script>
 
 		<!-- iOS PWA -->
 		<meta name="apple-mobile-web-app-capable" content="yes" />
