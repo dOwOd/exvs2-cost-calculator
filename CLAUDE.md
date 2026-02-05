@@ -32,3 +32,7 @@ pnpm test                  # テスト実行
 - [ ] テスト追加/更新 (`pnpm test`)
 - [ ] コミット規約に従う
 - [ ] PR作成（`Closes #番号`でIssue紐づけ）
+
+## セッション終了時
+
+ドキュメント更新が必要かどうか確認すること（詳細: `.claude/rules/session-update.md`）
