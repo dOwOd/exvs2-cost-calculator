@@ -40,9 +40,9 @@ export const Tooltip = ({ content, children, align = 'center' }: TooltipType) =>
         {children}
       </span>
       {isVisible && (
-        <span class={`absolute z-[100] top-full ${positionClasses[align]} mt-2 px-3 py-2 bg-slate-950 text-slate-200 text-sm rounded-lg shadow-lg border border-slate-700 whitespace-nowrap`}>
+        <span class={`absolute z-[100] top-full ${positionClasses[align]} mt-2 px-3 py-2 bg-slate-800 dark:bg-slate-950 text-slate-100 dark:text-slate-200 text-sm rounded-lg shadow-lg border border-slate-300 dark:border-slate-700 whitespace-nowrap`}>
           {content}
-          <span class={`absolute bottom-full ${arrowClasses[align]} mb-px border-4 border-transparent border-b-slate-950`} />
+          <span class={`absolute bottom-full ${arrowClasses[align]} mb-px border-4 border-transparent border-b-slate-800 dark:border-b-slate-950`} />
         </span>
       )}
     </span>
@@ -62,7 +62,7 @@ type InfoIconType = {
 export const InfoIcon = ({ tooltip, align = 'center' }: InfoIconType) => {
   return (
     <Tooltip content={tooltip} align={align}>
-      <span class="inline-flex items-center justify-center w-4 h-4 ml-1 text-xs text-slate-400 hover:text-blue-400 transition-colors">
+      <span class="inline-flex items-center justify-center w-4 h-4 ml-1 text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
         ⓘ
       </span>
     </Tooltip>

@@ -66,8 +66,8 @@ export const FormationPanel = ({
   return (
     <div class="space-y-4 md:space-y-6">
       {/* 機体A */}
-      <div data-testid="formation-panel-a" class="bg-slate-800 p-3 sm:p-4 rounded-lg">
-        <h3 class="text-lg font-bold text-blue-400 mb-3">機体A</h3>
+      <div data-testid="formation-panel-a" class="bg-slate-50 dark:bg-slate-800 p-3 sm:p-4 rounded-lg shadow-sm dark:shadow-none border border-slate-200 dark:border-transparent">
+        <h3 class="text-lg font-bold text-blue-600 dark:text-blue-400 mb-3">機体A</h3>
         <div class="space-y-3">
           <div>
             <MobileSuitSearch
@@ -77,12 +77,12 @@ export const FormationPanel = ({
             />
           </div>
           <div>
-            <label class="block text-sm text-slate-400 mb-2">コスト</label>
+            <label class="block text-sm text-slate-600 dark:text-slate-400 mb-2">コスト</label>
             <CostSelector selectedCost={costA} onSelect={handleCostASelect} testIdPrefix="a" />
           </div>
           {costA && (
             <div>
-              <label class="block text-sm text-slate-400 mb-2">耐久値</label>
+              <label class="block text-sm text-slate-600 dark:text-slate-400 mb-2">耐久値</label>
               <HealthSelector
                 cost={costA}
                 selectedHealth={unitA?.health ?? null}
@@ -93,15 +93,15 @@ export const FormationPanel = ({
           )}
         </div>
         {unitA && (
-          <div class="mt-3 text-sm text-slate-300">
+          <div class="mt-3 text-sm text-slate-700 dark:text-slate-300">
             選択中: コスト {unitA.cost} / 耐久 {unitA.health}
           </div>
         )}
       </div>
 
       {/* 機体B */}
-      <div data-testid="formation-panel-b" class="bg-slate-800 p-3 sm:p-4 rounded-lg">
-        <h3 class="text-lg font-bold text-green-400 mb-3">機体B</h3>
+      <div data-testid="formation-panel-b" class="bg-slate-50 dark:bg-slate-800 p-3 sm:p-4 rounded-lg shadow-sm dark:shadow-none border border-slate-200 dark:border-transparent">
+        <h3 class="text-lg font-bold text-green-600 dark:text-green-400 mb-3">機体B</h3>
         <div class="space-y-3">
           <div>
             <MobileSuitSearch
@@ -111,12 +111,12 @@ export const FormationPanel = ({
             />
           </div>
           <div>
-            <label class="block text-sm text-slate-400 mb-2">コスト</label>
+            <label class="block text-sm text-slate-600 dark:text-slate-400 mb-2">コスト</label>
             <CostSelector selectedCost={costB} onSelect={handleCostBSelect} testIdPrefix="b" />
           </div>
           {costB && (
             <div>
-              <label class="block text-sm text-slate-400 mb-2">耐久値</label>
+              <label class="block text-sm text-slate-600 dark:text-slate-400 mb-2">耐久値</label>
               <HealthSelector
                 cost={costB}
                 selectedHealth={unitB?.health ?? null}
@@ -127,7 +127,7 @@ export const FormationPanel = ({
           )}
         </div>
         {unitB && (
-          <div class="mt-3 text-sm text-slate-300">
+          <div class="mt-3 text-sm text-slate-700 dark:text-slate-300">
             選択中: コスト {unitB.cost} / 耐久 {unitB.health}
           </div>
         )}

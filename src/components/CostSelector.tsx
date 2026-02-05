@@ -26,7 +26,7 @@ export const CostSelector = ({
           onClick={() => onSelect(cost)}
           class={`min-h-[44px] px-2 sm:px-4 py-2 rounded font-semibold transition-colors text-sm sm:text-base ${selectedCost === cost
             ? 'bg-blue-600 text-white'
-            : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+            : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
             }`}
         >
           {cost}
