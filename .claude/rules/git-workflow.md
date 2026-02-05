@@ -42,16 +42,21 @@ docs/説明                 # ドキュメント
 
 **重要**: Issueに取り組む際は、以下を必ず守ること。
 
-1. **Issue専用ブランチを作成**: 各Issueに対して専用のブランチを作成する
-2. **ブランチの混在禁止**: 別のIssueの変更を同じブランチに含めない
-3. **1 Issue = 1 PR**: 1つのIssueに対して1つのPRを作成する
+1. **必ずmainから派生**: 新しいIssueのブランチは必ず最新のmainから作成する
+2. **Issue専用ブランチを作成**: 各Issueに対して専用のブランチを作成する
+3. **ブランチの混在禁止**: 別のIssueの変更を同じブランチに含めない
+4. **1 Issue = 1 PR**: 1つのIssueに対して1つのPRを作成する
 
 ```bash
-# 例: Issue #37 に取り組む場合
+# 新しいIssueに取り組む際の必須手順
 git checkout main
 git pull origin main
-git checkout -b fix/issue-37-説明
+git checkout -b fix/issue-番号-説明
 ```
+
+**禁止事項**:
+- 他のIssueブランチから派生してブランチを作成すること
+- 既存のIssueブランチで別のIssueの作業を行うこと
 
 ## PR作成ルール
 
