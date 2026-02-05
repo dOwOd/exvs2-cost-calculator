@@ -1,4 +1,18 @@
 {
+  "rules": [
+    {
+      "glob": "src/**/*",
+      "rules": [".claude/rules/development.md"]
+    },
+    {
+      "glob": "src/lib/**/*.ts",
+      "rules": [".claude/rules/specifications.md"]
+    },
+    {
+      "glob": "src/components/**/*.tsx",
+      "rules": [".claude/rules/ui-patterns.md"]
+    }
+  ],
   "hooks": {
     "PreToolUse": [
       {
