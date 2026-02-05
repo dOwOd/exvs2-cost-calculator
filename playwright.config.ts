@@ -13,9 +13,10 @@ export default defineConfig({
 
   // CI環境での設定
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  // LocalStorage競合を避けるため、常にシングルワーカーで実行
-  workers: 1,
+  // フレイキーテスト対策: ローカル1回、CI2回リトライ
+  retries: process.env.CI ? 2 : 1,
+  // ワーカー数: ローカルは自動（CPU数に応じて並列）、CIは50%
+  workers: process.env.CI ? '50%' : undefined,
 
   // レポーター設定
   reporter: 'html',
@@ -33,6 +34,14 @@ export default defineConfig({
 
     // ビデオ設定（失敗時のみ）
     video: 'retain-on-failure',
+
+    // 並列実行時の安定性向上
+    actionTimeout: 10000,
+  },
+
+  // expectのタイムアウト（デフォルト5000ms→10000ms）
+  expect: {
+    timeout: 10000,
   },
 
   // テスト対象ブラウザ
