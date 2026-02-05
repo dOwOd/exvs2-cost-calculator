@@ -18,8 +18,10 @@ pnpm test                  # テスト実行
 - **UI実装**: ui-patterns.md（src/components/**/*.tsx 編集時）
 - **よくある間違い**: common-mistakes.md
 - **Git操作**: git-workflow.md（Git コマンド実行時）
+- **ゲーム戦術**: game-tactics.md（パターン評価・コメント生成時）
 
 詳細仕様: `docs/SPECIFICATION.md`
+戦術知識: `docs/GAME_KNOWLEDGE.md`
 
 ## スキル
 
