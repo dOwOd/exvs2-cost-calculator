@@ -18,7 +18,7 @@ export const CostSelector = ({
   testIdPrefix = '',
 }: CostSelectorType) => {
   return (
-    <div class="grid grid-cols-4 gap-1.5 sm:flex sm:gap-2">
+    <div class="grid grid-cols-4 gap-1.5 sm:gap-2">
       {COSTS.map((cost) => (
         <button
           key={cost}
