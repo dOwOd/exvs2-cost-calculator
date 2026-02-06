@@ -8,6 +8,7 @@ import {
   getAllMobileSuitNames,
   getAvailableHealthOptions,
   hasMobileSuitsForHealth,
+  partialRevivalSuits,
   type MobileSuitInfo,
 } from './mobileSuitsData';
 
@@ -200,5 +201,60 @@ describe('searchMobileSuits', () => {
     expect(results[0].name).toBe('ゴッドガンダム');
     expect(results[0].cost).toBe(3000);
     expect(results[0].health).toBe(800);
+  });
+
+  test('復活あり機体の検索結果に hasPartialRevival: true が含まれる', () => {
+    const { searchMobileSuits } = require('./mobileSuitsData');
+    const results = searchMobileSuits('リボーンズ');
+    expect(results.length).toBeGreaterThan(0);
+    const reborns = results.find((r: MobileSuitInfo) => r.name === 'リボーンズガンダム');
+    expect(reborns).toBeDefined();
+    expect(reborns.hasPartialRevival).toBe(true);
+  });
+
+  test('復活なし機体の検索結果に hasPartialRevival: false が含まれる', () => {
+    const { searchMobileSuits } = require('./mobileSuitsData');
+    const results = searchMobileSuits('ゴッドガンダム');
+    expect(results.length).toBeGreaterThan(0);
+    expect(results[0].hasPartialRevival).toBe(false);
+  });
+});
+
+describe('partialRevivalSuits', () => {
+  test('復活あり機体セットに正しい機体が含まれる', () => {
+    expect(partialRevivalSuits.has('リボーンズガンダム')).toBe(true);
+    expect(partialRevivalSuits.has('ガンダム・バルバトスルプスレクス')).toBe(true);
+    expect(partialRevivalSuits.has('百式')).toBe(true);
+    expect(partialRevivalSuits.has('ガンダム・グシオンリベイクフルシティ')).toBe(true);
+    expect(partialRevivalSuits.has('ジオング')).toBe(true);
+    expect(partialRevivalSuits.has('クシャトリヤ')).toBe(true);
+    expect(partialRevivalSuits.has('ビルドストライクガンダム(フルパッケージ)')).toBe(true);
+    expect(partialRevivalSuits.has('ザクアメイジング')).toBe(true);
+    expect(partialRevivalSuits.has('ガンダムエクシア')).toBe(true);
+  });
+
+  test('復活なし機体は含まれない', () => {
+    expect(partialRevivalSuits.has('ゴッドガンダム')).toBe(false);
+    expect(partialRevivalSuits.has('νガンダム')).toBe(false);
+  });
+});
+
+describe('hasPartialRevivalForCostHealth', () => {
+  test('全機体が復活持ちのコスト/耐久でtrueを返す', () => {
+    const { hasPartialRevivalForCostHealth } = require('./mobileSuitsData');
+    // 3000/640: リボーンズガンダム、ガンダム・バルバトスルプスレクス（両方復活持ち）
+    expect(hasPartialRevivalForCostHealth(3000, 640)).toBe(true);
+  });
+
+  test('一部が復活持ちのコスト/耐久でtrueを返す', () => {
+    const { hasPartialRevivalForCostHealth } = require('./mobileSuitsData');
+    // 2500/620: 百式（復活持ち）+ 他の機体
+    expect(hasPartialRevivalForCostHealth(2500, 620)).toBe(true);
+  });
+
+  test('復活持ちがいないコスト/耐久でfalseを返す', () => {
+    const { hasPartialRevivalForCostHealth } = require('./mobileSuitsData');
+    // 3000/800: ゴッドガンダム、マスターガンダム（復活なし）
+    expect(hasPartialRevivalForCostHealth(3000, 800)).toBe(false);
   });
 });

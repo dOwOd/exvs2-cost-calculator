@@ -3,7 +3,7 @@
  */
 
 import type { Formation } from './types';
-import { checkEXActivation } from './evaluators';
+import { checkEXActivation, evaluateAllPatterns, getTopPatterns } from './evaluators';
 import { calculateCostTransitions } from './calculator';
 
 describe('checkEXActivation', () => {
@@ -199,5 +199,58 @@ describe('checkEXActivation', () => {
       expect(transitions[1].remainingCost).toBe(1500);
       expect(canActivate).toBe(true);
     });
+  });
+});
+
+describe('evaluateAllPatterns - 復活あり', () => {
+  test('復活1機で32パターン生成', () => {
+    const formation: Formation = {
+      unitA: { cost: 3000, health: 680, hasPartialRevival: true },
+      unitB: { cost: 3000, health: 680 },
+    };
+
+    const patterns = evaluateAllPatterns(formation);
+    expect(patterns).toHaveLength(32); // 2^5
+  });
+
+  test('復活2機で64パターン生成', () => {
+    const formation: Formation = {
+      unitA: { cost: 2500, health: 660, hasPartialRevival: true },
+      unitB: { cost: 2500, health: 660, hasPartialRevival: true },
+    };
+
+    const patterns = evaluateAllPatterns(formation);
+    expect(patterns).toHaveLength(64); // 2^6
+  });
+
+  test('復活なし編成は従来通り16パターン', () => {
+    const formation: Formation = {
+      unitA: { cost: 3000, health: 800 },
+      unitB: { cost: 3000, health: 800 },
+    };
+
+    const patterns = evaluateAllPatterns(formation);
+    expect(patterns).toHaveLength(16);
+  });
+
+  test('復活ありパターンの重複排除が正常に動作する', () => {
+    const formation: Formation = {
+      unitA: { cost: 3000, health: 680, hasPartialRevival: true },
+      unitB: { cost: 3000, health: 680 },
+    };
+
+    const patterns = evaluateAllPatterns(formation);
+    const top = getTopPatterns(patterns);
+
+    // 重複排除後は元の数以下
+    expect(top.length).toBeLessThanOrEqual(patterns.length);
+    // 少なくとも1つはある
+    expect(top.length).toBeGreaterThan(0);
+
+    // 復活ありパターンが含まれることを確認
+    const hasRevivalPattern = top.some(
+      (p) => p.transitions.some((t) => t.isPartialRevival)
+    );
+    expect(hasRevivalPattern).toBe(true);
   });
 });

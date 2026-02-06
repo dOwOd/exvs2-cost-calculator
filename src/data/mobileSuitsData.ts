@@ -150,12 +150,41 @@ export const hasMobileSuitsForHealth = (cost: CostType, health: HealthType): boo
 }
 
 /**
+ * 復活あり能力を持つ機体のセット
+ * 撃墜されたら敗北（remainingCost <= 0）という条件の撃墜時に、
+ * 耐久100で復活する（1機体につき1回のみ）
+ */
+export const partialRevivalSuits: ReadonlySet<MobileSuitName> = new Set<MobileSuitName>([
+  'リボーンズガンダム',
+  'ガンダム・バルバトスルプスレクス',
+  '百式',
+  'ガンダム・グシオンリベイクフルシティ',
+  'ジオング',
+  'クシャトリヤ',
+  'ビルドストライクガンダム(フルパッケージ)',
+  'ザクアメイジング',
+  'ガンダムエクシア',
+]);
+
+/**
+ * 指定コスト/耐久に復活あり機体がいるか判定
+ * @param cost - コスト
+ * @param health - 耐久値
+ * @returns 1機でも復活持ちがいればtrue
+ */
+export const hasPartialRevivalForCostHealth = (cost: CostType, health: HealthType): boolean => {
+  const suits = mobileSuitsData[cost]?.[health] || [];
+  return suits.some(name => partialRevivalSuits.has(name));
+};
+
+/**
  * 機体情報(名前、コスト、耐久値)
  */
 export type MobileSuitInfo = {
   name: MobileSuitName;
   cost: CostType;
   health: HealthType;
+  hasPartialRevival: boolean;
 };
 
 /**
@@ -178,7 +207,7 @@ export const mobileSuitsList: MobileSuitInfo[] = (() => {
       const suits = healthRecord[health];
       if (suits) {
         suits.forEach((name) => {
-          list.push({ name, cost, health });
+          list.push({ name, cost, health, hasPartialRevival: partialRevivalSuits.has(name) });
         });
       }
     });

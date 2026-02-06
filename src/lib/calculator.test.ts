@@ -4,6 +4,7 @@
 
 import type { Formation } from './types';
 import {
+  generatePatterns,
   calculateCostTransitions,
   calculateTotalHealth,
   calculateMinimumDefeatHealth,
@@ -299,5 +300,205 @@ describe('calculateMinimumDefeatHealth', () => {
     // Bだけ: ceil(6000/1500) × 520 = 4 × 520 = 2080
     // 最短: 2080
     expect(calculateMinimumDefeatHealth(formation)).toBe(2080);
+  });
+
+  test('3000(680,復活) + 3000(680): A復活で+100', () => {
+    const formation: Formation = {
+      unitA: { cost: 3000, health: 680, hasPartialRevival: true },
+      unitB: { cost: 3000, health: 680 },
+    };
+
+    // Aだけ: ceil(6000/3000) × 680 + 100 = 2 × 680 + 100 = 1460
+    // Bだけ: ceil(6000/3000) × 680 = 2 × 680 = 1360
+    // 最短: 1360
+    expect(calculateMinimumDefeatHealth(formation)).toBe(1360);
+  });
+
+  test('3000(680,復活) + 3000(680,復活): 両方復活で各+100', () => {
+    const formation: Formation = {
+      unitA: { cost: 3000, health: 680, hasPartialRevival: true },
+      unitB: { cost: 3000, health: 680, hasPartialRevival: true },
+    };
+
+    // Aだけ: ceil(6000/3000) × 680 + 100 = 1460
+    // Bだけ: ceil(6000/3000) × 680 + 100 = 1460
+    // 最短: 1460
+    expect(calculateMinimumDefeatHealth(formation)).toBe(1460);
+  });
+});
+
+describe('generatePatterns', () => {
+  test('デフォルトで16パターン生成（2^4）', () => {
+    const patterns = generatePatterns();
+    expect(patterns).toHaveLength(16);
+  });
+
+  test('maxKills=5で32パターン生成（2^5）', () => {
+    const patterns = generatePatterns(5);
+    expect(patterns).toHaveLength(32);
+  });
+
+  test('maxKills=6で64パターン生成（2^6）', () => {
+    const patterns = generatePatterns(6);
+    expect(patterns).toHaveLength(64);
+  });
+});
+
+describe('calculateCostTransitions - 復活あり', () => {
+  describe('3000(復活)+3000の場合', () => {
+    const formation: Formation = {
+      unitA: { cost: 3000, health: 680, hasPartialRevival: true },
+      unitB: { cost: 3000, health: 680 },
+    };
+
+    test('A→A: 1回目で残0→復活(耐久100)、2回目で敗北', () => {
+      const transitions = calculateCostTransitions(
+        ['A', 'A', 'A'],
+        formation
+      );
+
+      expect(transitions).toHaveLength(3);
+
+      // 1回目: A撃墜 → 残3000
+      expect(transitions[0]).toMatchObject({
+        killCount: 1,
+        killedUnit: 'A',
+        remainingCost: 3000,
+        isDefeat: false,
+        isPartialRevival: false,
+        respawnHealth: 680,
+      });
+
+      // 2回目: A撃墜 → 残0 → 復活あり
+      expect(transitions[1]).toMatchObject({
+        killCount: 2,
+        killedUnit: 'A',
+        remainingCost: 0,
+        isDefeat: false,
+        isPartialRevival: true,
+        respawnHealth: 100,
+      });
+
+      // 3回目: A撃墜 → 残-3000 → 敗北（復活済み）
+      expect(transitions[2]).toMatchObject({
+        killCount: 3,
+        killedUnit: 'A',
+        remainingCost: -3000,
+        isDefeat: true,
+        isPartialRevival: false,
+        respawnHealth: 0,
+      });
+    });
+
+    test('A→B: 残0でBは復活なし → 敗北', () => {
+      const transitions = calculateCostTransitions(['A', 'B'], formation);
+
+      expect(transitions).toHaveLength(2);
+
+      // 2回目: B撃墜 → 残0 → Bは復活なし → 敗北
+      expect(transitions[1]).toMatchObject({
+        killCount: 2,
+        killedUnit: 'B',
+        remainingCost: 0,
+        isDefeat: true,
+        isPartialRevival: false,
+        respawnHealth: 0,
+      });
+    });
+  });
+
+  describe('2500(復活)+2500(復活)の場合', () => {
+    const formation: Formation = {
+      unitA: { cost: 2500, health: 660, hasPartialRevival: true },
+      unitB: { cost: 2500, health: 660, hasPartialRevival: true },
+    };
+
+    test('A→B→A→B: 3回目でA復活、4回目でB復活、5回目で敗北', () => {
+      const transitions = calculateCostTransitions(
+        ['A', 'B', 'A', 'B', 'A'],
+        formation
+      );
+
+      // 1回目: A撃墜 → 残3500
+      expect(transitions[0]).toMatchObject({
+        remainingCost: 3500,
+        isDefeat: false,
+        isPartialRevival: false,
+      });
+
+      // 2回目: B撃墜 → 残1000
+      expect(transitions[1]).toMatchObject({
+        remainingCost: 1000,
+        isDefeat: false,
+        isPartialRevival: false,
+        isOverCost: true,
+      });
+
+      // 3回目: A撃墜 → 残-1500 → A復活
+      expect(transitions[2]).toMatchObject({
+        remainingCost: -1500,
+        isDefeat: false,
+        isPartialRevival: true,
+        respawnHealth: 100,
+      });
+
+      // 4回目: B撃墜 → 残-4000 → B復活
+      expect(transitions[3]).toMatchObject({
+        remainingCost: -4000,
+        isDefeat: false,
+        isPartialRevival: true,
+        respawnHealth: 100,
+      });
+
+      // 5回目: A撃墜 → 残-6500 → 復活済み → 敗北
+      expect(transitions[4]).toMatchObject({
+        remainingCost: -6500,
+        isDefeat: true,
+        isPartialRevival: false,
+        respawnHealth: 0,
+      });
+    });
+  });
+
+  describe('復活なし編成は既存動作と完全一致', () => {
+    test('3000+3000（復活なし）: 従来と同じ結果', () => {
+      const formation: Formation = {
+        unitA: { cost: 3000, health: 800 },
+        unitB: { cost: 3000, health: 800 },
+      };
+
+      const transitions = calculateCostTransitions(['A', 'A'], formation);
+
+      expect(transitions).toHaveLength(2);
+      expect(transitions[0]).toMatchObject({
+        isPartialRevival: false,
+      });
+      expect(transitions[1]).toMatchObject({
+        isDefeat: true,
+        isPartialRevival: false,
+      });
+    });
+  });
+});
+
+describe('calculateTotalHealth - 復活あり', () => {
+  test('3000(復活)+3000: 復活行の100が総耐久に加算される', () => {
+    const formation: Formation = {
+      unitA: { cost: 3000, health: 680, hasPartialRevival: true },
+      unitB: { cost: 3000, health: 680 },
+    };
+
+    const transitions = calculateCostTransitions(
+      ['A', 'A', 'A'],
+      formation
+    );
+    const totalHealth = calculateTotalHealth(formation, transitions);
+
+    // 初期耐久: 680 + 680 = 1360
+    // 1回目リスポーン(A): 680
+    // 2回目復活(A): 100
+    // 3回目: 敗北（加算しない）
+    // 合計: 1360 + 680 + 100 = 2140
+    expect(totalHealth).toBe(2140);
   });
 });

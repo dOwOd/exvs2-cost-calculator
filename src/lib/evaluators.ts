@@ -56,7 +56,9 @@ export const evaluateAllPatterns = (
     return [];
   }
 
-  const patterns = generatePatterns();
+  const revivalCount = (formation.unitA.hasPartialRevival ? 1 : 0) + (formation.unitB.hasPartialRevival ? 1 : 0);
+  const maxKills = 4 + revivalCount;
+  const patterns = generatePatterns(maxKills);
 
   const evaluated: EvaluatedPattern[] = patterns.map((pattern) => {
     const transitions = calculateCostTransitions(pattern, formation);

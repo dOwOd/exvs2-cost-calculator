@@ -9,18 +9,18 @@ import { getRespawnHealth } from '../data/overCostHealthTable';
 const INITIAL_COST = 6000;
 
 /**
- * 撃墜順パターンを生成（4回撃墜まで）
+ * 撃墜順パターンを生成
+ * @param maxKills 最大撃墜数（デフォルト4、復活ユニット数に応じて増加）
  * 例: ['A', 'A', 'B', 'B'], ['A', 'B', 'A', 'B'], ...
  */
-export const generatePatterns = (): UnitId[][] => {
+export const generatePatterns = (maxKills = 4): UnitId[][] => {
   const patterns: UnitId[][] = [];
   const units: UnitId[] = ['A', 'B'];
+  const total = 2 ** maxKills;
 
-  // 4回の撃墜パターンを全列挙（2^4 = 16通り）
-  for (let i = 0; i < 16; i++) {
+  for (let i = 0; i < total; i++) {
     const pattern: UnitId[] = [];
-    for (let j = 0; j < 4; j++) {
-      // ビット演算で各位置の機体を決定
+    for (let j = 0; j < maxKills; j++) {
       const bit = (i >> j) & 1;
       pattern.push(units[bit]);
     }
@@ -29,6 +29,9 @@ export const generatePatterns = (): UnitId[][] => {
 
   return patterns;
 }
+
+/** 復活あり時の耐久値 */
+const PARTIAL_REVIVAL_HEALTH = 100;
 
 /**
  * コスト推移を計算
@@ -46,6 +49,7 @@ export const calculateCostTransitions = (
 
   const transitions: BattleState[] = [];
   let remainingCost = INITIAL_COST; // チーム共有の残りコスト
+  const revivalUsed = { A: false, B: false }; // 復活ありの使用状況
 
   for (let i = 0; i < pattern.length; i++) {
     const killedUnit = pattern[i];
@@ -58,12 +62,46 @@ export const calculateCostTransitions = (
     remainingCost -= killedUnitConfig.cost;
 
     // 敗北判定（残コスト0以下）
-    const isDefeat = remainingCost <= 0;
+    const wouldDefeat = remainingCost <= 0;
 
-    // コストオーバー判定（残コストが機体コスト未満）
-    const isOverCost = remainingCost < killedUnitConfig.cost && remainingCost > 0;
+    // 復活ありチェック
+    const canRevive = wouldDefeat
+      && killedUnitConfig.hasPartialRevival
+      && !revivalUsed[killedUnit];
 
-    // リスポーン時の耐久値を計算
+    if (canRevive) {
+      // 復活あり発動
+      revivalUsed[killedUnit] = true;
+
+      transitions.push({
+        killCount,
+        killedUnit,
+        remainingCost,
+        isOverCost: false,
+        respawnHealth: PARTIAL_REVIVAL_HEALTH,
+        isDefeat: false,
+        isPartialRevival: true,
+      });
+
+      continue;
+    }
+
+    if (wouldDefeat) {
+      // 敗北
+      transitions.push({
+        killCount,
+        killedUnit,
+        remainingCost,
+        isOverCost: false,
+        respawnHealth: 0,
+        isDefeat: true,
+        isPartialRevival: false,
+      });
+      break;
+    }
+
+    // 通常のリスポーン
+    const isOverCost = remainingCost < killedUnitConfig.cost;
     const respawnHealth = getRespawnHealth(
       killedUnitConfig.cost,
       killedUnitConfig.health,
@@ -76,13 +114,9 @@ export const calculateCostTransitions = (
       remainingCost,
       isOverCost,
       respawnHealth,
-      isDefeat,
+      isDefeat: false,
+      isPartialRevival: false,
     });
-
-    // 敗北したらそれ以降の計算は不要
-    if (isDefeat) {
-      break;
-    }
   }
 
   return transitions;
@@ -139,11 +173,11 @@ export const calculateMinimumDefeatHealth = (formation: Formation): number => {
 
   // Aだけが狙われ続けた場合
   const killsA = Math.ceil(INITIAL_COST / formation.unitA.cost);
-  const damageA = killsA * formation.unitA.health;
+  const damageA = killsA * formation.unitA.health + (formation.unitA.hasPartialRevival ? PARTIAL_REVIVAL_HEALTH : 0);
 
   // Bだけが狙われ続けた場合
   const killsB = Math.ceil(INITIAL_COST / formation.unitB.cost);
-  const damageB = killsB * formation.unitB.health;
+  const damageB = killsB * formation.unitB.health + (formation.unitB.hasPartialRevival ? PARTIAL_REVIVAL_HEALTH : 0);
 
   // 最短（最小ダメージで敗北）
   return Math.min(damageA, damageB);
