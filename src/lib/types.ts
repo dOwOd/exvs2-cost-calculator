@@ -37,6 +37,7 @@ export type UnitId = 'A' | 'B';
 export type UnitConfig = {
   cost: CostType;
   health: HealthType;
+  hasPartialRevival?: boolean;
 }
 
 /** 編成（機体A, B） */
@@ -59,6 +60,8 @@ export type BattleState = {
   respawnHealth: number;
   /** 敗北条件を満たしたか（残コスト0以下） */
   isDefeat: boolean;
+  /** 復活ありで復帰したか */
+  isPartialRevival: boolean;
 }
 
 /** 評価済みパターン */

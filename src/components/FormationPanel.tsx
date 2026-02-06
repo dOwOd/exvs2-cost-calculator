@@ -8,6 +8,7 @@ import { CostSelector } from './CostSelector';
 import { HealthSelector } from './HealthSelector';
 import { MobileSuitSearch } from './MobileSuitSearch';
 import type { MobileSuitInfo } from '../data/mobileSuitsData';
+import { partialRevivalSuits, hasPartialRevivalForCostHealth } from '../data/mobileSuitsData';
 
 type FormationPanelType = {
   unitA: UnitConfig | null;
@@ -24,43 +25,66 @@ export const FormationPanel = ({
 }: FormationPanelType) => {
   const [costA, setCostA] = useState<CostType | null>(unitA?.cost ?? null);
   const [costB, setCostB] = useState<CostType | null>(unitB?.cost ?? null);
+  // 復活持ちがいるコスト/耐久かどうか（チェックボックス表示判定用）
+  const [canReviveA, setCanReviveA] = useState(false);
+  const [canReviveB, setCanReviveB] = useState(false);
 
   const handleCostASelect = (cost: CostType) => {
-    // コストが変更された場合、耐久値選択をリセット
     if (unitA && unitA.cost !== cost) {
       onUnitAChange(null);
+      setCanReviveA(false);
     }
     setCostA(cost);
   };
 
   const handleCostBSelect = (cost: CostType) => {
-    // コストが変更された場合、耐久値選択をリセット
     if (unitB && unitB.cost !== cost) {
       onUnitBChange(null);
+      setCanReviveB(false);
     }
     setCostB(cost);
   };
 
   const handleHealthASelect = (health: HealthType) => {
     if (costA) {
-      onUnitAChange({ cost: costA, health });
+      const canRevive = hasPartialRevivalForCostHealth(costA, health);
+      setCanReviveA(canRevive);
+      onUnitAChange({ cost: costA, health, hasPartialRevival: canRevive });
     }
   };
 
   const handleHealthBSelect = (health: HealthType) => {
     if (costB) {
-      onUnitBChange({ cost: costB, health });
+      const canRevive = hasPartialRevivalForCostHealth(costB, health);
+      setCanReviveB(canRevive);
+      onUnitBChange({ cost: costB, health, hasPartialRevival: canRevive });
+    }
+  };
+
+  const handleRevivalAChange = (checked: boolean) => {
+    if (unitA) {
+      onUnitAChange({ ...unitA, hasPartialRevival: checked });
+    }
+  };
+
+  const handleRevivalBChange = (checked: boolean) => {
+    if (unitB) {
+      onUnitBChange({ ...unitB, hasPartialRevival: checked });
     }
   };
 
   const handleSuitASelect = (suit: MobileSuitInfo) => {
     setCostA(suit.cost);
-    onUnitAChange({ cost: suit.cost, health: suit.health });
+    const hasRevival = partialRevivalSuits.has(suit.name);
+    setCanReviveA(hasPartialRevivalForCostHealth(suit.cost, suit.health));
+    onUnitAChange({ cost: suit.cost, health: suit.health, hasPartialRevival: hasRevival });
   };
 
   const handleSuitBSelect = (suit: MobileSuitInfo) => {
     setCostB(suit.cost);
-    onUnitBChange({ cost: suit.cost, health: suit.health });
+    const hasRevival = partialRevivalSuits.has(suit.name);
+    setCanReviveB(hasPartialRevivalForCostHealth(suit.cost, suit.health));
+    onUnitBChange({ cost: suit.cost, health: suit.health, hasPartialRevival: hasRevival });
   };
 
   return (
@@ -93,8 +117,22 @@ export const FormationPanel = ({
           )}
         </div>
         {unitA && (
-          <div class="mt-3 text-sm text-slate-700 dark:text-slate-300">
-            選択中: コスト {unitA.cost} / 耐久 {unitA.health}
+          <div class="mt-3 space-y-2">
+            <div class="text-sm text-slate-700 dark:text-slate-300">
+              選択中: コスト {unitA.cost} / 耐久 {unitA.health}
+            </div>
+            {canReviveA && (
+              <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer">
+                <input
+                  type="checkbox"
+                  data-testid="revival-checkbox-a"
+                  checked={unitA.hasPartialRevival ?? false}
+                  onChange={(e) => handleRevivalAChange((e.target as HTMLInputElement).checked)}
+                  class="rounded border-slate-300 dark:border-slate-600"
+                />
+                復活あり
+              </label>
+            )}
           </div>
         )}
       </div>
@@ -127,8 +165,22 @@ export const FormationPanel = ({
           )}
         </div>
         {unitB && (
-          <div class="mt-3 text-sm text-slate-700 dark:text-slate-300">
-            選択中: コスト {unitB.cost} / 耐久 {unitB.health}
+          <div class="mt-3 space-y-2">
+            <div class="text-sm text-slate-700 dark:text-slate-300">
+              選択中: コスト {unitB.cost} / 耐久 {unitB.health}
+            </div>
+            {canReviveB && (
+              <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer">
+                <input
+                  type="checkbox"
+                  data-testid="revival-checkbox-b"
+                  checked={unitB.hasPartialRevival ?? false}
+                  onChange={(e) => handleRevivalBChange((e.target as HTMLInputElement).checked)}
+                  class="rounded border-slate-300 dark:border-slate-600"
+                />
+                復活あり
+              </label>
+            )}
           </div>
         )}
       </div>
