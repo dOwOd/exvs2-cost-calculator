@@ -236,8 +236,6 @@ describe('calculatePatternStatistics', () => {
     const stats = calculatePatternStatistics(patterns);
     expect(stats).not.toBeNull();
     expect(stats!.totalHealth).toEqual({ max: 2000, min: 2000, average: 2000 });
-    expect(stats!.overCostCount).toEqual({ max: 1, min: 1 });
-    expect(stats!.killCount).toEqual({ max: 2, min: 2 });
     expect(stats!.exActivatableCount).toBe(1);
     expect(stats!.totalPatterns).toBe(1);
     expect(stats!.exActivatableMaxHealth).toBe(2000);
@@ -262,8 +260,6 @@ describe('calculatePatternStatistics', () => {
     const stats = calculatePatternStatistics(patterns);
     expect(stats).not.toBeNull();
     expect(stats!.totalHealth).toEqual({ max: 3000, min: 2000, average: 2500 });
-    expect(stats!.overCostCount).toEqual({ max: 2, min: 0 });
-    expect(stats!.killCount).toEqual({ max: 3, min: 1 });
     expect(stats!.exActivatableCount).toBe(2);
     expect(stats!.totalPatterns).toBe(3);
     expect(stats!.exActivatableMaxHealth).toBe(3000);
@@ -277,22 +273,6 @@ describe('calculatePatternStatistics', () => {
 
     const stats = calculatePatternStatistics(patterns);
     expect(stats!.exActivatableMaxHealth).toBeNull();
-  });
-
-  test('killCount は transitions.length で計算される', () => {
-    const patterns = [
-      makePattern({
-        totalHealth: 2000,
-        transitions: [
-          { killCount: 1, killedUnit: 'A', remainingCost: 3000, isOverCost: false, respawnHealth: 800, isDefeat: false, isPartialRevival: false },
-          { killCount: 2, killedUnit: 'B', remainingCost: 500, isOverCost: true, respawnHealth: 300, isDefeat: false, isPartialRevival: false },
-          { killCount: 3, killedUnit: 'A', remainingCost: 0, isOverCost: false, respawnHealth: 0, isDefeat: true, isPartialRevival: false },
-        ],
-      }),
-    ];
-
-    const stats = calculatePatternStatistics(patterns);
-    expect(stats!.killCount).toEqual({ max: 3, min: 3 });
   });
 
   test('average は Math.round で丸められる', () => {
@@ -322,8 +302,6 @@ describe('generatePatternComments', () => {
 
   const makeStats = (overrides: Partial<PatternStatistics> = {}): PatternStatistics => ({
     totalHealth: { max: 3000, min: 1500, average: 2250 },
-    overCostCount: { max: 3, min: 0 },
-    killCount: { max: 4, min: 2 },
     exActivatableCount: 2,
     totalPatterns: 5,
     exActivatableMaxHealth: 3000,
@@ -360,52 +338,6 @@ describe('generatePatternComments', () => {
     const comments = generatePatternComments(pattern, stats);
     expect(comments).not.toContain('総耐久が最も高い');
     expect(comments).not.toContain('総耐久が最も低い');
-  });
-
-  test('コストオーバーが最も少ない', () => {
-    const pattern = makePattern({ totalHealth: 2500, overCostCount: 0 });
-    const stats = makeStats();
-
-    const comments = generatePatternComments(pattern, stats);
-    expect(comments).toContain('コストオーバーが最も少ない');
-  });
-
-  test('全パターン同じコストオーバー数 → コメントなし', () => {
-    const pattern = makePattern({ totalHealth: 2500, overCostCount: 1 });
-    const stats = makeStats({ overCostCount: { max: 1, min: 1 } });
-
-    const comments = generatePatternComments(pattern, stats);
-    expect(comments).not.toContain('コストオーバーが最も少ない');
-  });
-
-  test('最も長く戦える（killCount が最大）', () => {
-    const pattern = makePattern({
-      totalHealth: 2500,
-      transitions: [
-        { killCount: 1, killedUnit: 'A', remainingCost: 3000, isOverCost: false, respawnHealth: 800, isDefeat: false, isPartialRevival: false },
-        { killCount: 2, killedUnit: 'B', remainingCost: 1000, isOverCost: false, respawnHealth: 700, isDefeat: false, isPartialRevival: false },
-        { killCount: 3, killedUnit: 'A', remainingCost: 500, isOverCost: true, respawnHealth: 300, isDefeat: false, isPartialRevival: false },
-        { killCount: 4, killedUnit: 'B', remainingCost: 0, isOverCost: false, respawnHealth: 0, isDefeat: true, isPartialRevival: false },
-      ],
-    });
-    const stats = makeStats();
-
-    const comments = generatePatternComments(pattern, stats);
-    expect(comments).toContain('最も長く戦える');
-  });
-
-  test('全パターン同じ killCount → コメントなし', () => {
-    const pattern = makePattern({
-      totalHealth: 2500,
-      transitions: [
-        { killCount: 1, killedUnit: 'A', remainingCost: 3000, isOverCost: false, respawnHealth: 800, isDefeat: false, isPartialRevival: false },
-        { killCount: 2, killedUnit: 'B', remainingCost: 0, isOverCost: false, respawnHealth: 0, isDefeat: true, isPartialRevival: false },
-      ],
-    });
-    const stats = makeStats({ killCount: { max: 2, min: 2 } });
-
-    const comments = generatePatternComments(pattern, stats);
-    expect(comments).not.toContain('最も長く戦える');
   });
 
   test('EX発動可能な中で最高耐久', () => {
@@ -447,23 +379,15 @@ describe('generatePatternComments', () => {
   test('複数コメントが同時に付く', () => {
     const pattern = makePattern({
       totalHealth: 3000,
-      overCostCount: 0,
       canActivateEXOverLimit: true,
       isEXActivationFailure: false,
-      transitions: [
-        { killCount: 1, killedUnit: 'A', remainingCost: 3000, isOverCost: false, respawnHealth: 800, isDefeat: false, isPartialRevival: false },
-        { killCount: 2, killedUnit: 'B', remainingCost: 500, isOverCost: false, respawnHealth: 700, isDefeat: false, isPartialRevival: false },
-        { killCount: 3, killedUnit: 'A', remainingCost: 0, isOverCost: false, respawnHealth: 0, isDefeat: true, isPartialRevival: false },
-        { killCount: 4, killedUnit: 'B', remainingCost: 0, isOverCost: false, respawnHealth: 0, isDefeat: true, isPartialRevival: false },
-      ],
     });
     const stats = makeStats({ exActivatableCount: 3, exActivatableMaxHealth: 3000 });
 
     const comments = generatePatternComments(pattern, stats);
     expect(comments).toContain('総耐久が最も高い');
-    expect(comments).toContain('コストオーバーが最も少ない');
-    expect(comments).toContain('最も長く戦える');
     expect(comments).toContain('EX発動可能な中で最高耐久');
+    expect(comments).toHaveLength(2);
   });
 
   test('該当しないパターンには空配列', () => {

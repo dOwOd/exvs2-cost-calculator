@@ -128,8 +128,6 @@ export const calculatePatternStatistics = (
   if (patterns.length === 0) return null;
 
   const totalHealthValues = patterns.map((p) => p.totalHealth);
-  const overCostValues = patterns.map((p) => p.overCostCount);
-  const killCountValues = patterns.map((p) => p.transitions.length);
 
   const exActivatablePatterns = patterns.filter(
     (p) => p.canActivateEXOverLimit && !p.isEXActivationFailure
@@ -142,14 +140,6 @@ export const calculatePatternStatistics = (
       max: Math.max(...totalHealthValues),
       min: Math.min(...totalHealthValues),
       average: Math.round(sum / patterns.length),
-    },
-    overCostCount: {
-      max: Math.max(...overCostValues),
-      min: Math.min(...overCostValues),
-    },
-    killCount: {
-      max: Math.max(...killCountValues),
-      min: Math.min(...killCountValues),
     },
     exActivatableCount: exActivatablePatterns.length,
     totalPatterns: patterns.length,
@@ -170,7 +160,7 @@ export const generatePatternComments = (
   if (statistics.totalPatterns <= 1) return [];
 
   const comments: string[] = [];
-  const { totalHealth, overCostCount, killCount } = statistics;
+  const { totalHealth } = statistics;
 
   // 1. 総耐久が最も高い
   if (pattern.totalHealth === totalHealth.max && totalHealth.max !== totalHealth.min) {
@@ -182,18 +172,7 @@ export const generatePatternComments = (
     comments.push('総耐久が最も低い');
   }
 
-  // 3. コストオーバーが最も少ない
-  if (pattern.overCostCount === overCostCount.min && overCostCount.max !== overCostCount.min) {
-    comments.push('コストオーバーが最も少ない');
-  }
-
-  // 4. 最も長く戦える
-  const patternKillCount = pattern.transitions.length;
-  if (patternKillCount === killCount.max && killCount.max !== killCount.min) {
-    comments.push('最も長く戦える');
-  }
-
-  // 5. EX発動可能な中で最高耐久
+  // 3. EX発動可能な中で最高耐久
   const isEXActivatable = pattern.canActivateEXOverLimit && !pattern.isEXActivationFailure;
   if (
     isEXActivatable &&
