@@ -80,3 +80,13 @@ export type EvaluatedPattern = {
   transitions: BattleState[];
 }
 
+/** パターン統計情報（相対評価用） */
+export type PatternStatistics = {
+  totalHealth: { max: number; min: number; average: number };
+  overCostCount: { max: number; min: number };
+  killCount: { max: number; min: number };
+  exActivatableCount: number;
+  totalPatterns: number;
+  exActivatableMaxHealth: number | null;
+}
+

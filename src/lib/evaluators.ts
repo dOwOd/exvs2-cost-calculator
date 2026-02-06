@@ -6,6 +6,7 @@ import type {
   Formation,
   EvaluatedPattern,
   BattleState,
+  PatternStatistics,
 } from './types';
 import {
   generatePatterns,
@@ -116,4 +117,92 @@ export const getTopPatterns = (
   }
 
   return unique;
+}
+
+/**
+ * パターン統計情報を計算（相対評価用）
+ */
+export const calculatePatternStatistics = (
+  patterns: EvaluatedPattern[]
+): PatternStatistics | null => {
+  if (patterns.length === 0) return null;
+
+  const totalHealthValues = patterns.map((p) => p.totalHealth);
+  const overCostValues = patterns.map((p) => p.overCostCount);
+  const killCountValues = patterns.map((p) => p.transitions.length);
+
+  const exActivatablePatterns = patterns.filter(
+    (p) => p.canActivateEXOverLimit && !p.isEXActivationFailure
+  );
+
+  const sum = totalHealthValues.reduce((a, b) => a + b, 0);
+
+  return {
+    totalHealth: {
+      max: Math.max(...totalHealthValues),
+      min: Math.min(...totalHealthValues),
+      average: Math.round(sum / patterns.length),
+    },
+    overCostCount: {
+      max: Math.max(...overCostValues),
+      min: Math.min(...overCostValues),
+    },
+    killCount: {
+      max: Math.max(...killCountValues),
+      min: Math.min(...killCountValues),
+    },
+    exActivatableCount: exActivatablePatterns.length,
+    totalPatterns: patterns.length,
+    exActivatableMaxHealth:
+      exActivatablePatterns.length > 0
+        ? Math.max(...exActivatablePatterns.map((p) => p.totalHealth))
+        : null,
+  };
+}
+
+/**
+ * パターンの相対評価コメントを生成
+ */
+export const generatePatternComments = (
+  pattern: EvaluatedPattern,
+  statistics: PatternStatistics
+): string[] => {
+  if (statistics.totalPatterns <= 1) return [];
+
+  const comments: string[] = [];
+  const { totalHealth, overCostCount, killCount } = statistics;
+
+  // 1. 総耐久が最も高い
+  if (pattern.totalHealth === totalHealth.max && totalHealth.max !== totalHealth.min) {
+    comments.push('総耐久が最も高い');
+  }
+
+  // 2. 総耐久が最も低い
+  if (pattern.totalHealth === totalHealth.min && totalHealth.max !== totalHealth.min) {
+    comments.push('総耐久が最も低い');
+  }
+
+  // 3. コストオーバーが最も少ない
+  if (pattern.overCostCount === overCostCount.min && overCostCount.max !== overCostCount.min) {
+    comments.push('コストオーバーが最も少ない');
+  }
+
+  // 4. 最も長く戦える
+  const patternKillCount = pattern.transitions.length;
+  if (patternKillCount === killCount.max && killCount.max !== killCount.min) {
+    comments.push('最も長く戦える');
+  }
+
+  // 5. EX発動可能な中で最高耐久
+  const isEXActivatable = pattern.canActivateEXOverLimit && !pattern.isEXActivationFailure;
+  if (
+    isEXActivatable &&
+    statistics.exActivatableCount > 1 &&
+    statistics.exActivatableMaxHealth !== null &&
+    pattern.totalHealth === statistics.exActivatableMaxHealth
+  ) {
+    comments.push('EX発動可能な中で最高耐久');
+  }
+
+  return comments;
 }

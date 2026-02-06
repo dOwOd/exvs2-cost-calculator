@@ -12,6 +12,7 @@ type PatternCardType = {
   minimumDefeatHealth: number;
   formation: Formation;
   showScrollHint?: boolean;
+  comments?: string[];
 }
 
 export const PatternCard = ({
@@ -20,6 +21,7 @@ export const PatternCard = ({
   minimumDefeatHealth,
   formation,
   showScrollHint = false,
+  comments = [],
 }: PatternCardType) => {
   const [hasScrolled, setHasScrolled] = useState(false);
 
@@ -76,6 +78,13 @@ export const PatternCard = ({
           )}
         </div>
       </div>
+
+      {/* 相対評価コメント */}
+      {comments.length > 0 && (
+        <div data-testid={`pattern-comments-${rank}`} class="mb-3 px-3 py-2 bg-blue-50 dark:bg-blue-900/20 rounded text-sm sm:text-base text-blue-700 dark:text-blue-300">
+          {comments.join(' / ')}
+        </div>
+      )}
 
       {/* 評価指標 */}
       <div class="mb-3">

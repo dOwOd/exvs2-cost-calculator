@@ -5,7 +5,7 @@
 import { useState } from 'preact/hooks';
 import type { EvaluatedPattern, Formation } from '../lib/types';
 import { PatternList } from './PatternList';
-import { getTopPatterns } from '../lib/evaluators';
+import { getTopPatterns, calculatePatternStatistics } from '../lib/evaluators';
 
 type ResultPanelType = {
   patterns: EvaluatedPattern[];
@@ -22,6 +22,9 @@ export const ResultPanel = ({
 
   // 総耐久最大でソート
   const sortedPatterns = getTopPatterns(patterns);
+
+  // 統計情報を計算（EXフィルタ前の全パターン基準）
+  const statistics = calculatePatternStatistics(sortedPatterns);
 
   // フィルタリング
   const filteredPatterns = showOnlyEXAvailable
@@ -132,6 +135,7 @@ export const ResultPanel = ({
           patterns={filteredPatterns}
           minimumDefeatHealth={minimumDefeatHealth}
           formation={formation}
+          statistics={statistics}
         />
       </div>
     </div>
