@@ -20,8 +20,8 @@ export const ResultPanel = ({
 }: ResultPanelType) => {
   const [showOnlyEXAvailable, setShowOnlyEXAvailable] = useState(false);
 
-  // 総耐久最大でソート
-  const sortedPatterns = getTopPatterns(patterns);
+  // 総耐久最大でソート（同じ総耐久値内で高コスト先落ち優先）
+  const sortedPatterns = getTopPatterns(patterns, formation);
 
   // フィルタリング
   const filteredPatterns = showOnlyEXAvailable

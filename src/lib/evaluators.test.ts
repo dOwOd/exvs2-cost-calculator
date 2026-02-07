@@ -202,6 +202,117 @@ describe('checkEXActivation', () => {
   });
 });
 
+describe('getTopPatterns - 高コスト先落ちソート', () => {
+  test('同じ総耐久値の場合、高コスト機が先に撃墜されるパターンを優先する', () => {
+    const formation: Formation = {
+      unitA: { cost: 3000, health: 680 },
+      unitB: { cost: 2000, health: 680 },
+    };
+
+    const patterns = evaluateAllPatterns(formation);
+    const sorted = getTopPatterns(patterns, formation);
+
+    // 同じ総耐久値のグループが実際に存在することを確認
+    const tiedGroups: { health: number; firstKills: string[] }[] = [];
+    let i = 0;
+    while (i < sorted.length) {
+      let j = i + 1;
+      while (j < sorted.length && sorted[j].totalHealth === sorted[i].totalHealth) {
+        j++;
+      }
+      if (j - i > 1) {
+        tiedGroups.push({
+          health: sorted[i].totalHealth,
+          firstKills: sorted.slice(i, j).map(p => p.transitions[0].killedUnit),
+        });
+      }
+      i = j;
+    }
+
+    // 同じ総耐久値のグループが存在することを検証
+    expect(tiedGroups.length).toBeGreaterThan(0);
+
+    // 各グループ内で高コスト先落ち(A=3000)が低コスト先落ち(B)より前に来ることを確認
+    for (const group of tiedGroups) {
+      const lastAIndex = group.firstKills.lastIndexOf('A');
+      const firstBIndex = group.firstKills.indexOf('B');
+      if (lastAIndex !== -1 && firstBIndex !== -1) {
+        expect(lastAIndex).toBeLessThan(firstBIndex);
+      }
+    }
+  });
+
+  test('B機が高コストの場合、B機先落ちパターンを優先する', () => {
+    const formation: Formation = {
+      unitA: { cost: 2000, health: 680 },
+      unitB: { cost: 3000, health: 680 },
+    };
+
+    const patterns = evaluateAllPatterns(formation);
+    const sorted = getTopPatterns(patterns, formation);
+
+    // 同じ総耐久値のグループが実際に存在することを確認
+    const tiedGroups: { health: number; firstKills: string[] }[] = [];
+    let i = 0;
+    while (i < sorted.length) {
+      let j = i + 1;
+      while (j < sorted.length && sorted[j].totalHealth === sorted[i].totalHealth) {
+        j++;
+      }
+      if (j - i > 1) {
+        tiedGroups.push({
+          health: sorted[i].totalHealth,
+          firstKills: sorted.slice(i, j).map(p => p.transitions[0].killedUnit),
+        });
+      }
+      i = j;
+    }
+
+    // 同じ総耐久値のグループが存在することを検証
+    expect(tiedGroups.length).toBeGreaterThan(0);
+
+    // 各グループ内で高コスト先落ち(B=3000)が低コスト先落ち(A)より前に来ることを確認
+    for (const group of tiedGroups) {
+      const lastBIndex = group.firstKills.lastIndexOf('B');
+      const firstAIndex = group.firstKills.indexOf('A');
+      if (lastBIndex !== -1 && firstAIndex !== -1) {
+        expect(lastBIndex).toBeLessThan(firstAIndex);
+      }
+    }
+  });
+
+  test('同コスト編成の場合、ソート順に影響しない', () => {
+    const formation: Formation = {
+      unitA: { cost: 3000, health: 680 },
+      unitB: { cost: 3000, health: 680 },
+    };
+
+    const patterns = evaluateAllPatterns(formation);
+    const withFormation = getTopPatterns(patterns, formation);
+    const withoutFormation = getTopPatterns(patterns);
+
+    // 同コストなのでformationの有無でソート結果が変わらない
+    expect(withFormation.map(p => p.totalHealth)).toEqual(
+      withoutFormation.map(p => p.totalHealth)
+    );
+  });
+
+  test('総耐久値が異なる場合、総耐久降順がプライマリソートのままである', () => {
+    const formation: Formation = {
+      unitA: { cost: 3000, health: 680 },
+      unitB: { cost: 2000, health: 680 },
+    };
+
+    const patterns = evaluateAllPatterns(formation);
+    const sorted = getTopPatterns(patterns, formation);
+
+    // 総耐久値が降順であることを確認
+    for (let i = 0; i < sorted.length - 1; i++) {
+      expect(sorted[i].totalHealth).toBeGreaterThanOrEqual(sorted[i + 1].totalHealth);
+    }
+  });
+});
+
 describe('evaluateAllPatterns - 復活あり', () => {
   test('復活1機で32パターン生成', () => {
     const formation: Formation = {
