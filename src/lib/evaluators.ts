@@ -85,8 +85,8 @@ export const evaluateAllPatterns = (
 }
 
 /**
- * 総耐久降順でソートされたパターンを取得（重複排除）
- * formation が渡された場合、同じ総耐久値内で高コスト先落ちパターンを優先する
+ * ソートされたパターンを取得（重複排除）
+ * formation が渡された場合、高コスト先落ちパターンを優先し、同グループ内で総耐久降順
  */
 export const getTopPatterns = (
   patterns: EvaluatedPattern[],
@@ -101,21 +101,19 @@ export const getTopPatterns = (
     return null;
   })();
 
-  // 総耐久の降順でソート（セカンダリ: 高コスト先落ち優先）
+  // プライマリ: 高コスト先落ち優先、セカンダリ: 総耐久降順
   const sorted = [...patterns].sort((a, b) => {
-    // プライマリ: 総耐久降順
-    if (b.totalHealth !== a.totalHealth) {
-      return b.totalHealth - a.totalHealth;
-    }
-
-    // セカンダリ: 高コスト先落ちパターンを優先
+    // プライマリ: 高コスト先落ちパターンを優先
     if (higherCostUnit && a.transitions.length > 0 && b.transitions.length > 0) {
       const aIsTheory = a.transitions[0].killedUnit === higherCostUnit ? 1 : 0;
       const bIsTheory = b.transitions[0].killedUnit === higherCostUnit ? 1 : 0;
-      return bIsTheory - aIsTheory;
+      if (aIsTheory !== bIsTheory) {
+        return bIsTheory - aIsTheory;
+      }
     }
 
-    return 0;
+    // セカンダリ: 総耐久降順
+    return b.totalHealth - a.totalHealth;
   });
 
   // 実際に発生した撃墜順で重複を排除
