@@ -2,20 +2,18 @@
  * EXVS2 コスト計算機 型定義
  */
 
+import type { HealthType as _HealthType } from '../data/mobileSuitsData';
+
 /** コストタイプ */
 export type CostType = 1500 | 2000 | 2500 | 3000;
 
 /** 機体名リテラル型（mobileSuitsDataから再エクスポート） */
 export type { MobileSuitName } from '../data/mobileSuitsData';
 
-/** 耐久値タイプ（overCostHealthTable.tsで使用されているすべての値） */
-export type HealthType = 440 | 460 | 480 | 500 | 520 | 540 | 580 | 600 | 620 | 640 | 650 | 660 | 680 | 700 | 720 | 740 | 750 | 760 | 800;
-
-/** HealthType の全値を配列として保持（ランタイム検証用） */
-export const HEALTH_VALUES = [
-  440, 460, 480, 500, 520, 540, 580, 600, 620, 640,
-  650, 660, 680, 700, 720, 740, 750, 760, 800
-] as const;
+/** 耐久値タイプ（mobileSuitsDataから自動導出・再エクスポート） */
+export type { HealthType } from '../data/mobileSuitsData';
+export { HEALTH_VALUES, isHealthType } from '../data/mobileSuitsData';
+type HealthType = _HealthType;
 
 /** CostType の全値を配列として保持（ランタイム検証用） */
 export const COST_VALUES = [1500, 2000, 2500, 3000] as const;
@@ -23,11 +21,6 @@ export const COST_VALUES = [1500, 2000, 2500, 3000] as const;
 /** CostType の型ガード関数 */
 export const isCostType = (value: number): value is CostType => {
   return COST_VALUES.some(v => v === value);
-};
-
-/** 型ガード関数（asを使わず some で比較） */
-export const isHealthType = (value: number): value is HealthType => {
-  return HEALTH_VALUES.some(v => v === value);
 };
 
 /** 機体ID */
@@ -79,4 +72,3 @@ export type EvaluatedPattern = {
   /** コスト推移 */
   transitions: BattleState[];
 }
-
