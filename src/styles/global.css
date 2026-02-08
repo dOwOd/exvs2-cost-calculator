@@ -51,6 +51,14 @@
     -webkit-overflow-scrolling: touch;
   }
 
+  /* 画像エクスポート: 通常時は非表示、.exporting時のみ表示 */
+  [data-export-only] {
+    display: none !important;
+  }
+  .exporting [data-export-only] {
+    display: block !important;
+  }
+
   /* タッチデバイスでのホバー無効化 */
   @media (hover: none) {
     .hover-none\:no-hover:hover {
