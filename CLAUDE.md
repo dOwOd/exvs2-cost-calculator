@@ -46,6 +46,7 @@ pnpm test                  # テスト実行
   - HealthSelector.tsx - 耐久値選択
   - HealthDropdownPopup.tsx - 耐久値ドロップダウン
   - MobileSuitSearch.tsx - 機体名検索
+- **SavedFormationsPanel.tsx** - 保存編成パネル（保存・読込・削除、確認モーダル）
 - **ResultPanel.tsx** - 結果パネル（EXフィルター + パターンリスト表示）
   - PatternList.tsx - パターン一覧（全パターンをPatternCardで描画）
     - PatternCard.tsx - 個別パターンカード（ランク・撃墜順・コスト推移テーブル）
@@ -56,9 +57,10 @@ pnpm test                  # テスト実行
 ### ロジック（src/lib/）
 - **calculator.ts** - コスト計算（パターン生成、コスト推移計算、総耐久計算）
 - **evaluators.ts** - パターン評価（全パターン評価、統計計算、コメント生成）
-- **types.ts** - 型定義（CostType, Formation, EvaluatedPattern 等）
+- **types.ts** - 型定義（CostType, Formation, EvaluatedPattern, SavedFormation 等）
 - useTheme.ts - テーマ管理フック
 - recentHistory.ts - 最近の編成履歴管理
+- savedFormations.ts - 保存編成管理（LocalStorage CRUD、最大10件）
 
 ### データ（src/data/）
 - **overCostHealthTable.ts** - コストオーバー時の復帰耐久値テーブル
