@@ -140,3 +140,18 @@ export const getTopPatterns = (
 
   return unique;
 }
+
+/**
+ * 編成が不完全な場合はパターンを空にするガード
+ * useEffectによるパターンクリアはレンダー後のため、
+ * 中間レンダーでformationがnullのままパターンが残る状態を防ぐ
+ */
+export const getEffectivePatterns = (
+  patterns: EvaluatedPattern[],
+  formation: Formation
+): EvaluatedPattern[] => {
+  if (!formation.unitA || !formation.unitB) {
+    return [];
+  }
+  return patterns;
+}

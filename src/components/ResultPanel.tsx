@@ -5,7 +5,7 @@
 import { useState } from 'preact/hooks';
 import type { EvaluatedPattern, Formation } from '../lib/types';
 import { PatternList } from './PatternList';
-import { getTopPatterns } from '../lib/evaluators';
+import { getTopPatterns, getEffectivePatterns } from '../lib/evaluators';
 
 type ResultPanelType = {
   patterns: EvaluatedPattern[];
@@ -23,9 +23,8 @@ export const ResultPanel = ({
   // 両方選択済みかどうか
   const isFormationComplete = formation.unitA && formation.unitB;
 
-  // 編成が不完全な場合はパターンを空にする
-  // （useEffectによるパターンクリアはレンダー後のため、中間レンダーでnullアクセスが発生する）
-  const effectivePatterns = isFormationComplete ? patterns : [];
+  // 編成が不完全な場合はパターンを空にするガード
+  const effectivePatterns = getEffectivePatterns(patterns, formation);
 
   // 総耐久最大でソート（同じ総耐久値内で高コスト先落ち優先）
   const sortedPatterns = getTopPatterns(effectivePatterns, formation);

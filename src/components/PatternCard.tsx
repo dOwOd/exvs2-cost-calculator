@@ -231,7 +231,7 @@ export const PatternCard = ({
                         <div class="flex flex-col items-end">
                           <span class="font-mono">{trans.respawnHealth}</span>
                           {trans.isOverCost && (() => {
-                            const fullHealth = trans.killedUnit === 'A' ? formation.unitA!.health : formation.unitB!.health;
+                            const fullHealth = trans.killedUnit === 'A' ? (formation.unitA?.health ?? 0) : (formation.unitB?.health ?? 0);
                             const reduction = fullHealth - trans.respawnHealth;
                             const reductionPercent = Math.floor((reduction / fullHealth) * 100);
                             return (
