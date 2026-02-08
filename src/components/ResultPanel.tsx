@@ -20,16 +20,20 @@ export const ResultPanel = ({
 }: ResultPanelType) => {
   const [showOnlyEXAvailable, setShowOnlyEXAvailable] = useState(false);
 
+  // 両方選択済みかどうか
+  const isFormationComplete = formation.unitA && formation.unitB;
+
+  // 編成が不完全な場合はパターンを空にする
+  // （useEffectによるパターンクリアはレンダー後のため、中間レンダーでnullアクセスが発生する）
+  const effectivePatterns = isFormationComplete ? patterns : [];
+
   // 総耐久最大でソート（同じ総耐久値内で高コスト先落ち優先）
-  const sortedPatterns = getTopPatterns(patterns, formation);
+  const sortedPatterns = getTopPatterns(effectivePatterns, formation);
 
   // フィルタリング
   const filteredPatterns = showOnlyEXAvailable
     ? sortedPatterns.filter((p) => !p.isEXActivationFailure)
     : sortedPatterns;
-
-  // 両方選択済みかどうか
-  const isFormationComplete = formation.unitA && formation.unitB;
 
   // ガイダンスメッセージを生成
   const getGuidanceMessage = () => {
