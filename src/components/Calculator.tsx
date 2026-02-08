@@ -5,6 +5,7 @@
 import { useState, useEffect } from 'preact/hooks';
 import type { Formation, UnitConfig, EvaluatedPattern } from '../lib/types';
 import { FormationPanel } from './FormationPanel';
+import { SavedFormationsPanel } from './SavedFormationsPanel';
 import { ResultPanel } from './ResultPanel';
 import { Footer } from './Footer';
 import { ThemeToggle } from './ThemeToggle';
@@ -44,6 +45,10 @@ export const Calculator = () => {
     setFormation((prev) => ({ ...prev, unitB: unit }));
   };
 
+  const handleLoadFormation = (loaded: Formation) => {
+    setFormation(loaded);
+  };
+
   return (
     <div class="min-h-screen bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100">
       <div class="container mx-auto p-3 sm:p-4 md:p-6">
@@ -62,13 +67,17 @@ export const Calculator = () => {
         </header>
 
         <div data-testid="main-layout" class="grid grid-cols-1 lg:grid-cols-[400px_1fr] gap-4 md:gap-6">
-          {/* 左カラム: 編成選択 */}
-          <aside>
+          {/* 左カラム: 編成選択 + 保存編成 */}
+          <aside class="space-y-4 md:space-y-6">
             <FormationPanel
               unitA={formation.unitA}
               unitB={formation.unitB}
               onUnitAChange={handleUnitAChange}
               onUnitBChange={handleUnitBChange}
+            />
+            <SavedFormationsPanel
+              formation={formation}
+              onLoad={handleLoadFormation}
             />
           </aside>
 

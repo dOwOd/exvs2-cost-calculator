@@ -2,7 +2,7 @@
  * 編成パネル（機体A/B選択）
  */
 
-import { useState } from 'preact/hooks';
+import { useState, useEffect } from 'preact/hooks';
 import type { CostType, UnitConfig, HealthType } from '../lib/types';
 import { CostSelector } from './CostSelector';
 import { HealthSelector } from './HealthSelector';
@@ -28,6 +28,22 @@ export const FormationPanel = ({
   // 復活持ちがいるコスト/耐久かどうか（チェックボックス表示判定用）
   const [canReviveA, setCanReviveA] = useState(false);
   const [canReviveB, setCanReviveB] = useState(false);
+
+  // 外部からの props 変更（保存編成の読み込み等）と内部 state を同期
+  // unitA が null の場合は同期しない（コスト変更時に costA がリセットされるのを防ぐ）
+  useEffect(() => {
+    if (unitA) {
+      setCostA(unitA.cost);
+      setCanReviveA(hasPartialRevivalForCostHealth(unitA.cost, unitA.health));
+    }
+  }, [unitA?.cost, unitA?.health]);
+
+  useEffect(() => {
+    if (unitB) {
+      setCostB(unitB.cost);
+      setCanReviveB(hasPartialRevivalForCostHealth(unitB.cost, unitB.health));
+    }
+  }, [unitB?.cost, unitB?.health]);
 
   const handleCostASelect = (cost: CostType) => {
     if (unitA && unitA.cost !== cost) {

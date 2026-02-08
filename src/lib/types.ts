@@ -57,6 +57,14 @@ export type BattleState = {
   isPartialRevival: boolean;
 }
 
+/** 保存された編成 */
+export type SavedFormation = {
+  id: string;
+  name: string;
+  formation: Formation;
+  savedAt: number;
+}
+
 /** 評価済みパターン */
 export type EvaluatedPattern = {
   /** 撃墜順パターン */
