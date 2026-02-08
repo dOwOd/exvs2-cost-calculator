@@ -160,7 +160,7 @@ export const PatternCard = ({
                     <span class="flex items-center justify-end whitespace-nowrap">
                       <span class="lg:hidden">耐久</span>
                       <span class="hidden lg:inline">リスポーン耐久</span>
-                      <InfoIcon tooltip="撃墜後のリスポーン時の耐久値。" align="right" />
+                      <InfoIcon tooltip="撃墜後のリスポーン時の耐久値。コストオーバー時はフル耐久からの減少量と減少割合を併記。" align="right" />
                     </span>
                   </th>
                   <th class="text-center py-2 px-1 sm:px-2 text-slate-600 dark:text-slate-400">
@@ -213,11 +213,23 @@ export const PatternCard = ({
                         </div>
                       </div>
                     </td>
-                    <td class="py-2 px-1 sm:px-2 text-right font-mono text-slate-700 dark:text-slate-300">
+                    <td class="py-2 px-1 sm:px-2 text-right text-slate-700 dark:text-slate-300">
                       {trans.isDefeat ? (
-                        <span class="text-red-600 dark:text-red-400">-</span>
+                        <span class="text-red-600 dark:text-red-400 font-mono">-</span>
                       ) : (
-                        trans.respawnHealth
+                        <div class="flex flex-col items-end">
+                          <span class="font-mono">{trans.respawnHealth}</span>
+                          {trans.isOverCost && (() => {
+                            const fullHealth = trans.killedUnit === 'A' ? formation.unitA!.health : formation.unitB!.health;
+                            const reduction = fullHealth - trans.respawnHealth;
+                            const reductionPercent = Math.floor((reduction / fullHealth) * 100);
+                            return (
+                              <span class="text-xs sm:text-sm text-red-500 dark:text-red-400">
+                                (-{reduction} / -{reductionPercent}%)
+                              </span>
+                            );
+                          })()}
+                        </div>
                       )}
                     </td>
                     <td class="py-2 px-1 sm:px-2 text-center whitespace-nowrap">
