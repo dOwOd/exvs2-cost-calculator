@@ -59,10 +59,10 @@ export const SavedFormationsPanel = ({
     return `${month}/${day} ${hours}:${minutes}`;
   };
 
-  const formatCostInfo = (saved: SavedFormation): string => {
+  const formatUnitInfo = (saved: SavedFormation): string => {
     const { unitA, unitB } = saved.formation;
     if (!unitA || !unitB) return '';
-    return `${unitA.cost}/${unitB.cost}`;
+    return `${unitA.cost}(${unitA.health}) / ${unitB.cost}(${unitB.health})`;
   };
 
   return (
@@ -132,7 +132,7 @@ export const SavedFormationsPanel = ({
                   {saved.name}
                 </div>
                 <div class="text-xs text-slate-500 dark:text-slate-400">
-                  <span class="font-mono">{formatCostInfo(saved)}</span>
+                  <span class="font-mono">{formatUnitInfo(saved)}</span>
                   <span class="mx-1">|</span>
                   <span>{formatDate(saved.savedAt)}</span>
                 </div>
