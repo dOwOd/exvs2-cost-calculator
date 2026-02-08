@@ -10,13 +10,13 @@ const DEFAULT_EXPANDED_COUNT = 3;
 
 type PatternListType = {
   patterns: EvaluatedPattern[];
-  minimumDefeatHealth: number;
+  maxTotalHealth: number;
   formation: Formation;
 }
 
 export const PatternList = ({
   patterns,
-  minimumDefeatHealth,
+  maxTotalHealth,
   formation,
 }: PatternListType) => {
   const [expandedIndices, setExpandedIndices] = useState<Set<number>>(
@@ -93,7 +93,7 @@ export const PatternList = ({
           key={index}
           pattern={pattern}
           rank={index + 1}
-          minimumDefeatHealth={minimumDefeatHealth}
+          maxTotalHealth={maxTotalHealth}
           formation={formation}
           showScrollHint={index === 0}
           isExpanded={expandedIndices.has(index)}
