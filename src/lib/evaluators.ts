@@ -6,6 +6,7 @@ import type {
   Formation,
   EvaluatedPattern,
   BattleState,
+  UnitId,
 } from './types';
 import {
   generatePatterns,
@@ -84,14 +85,36 @@ export const evaluateAllPatterns = (
 }
 
 /**
- * 総耐久降順でソートされたパターンを取得（重複排除）
+ * ソートされたパターンを取得（重複排除）
+ * formation が渡された場合、高コスト先落ちパターンを優先し、同グループ内で総耐久降順
  */
 export const getTopPatterns = (
   patterns: EvaluatedPattern[],
+  formation?: Formation,
   limit = Infinity
 ): EvaluatedPattern[] => {
-  // 総耐久の降順でソート
-  const sorted = [...patterns].sort((a, b) => b.totalHealth - a.totalHealth);
+  // 高コスト側の機体IDを特定（同コストの場合はnull = 優先なし）
+  const higherCostUnit: UnitId | null = (() => {
+    if (!formation?.unitA || !formation?.unitB) return null;
+    if (formation.unitA.cost > formation.unitB.cost) return 'A';
+    if (formation.unitB.cost > formation.unitA.cost) return 'B';
+    return null;
+  })();
+
+  // プライマリ: 高コスト先落ち優先、セカンダリ: 総耐久降順
+  const sorted = [...patterns].sort((a, b) => {
+    // プライマリ: 高コスト先落ちパターンを優先
+    if (higherCostUnit && a.transitions.length > 0 && b.transitions.length > 0) {
+      const aIsTheory = a.transitions[0].killedUnit === higherCostUnit ? 1 : 0;
+      const bIsTheory = b.transitions[0].killedUnit === higherCostUnit ? 1 : 0;
+      if (aIsTheory !== bIsTheory) {
+        return bIsTheory - aIsTheory;
+      }
+    }
+
+    // セカンダリ: 総耐久降順
+    return b.totalHealth - a.totalHealth;
+  });
 
   // 実際に発生した撃墜順で重複を排除
   const seen = new Set<string>();
