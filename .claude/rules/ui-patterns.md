@@ -34,6 +34,15 @@
 - 総耐久降順でソート（固定）
 - 全パターン表示（TOP 5制限なし）
 
+## コストオーバー時の耐久減少表示
+
+- **表示条件**: `trans.isOverCost === true` の行のみ
+- **表示フォーマット**: `140 (-660 / -82%)`
+  - リスポーン耐久値: `font-mono`（既存）
+  - 減少情報: `text-xs sm:text-sm`、`text-red-500 dark:text-red-400`
+- **計算**: `reduction = fullHealth - respawnHealth`、`reductionPercent = Math.floor((reduction / fullHealth) * 100)`
+- 敗北行・復活あり行は `isOverCost: false` なので自動的に除外
+
 ## 総耐久値の表示形式
 
 ```
