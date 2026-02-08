@@ -18,6 +18,7 @@ export const SavedFormationsPanel = ({
   const [savedFormations, setSavedFormations] = useState<SavedFormation[]>([]);
   const [saveName, setSaveName] = useState('');
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<SavedFormation | null>(null);
 
   const refreshList = () => {
     setSavedFormations(getSavedFormations());
@@ -38,8 +39,10 @@ export const SavedFormationsPanel = ({
     refreshList();
   };
 
-  const handleDelete = (id: string) => {
-    deleteSavedFormation(id);
+  const handleDeleteConfirm = () => {
+    if (!deleteTarget) return;
+    deleteSavedFormation(deleteTarget.id);
+    setDeleteTarget(null);
     refreshList();
   };
 
@@ -120,7 +123,9 @@ export const SavedFormationsPanel = ({
           {savedFormations.map((saved) => (
             <li
               key={saved.id}
-              class="flex items-center justify-between p-2 bg-white dark:bg-slate-700 rounded border border-slate-200 dark:border-slate-600"
+              data-testid={`saved-formation-${saved.id}`}
+              onClick={() => handleLoad(saved)}
+              class="flex items-center justify-between p-2 bg-white dark:bg-slate-700 rounded border border-slate-200 dark:border-slate-600 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors"
             >
               <div class="flex-1 min-w-0">
                 <div class="text-sm font-medium text-slate-800 dark:text-slate-200 truncate">
@@ -132,25 +137,53 @@ export const SavedFormationsPanel = ({
                   <span>{formatDate(saved.savedAt)}</span>
                 </div>
               </div>
-              <div class="flex gap-1.5 ml-2 shrink-0">
-                <button
-                  data-testid={`load-formation-${saved.id}`}
-                  onClick={() => handleLoad(saved)}
-                  class="text-xs px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded transition-colors"
-                >
-                  読込
-                </button>
-                <button
-                  data-testid={`delete-formation-${saved.id}`}
-                  onClick={() => handleDelete(saved.id)}
-                  class="text-xs px-2 py-1 bg-red-500 hover:bg-red-600 text-white rounded transition-colors"
-                >
-                  削除
-                </button>
-              </div>
+              <button
+                data-testid={`delete-formation-${saved.id}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setDeleteTarget(saved);
+                }}
+                class="text-xs px-2 py-1 ml-2 shrink-0 bg-red-500 hover:bg-red-600 text-white rounded transition-colors"
+              >
+                削除
+              </button>
             </li>
           ))}
         </ul>
+      )}
+
+      {/* 削除確認モーダル */}
+      {deleteTarget && (
+        <div
+          data-testid="delete-confirm-modal"
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+          onClick={() => setDeleteTarget(null)}
+        >
+          <div
+            class="bg-white dark:bg-slate-800 rounded-lg p-4 sm:p-6 mx-4 max-w-sm w-full shadow-lg"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <p class="text-sm text-slate-800 dark:text-slate-200 mb-4">
+              「{deleteTarget.name}」を削除しますか？
+            </p>
+            <div class="flex justify-end gap-2">
+              <button
+                data-testid="delete-cancel-button"
+                onClick={() => setDeleteTarget(null)}
+                class="text-sm px-3 py-1.5 bg-slate-200 hover:bg-slate-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-slate-700 dark:text-slate-200 rounded transition-colors"
+              >
+                キャンセル
+              </button>
+              <button
+                data-testid="delete-confirm-button"
+                onClick={handleDeleteConfirm}
+                class="text-sm px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded transition-colors"
+              >
+                削除
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
