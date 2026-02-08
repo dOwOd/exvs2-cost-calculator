@@ -9,7 +9,7 @@ import { InfoIcon } from './Tooltip';
 type PatternCardType = {
   pattern: EvaluatedPattern;
   rank: number;
-  minimumDefeatHealth: number;
+  maxTotalHealth: number;
   formation: Formation;
   showScrollHint?: boolean;
   isExpanded: boolean;
@@ -19,7 +19,7 @@ type PatternCardType = {
 export const PatternCard = ({
   pattern,
   rank,
-  minimumDefeatHealth,
+  maxTotalHealth,
   formation,
   showScrollHint = false,
   isExpanded,
@@ -40,6 +40,10 @@ export const PatternCard = ({
     formation.unitA && formation.unitB
       ? Math.min(formation.unitA.cost, formation.unitB.cost)
       : 0;
+
+  const healthDiff = maxTotalHealth > 0 && pattern.totalHealth < maxTotalHealth
+    ? maxTotalHealth - pattern.totalHealth
+    : 0;
 
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -94,6 +98,11 @@ export const PatternCard = ({
           {!isExpanded && (
             <span data-testid={`pattern-summary-health-${rank}`} class="text-sm sm:text-base text-slate-500 dark:text-slate-400 ml-2">
               総耐久 {pattern.totalHealth}
+              {healthDiff > 0 && (
+                <span class="text-red-500 dark:text-red-400 ml-1">
+                  (最大比 -{healthDiff})
+                </span>
+              )}
             </span>
           )}
         </div>
@@ -124,9 +133,11 @@ export const PatternCard = ({
                 <span class="text-2xl sm:text-3xl font-semibold text-slate-900 dark:text-slate-100">
                   {pattern.totalHealth}
                 </span>
-                <span class="text-sm sm:text-base text-slate-600 dark:text-slate-400">
-                  (最短: {minimumDefeatHealth})
-                </span>
+                {healthDiff > 0 && (
+                  <span class="text-sm sm:text-base text-red-500 dark:text-red-400">
+                    (最大比 -{healthDiff})
+                  </span>
+                )}
               </div>
             </div>
           </div>
@@ -220,7 +231,7 @@ export const PatternCard = ({
                         <div class="flex flex-col items-end">
                           <span class="font-mono">{trans.respawnHealth}</span>
                           {trans.isOverCost && (() => {
-                            const fullHealth = trans.killedUnit === 'A' ? formation.unitA!.health : formation.unitB!.health;
+                            const fullHealth = trans.killedUnit === 'A' ? (formation.unitA?.health ?? 0) : (formation.unitB?.health ?? 0);
                             const reduction = fullHealth - trans.respawnHealth;
                             const reductionPercent = Math.floor((reduction / fullHealth) * 100);
                             return (

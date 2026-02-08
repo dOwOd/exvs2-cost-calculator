@@ -16,7 +16,6 @@ import {
   exFailurePattern,
   overCostPattern,
 } from '../stories/mocks/patterns';
-import { calculateMinimumDefeatHealth } from '../lib/calculator';
 
 const meta = {
   title: 'Components/PatternCard',
@@ -35,7 +34,7 @@ export const Default: Story = {
   args: {
     pattern: topPatterns3000_3000[0],
     rank: 1,
-    minimumDefeatHealth: calculateMinimumDefeatHealth(formation3000_3000),
+    maxTotalHealth: topPatterns3000_3000[0].totalHealth,
     formation: formation3000_3000,
   },
 };
@@ -45,7 +44,7 @@ export const EXActivationAvailable: Story = {
   args: {
     pattern: exAvailablePattern,
     rank: 1,
-    minimumDefeatHealth: calculateMinimumDefeatHealth(formation3000_3000),
+    maxTotalHealth: topPatterns3000_3000[0].totalHealth,
     formation: formation3000_3000,
   },
 };
@@ -55,7 +54,7 @@ export const EXActivationFailure: Story = {
   args: {
     pattern: exFailurePattern,
     rank: 1,
-    minimumDefeatHealth: calculateMinimumDefeatHealth(formation3000_2500),
+    maxTotalHealth: exFailurePattern.totalHealth,
     formation: formation3000_2500,
   },
 };
@@ -65,7 +64,7 @@ export const WithCostOver: Story = {
   args: {
     pattern: overCostPattern,
     rank: 1,
-    minimumDefeatHealth: calculateMinimumDefeatHealth(formation2500_2500),
+    maxTotalHealth: overCostPattern.totalHealth,
     formation: formation2500_2500,
   },
 };
@@ -75,7 +74,7 @@ export const Rank2: Story = {
   args: {
     pattern: topPatterns3000_3000[1] || topPatterns3000_3000[0],
     rank: 2,
-    minimumDefeatHealth: calculateMinimumDefeatHealth(formation3000_3000),
+    maxTotalHealth: topPatterns3000_3000[0].totalHealth,
     formation: formation3000_3000,
   },
 };

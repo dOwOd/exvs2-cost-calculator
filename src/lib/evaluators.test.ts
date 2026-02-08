@@ -3,7 +3,7 @@
  */
 
 import type { Formation } from './types';
-import { checkEXActivation, evaluateAllPatterns, getTopPatterns } from './evaluators';
+import { checkEXActivation, evaluateAllPatterns, getTopPatterns, getEffectivePatterns } from './evaluators';
 import { calculateCostTransitions } from './calculator';
 
 describe('checkEXActivation', () => {
@@ -333,5 +333,60 @@ describe('evaluateAllPatterns - 復活あり', () => {
       (p) => p.transitions.some((t) => t.isPartialRevival)
     );
     expect(hasRevivalPattern).toBe(true);
+  });
+});
+
+describe('getEffectivePatterns', () => {
+  // 編成が完全な場合に使う既存パターン
+  const completeFormation: Formation = {
+    unitA: { cost: 3000, health: 800 },
+    unitB: { cost: 2500, health: 680 },
+  };
+  const patterns = evaluateAllPatterns(completeFormation);
+
+  test('編成が完全な場合、パターンをそのまま返す', () => {
+    const result = getEffectivePatterns(patterns, completeFormation);
+
+    expect(result).toBe(patterns);
+    expect(result.length).toBeGreaterThan(0);
+  });
+
+  test('unitBがnullの場合、パターンが存在しても空配列を返す（中間レンダー対策）', () => {
+    const incompleteFormation: Formation = {
+      unitA: { cost: 3000, health: 800 },
+      unitB: null,
+    };
+
+    const result = getEffectivePatterns(patterns, incompleteFormation);
+
+    expect(result).toEqual([]);
+  });
+
+  test('unitAがnullの場合、パターンが存在しても空配列を返す（中間レンダー対策）', () => {
+    const incompleteFormation: Formation = {
+      unitA: null,
+      unitB: { cost: 2500, health: 680 },
+    };
+
+    const result = getEffectivePatterns(patterns, incompleteFormation);
+
+    expect(result).toEqual([]);
+  });
+
+  test('両方nullの場合、空配列を返す', () => {
+    const emptyFormation: Formation = {
+      unitA: null,
+      unitB: null,
+    };
+
+    const result = getEffectivePatterns(patterns, emptyFormation);
+
+    expect(result).toEqual([]);
+  });
+
+  test('パターンが空の場合、編成が完全でも空配列を返す', () => {
+    const result = getEffectivePatterns([], completeFormation);
+
+    expect(result).toEqual([]);
   });
 });
