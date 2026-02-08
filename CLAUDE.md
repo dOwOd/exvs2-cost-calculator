@@ -90,8 +90,23 @@ PatternList → PatternCard（各パターン表示）
 詳細仕様: `docs/SPECIFICATION.md`
 戦術知識: `docs/GAME_KNOWLEDGE.md`
 
+## エージェントチーム
+
+`.claude/agents/` にカスタムエージェント定義を配置。プロジェクト単位でチームを構成する。
+
+- **lead.md** - チームリーダー（タスク分割・割当、統合・レビュー、Git/PR管理）
+- **logic.md** - ゲームロジック＆テスト担当（`src/lib/`, `src/data/`, テストファイル）
+- **ui.md** - UIコンポーネント担当（`src/components/`）
+
+### チーム運用
+
+- チーム名: `exvs2`（プロジェクト固定、Issueごとに作り直さない）
+- Issueはタスクとして管理し、同じチーム内で処理する
+- セッション開始時に `TeamCreate(team_name: "exvs2")` で起動
+
 ## スキル
 
+- `/team` - エージェントチームを起動してIssueに取り組む（例: `/team #42`）
 - `/commit` - コミット規約に従ったコミット作成
 
 ## チェックリスト
