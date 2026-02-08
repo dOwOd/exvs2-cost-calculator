@@ -177,7 +177,7 @@ export const PatternCard = ({
                   <th class="text-center py-2 px-1 sm:px-2 text-slate-600 dark:text-slate-400">
                     <span class="flex items-center justify-center">
                       状態
-                      <InfoIcon tooltip="✓=通常 ⚠️=コストオーバー 🔄=復活あり 💀=敗北" align="right" />
+                      <InfoIcon tooltip="✓=通常 ⚠️=コストオーバー 🔄=復活あり 💀=敗北 ⚡=EX発動" align="right" />
                     </span>
                   </th>
                 </tr>
@@ -186,13 +186,15 @@ export const PatternCard = ({
                 {pattern.transitions.map((trans) => (
                   <tr
                     key={trans.killCount}
-                    class={`border-b border-slate-200 dark:border-slate-700 ${trans.isDefeat
+                    class={`border-b border-slate-200 dark:border-slate-700 ${trans.isEXActivationStep ? 'border-l-4 border-l-red-500' : ''} ${trans.isDefeat
                       ? 'bg-red-100 dark:bg-red-900/40'
                       : trans.isPartialRevival
                         ? 'bg-purple-50 dark:bg-purple-900/20'
-                        : trans.isOverCost
-                          ? 'bg-yellow-50 dark:bg-yellow-900/20'
-                          : ''
+                        : trans.isEXActivationStep
+                          ? 'bg-red-50 dark:bg-red-900/20'
+                          : trans.isOverCost
+                            ? 'bg-yellow-50 dark:bg-yellow-900/20'
+                            : ''
                       }`}
                   >
                     <td class="py-2 px-1 sm:px-2 text-slate-700 dark:text-slate-300">{trans.killCount}</td>
@@ -244,15 +246,20 @@ export const PatternCard = ({
                       )}
                     </td>
                     <td class="py-2 px-1 sm:px-2 text-center whitespace-nowrap">
-                      {trans.isDefeat ? (
-                        <span class="text-red-600 dark:text-red-400 font-semibold">💀 <span class="hidden sm:inline">敗北</span></span>
-                      ) : trans.isPartialRevival ? (
-                        <span class="text-purple-600 dark:text-purple-400 font-semibold">🔄 <span class="hidden sm:inline">復活あり</span></span>
-                      ) : trans.isOverCost ? (
-                        <span class="text-yellow-600 dark:text-yellow-400 font-semibold">⚠️ <span class="hidden sm:inline">コストオーバー</span></span>
-                      ) : (
-                        <span class="text-green-600 dark:text-green-400">✓</span>
-                      )}
+                      <div class="flex flex-col items-center gap-0.5">
+                        {trans.isEXActivationStep && (
+                          <span class="text-red-600 dark:text-red-400 font-bold">⚡ <span class="hidden sm:inline">EX発動</span></span>
+                        )}
+                        {trans.isDefeat ? (
+                          <span class="text-red-600 dark:text-red-400 font-semibold">💀 <span class="hidden sm:inline">敗北</span></span>
+                        ) : trans.isPartialRevival ? (
+                          <span class="text-purple-600 dark:text-purple-400 font-semibold">🔄 <span class="hidden sm:inline">復活あり</span></span>
+                        ) : trans.isOverCost ? (
+                          <span class="text-yellow-600 dark:text-yellow-400 font-semibold">⚠️ <span class="hidden sm:inline">コストオーバー</span></span>
+                        ) : !trans.isEXActivationStep ? (
+                          <span class="text-green-600 dark:text-green-400">✓</span>
+                        ) : null}
+                      </div>
                     </td>
                   </tr>
                 ))}

@@ -314,6 +314,7 @@ export type BattleState = {
   isOverCost: boolean;
   respawnHealth: number;
   isDefeat: boolean;
+  isEXActivationStep: boolean; // EX発動可能になった最初のステップか
 }
 
 /** 評価済みパターン */
@@ -398,7 +399,7 @@ export function getRespawnHealth(
 | 対象 | 撃墜された機体（A/B） |
 | チーム残コスト | 数値 + **コストバー**（視覚的表現） |
 | リスポーン耐久 | リスポーン時の耐久値。コストオーバー時はフル耐久からの減少量・減少割合を併記（例: `140 (-660 / -82%)`） |
-| 状態 | ✓ 通常 / ⚠️ コストオーバー / 💀 敗北 |
+| 状態 | ✓ 通常 / ⚠️ コストオーバー / ⚡ EX発動 / 💀 敗北 |
 
 #### コストバーの仕様
 
@@ -422,6 +423,34 @@ export function getRespawnHealth(
 **アニメーション:**
 - `transition-all` で滑らかに変化
 
+#### EX発動ステップのハイライト
+
+EXオーバーリミットが発動可能になった**最初のステップ**をハイライト表示する。
+
+**判定ロジック:**
+- `findEXActivationStepIndex()` で `remainingCost <= minCost` を満たす最初のステップを特定
+- 該当ステップの `isEXActivationStep` を `true` にセット
+
+**表示:**
+- **左ボーダー**: `border-l-4 border-l-red-500`（太い赤線）
+- **背景色**: `bg-red-50 dark:bg-red-900/20`（薄い赤背景）
+- **状態列**: `⚡ EX発動`（モバイルは ⚡ のみ、sm以上でテキスト付き）
+- **フォント**: `font-bold` で太字
+
+**背景色の優先順位:**
+1. 敗北（`bg-red-100`）
+2. 復活あり（`bg-purple-50`）
+3. EX発動（`bg-red-50`）
+4. コストオーバー（`bg-yellow-50`）
+5. 通常（背景なし）
+
+**コストオーバーと同時発生時:**
+- 背景色はEX発動を優先
+- 状態列にはEXマーカーとコストオーバーの両方を表示
+
+**色覚配慮:**
+- テキスト（`⚡ EX発動`）、アイコン（⚡）、左ボーダー（太線）、太字の4重手がかり
+
 ---
 
 ## 8. テスト戦略
@@ -432,6 +461,7 @@ export function getRespawnHealth(
 - `calculateCostTransitions`: コスト推移計算
 - `calculateTotalHealth`: 総耐久値計算
 - `checkEXActivation`: EX発動判定
+- `findEXActivationStepIndex`: EX発動ステップインデックス特定
 
 ### 8.2 重要テストケース
 

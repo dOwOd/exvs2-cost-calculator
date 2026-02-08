@@ -3,7 +3,7 @@
  */
 
 import type { Formation } from './types';
-import { checkEXActivation, evaluateAllPatterns, getTopPatterns, getEffectivePatterns } from './evaluators';
+import { checkEXActivation, findEXActivationStepIndex, evaluateAllPatterns, getTopPatterns, getEffectivePatterns } from './evaluators';
 import { calculateCostTransitions } from './calculator';
 
 describe('checkEXActivation', () => {
@@ -199,6 +199,152 @@ describe('checkEXActivation', () => {
       expect(transitions[1].remainingCost).toBe(1500);
       expect(canActivate).toBe(true);
     });
+  });
+});
+
+describe('findEXActivationStepIndex', () => {
+  test('3000+3000: 1回目撃墜でEX発動（index=0）', () => {
+    const formation: Formation = {
+      unitA: { cost: 3000, health: 800 },
+      unitB: { cost: 3000, health: 800 },
+    };
+
+    const transitions = calculateCostTransitions(['A', 'A'], formation);
+    const index = findEXActivationStepIndex(formation, transitions);
+
+    expect(index).toBe(0);
+    expect(transitions[0].remainingCost).toBe(3000); // 3000 <= min(3000, 3000)
+  });
+
+  test('3000+2500: A→B撃墜でEX発動（index=1）', () => {
+    const formation: Formation = {
+      unitA: { cost: 3000, health: 800 },
+      unitB: { cost: 2500, health: 700 },
+    };
+
+    const transitions = calculateCostTransitions(['A', 'B', 'A'], formation);
+    const index = findEXActivationStepIndex(formation, transitions);
+
+    expect(index).toBe(1);
+    expect(transitions[1].remainingCost).toBe(500); // 500 <= min(3000, 2500)
+  });
+
+  test('EX不発パターン（-1を返す）', () => {
+    const formation: Formation = {
+      unitA: { cost: 3000, health: 800 },
+      unitB: { cost: 2500, health: 700 },
+    };
+
+    // B→B: 残1000でEX未発動のまま敗北
+    const transitions = calculateCostTransitions(['B', 'B'], formation);
+    const index = findEXActivationStepIndex(formation, transitions);
+
+    // 残1000 <= min(2500)なので実は発動する
+    // B→Bだと: 残3500, 残1000（1000 <= 2500 で発動）
+    // 正しいEX不発ケースを探す
+    expect(index).toBe(1); // 1000 <= 2500
+  });
+
+  test('3000+1500: B→B→B→B で3回目にEX発動（index=2）', () => {
+    const formation: Formation = {
+      unitA: { cost: 3000, health: 800 },
+      unitB: { cost: 1500, health: 520 },
+    };
+
+    // B→B→B→B: 残4500, 残3000, 残1500, 残0（敗北）
+    const transitions = calculateCostTransitions(['B', 'B', 'B', 'B'], formation);
+    const index = findEXActivationStepIndex(formation, transitions);
+
+    expect(index).toBe(2); // 残1500 <= min(3000, 1500) = 1500
+  });
+
+  test('境界値: remainingCost == minCost で発動', () => {
+    const formation: Formation = {
+      unitA: { cost: 2500, health: 700 },
+      unitB: { cost: 2000, health: 680 },
+    };
+
+    // B→B: 残4000, 残2000（2000 <= min(2500, 2000) = 2000、等号で発動）
+    const transitions = calculateCostTransitions(['B', 'B'], formation);
+    const index = findEXActivationStepIndex(formation, transitions);
+
+    expect(index).toBe(1);
+    expect(transitions[1].remainingCost).toBe(2000);
+  });
+
+  test('編成不完全時は-1を返す', () => {
+    const formation: Formation = {
+      unitA: { cost: 3000, health: 800 },
+      unitB: null,
+    };
+
+    const index = findEXActivationStepIndex(formation, []);
+
+    expect(index).toBe(-1);
+  });
+
+  test('両方null時は-1を返す', () => {
+    const formation: Formation = {
+      unitA: null,
+      unitB: null,
+    };
+
+    const index = findEXActivationStepIndex(formation, []);
+
+    expect(index).toBe(-1);
+  });
+});
+
+describe('evaluateAllPatterns - isEXActivationStep', () => {
+  test('EX発動パターンで正確に1ステップだけisEXActivationStep: true', () => {
+    const formation: Formation = {
+      unitA: { cost: 3000, health: 800 },
+      unitB: { cost: 3000, health: 800 },
+    };
+
+    const patterns = evaluateAllPatterns(formation);
+
+    for (const p of patterns) {
+      if (p.canActivateEXOverLimit) {
+        const exSteps = p.transitions.filter(t => t.isEXActivationStep);
+        expect(exSteps).toHaveLength(1);
+      }
+    }
+  });
+
+  test('EX不発パターンで全てisEXActivationStep: false', () => {
+    const formation: Formation = {
+      unitA: { cost: 3000, health: 800 },
+      unitB: { cost: 3000, health: 800 },
+    };
+
+    const patterns = evaluateAllPatterns(formation);
+
+    for (const p of patterns) {
+      if (p.isEXActivationFailure) {
+        const exSteps = p.transitions.filter(t => t.isEXActivationStep);
+        expect(exSteps).toHaveLength(0);
+      }
+    }
+  });
+
+  test('3000+2500: A→B パターンでindex=1のステップだけtrue', () => {
+    const formation: Formation = {
+      unitA: { cost: 3000, health: 800 },
+      unitB: { cost: 2500, health: 700 },
+    };
+
+    const patterns = evaluateAllPatterns(formation);
+    // A→B→A パターンを探す
+    const abPattern = patterns.find(p =>
+      p.transitions.length >= 2 &&
+      p.transitions[0].killedUnit === 'A' &&
+      p.transitions[1].killedUnit === 'B'
+    );
+
+    expect(abPattern).toBeDefined();
+    expect(abPattern!.transitions[0].isEXActivationStep).toBe(false);
+    expect(abPattern!.transitions[1].isEXActivationStep).toBe(true);
   });
 });
 

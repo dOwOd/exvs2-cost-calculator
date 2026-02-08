@@ -55,6 +55,8 @@ export type BattleState = {
   isDefeat: boolean;
   /** 復活ありで復帰したか */
   isPartialRevival: boolean;
+  /** EXオーバーリミット発動可能になった最初のステップか */
+  isEXActivationStep: boolean;
 }
 
 /** 保存された編成 */

@@ -81,6 +81,7 @@ export const calculateCostTransitions = (
         respawnHealth: PARTIAL_REVIVAL_HEALTH,
         isDefeat: false,
         isPartialRevival: true,
+        isEXActivationStep: false,
       });
 
       continue;
@@ -96,6 +97,7 @@ export const calculateCostTransitions = (
         respawnHealth: 0,
         isDefeat: true,
         isPartialRevival: false,
+        isEXActivationStep: false,
       });
       break;
     }
@@ -116,6 +118,7 @@ export const calculateCostTransitions = (
       respawnHealth,
       isDefeat: false,
       isPartialRevival: false,
+      isEXActivationStep: false,
     });
   }
 

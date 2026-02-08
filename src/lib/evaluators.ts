@@ -48,6 +48,37 @@ export const checkEXActivation = (
 
 
 /**
+ * EXオーバーリミット発動可能になった最初のステップのインデックスを返す
+ * 発動条件を満たさない場合は -1 を返す
+ */
+export const findEXActivationStepIndex = (
+  formation: Formation,
+  transitions: BattleState[]
+): number => {
+  if (!formation.unitA || !formation.unitB) {
+    return -1;
+  }
+
+  const minCost = Math.min(formation.unitA.cost, formation.unitB.cost);
+
+  for (let i = 0; i < transitions.length; i++) {
+    const transition = transitions[i];
+
+    // 敗北した場合はその前の状態でチェック済み
+    if (transition.isDefeat) {
+      break;
+    }
+
+    // 残コスト <= minCost = どちらを撃墜しても敗北 = EX発動可能
+    if (transition.remainingCost <= minCost) {
+      return i;
+    }
+  }
+
+  return -1;
+};
+
+/**
  * 全パターンを評価
  */
 export const evaluateAllPatterns = (
@@ -70,6 +101,12 @@ export const evaluateAllPatterns = (
     const canActivateEX = checkEXActivation(formation, transitions);
     // EX発動不可パターンかどうか（発動せずに敗北）
     const isEXFailure = !canActivateEX;
+
+    // EX発動ステップにフラグを付与
+    const exStepIndex = findEXActivationStepIndex(formation, transitions);
+    if (exStepIndex >= 0) {
+      transitions[exStepIndex].isEXActivationStep = true;
+    }
 
     return {
       pattern,

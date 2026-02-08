@@ -30,6 +30,7 @@ describe('calculateCostTransitions', () => {
         isOverCost: false,
         isDefeat: false,
         respawnHealth: 800, // 残3000 >= 3000なので初期耐久
+        isEXActivationStep: false,
       });
 
       // 2回目: A撃墜 → 敗北
@@ -40,6 +41,7 @@ describe('calculateCostTransitions', () => {
         isOverCost: false,
         isDefeat: true,
         respawnHealth: 0,
+        isEXActivationStep: false,
       });
     });
 
@@ -71,6 +73,7 @@ describe('calculateCostTransitions', () => {
         isOverCost: false,
         isDefeat: false,
         respawnHealth: 800,
+        isEXActivationStep: false,
       });
 
       // 2回目: B(2500)撃墜 → 残500（コストオーバー）
@@ -81,6 +84,7 @@ describe('calculateCostTransitions', () => {
         isOverCost: true, // 500 < 2500
         isDefeat: false,
         respawnHealth: 140, // 2500コスト・耐久700・残500
+        isEXActivationStep: false,
       });
     });
 
@@ -110,6 +114,7 @@ describe('calculateCostTransitions', () => {
         isOverCost: false,
         isDefeat: true,
         respawnHealth: 0,
+        isEXActivationStep: false,
       });
     });
   });
@@ -367,6 +372,7 @@ describe('calculateCostTransitions - 復活あり', () => {
         isDefeat: false,
         isPartialRevival: false,
         respawnHealth: 680,
+        isEXActivationStep: false,
       });
 
       // 2回目: A撃墜 → 残0 → 復活あり
@@ -377,6 +383,7 @@ describe('calculateCostTransitions - 復活あり', () => {
         isDefeat: false,
         isPartialRevival: true,
         respawnHealth: 100,
+        isEXActivationStep: false,
       });
 
       // 3回目: A撃墜 → 残-3000 → 敗北（復活済み）
@@ -387,6 +394,7 @@ describe('calculateCostTransitions - 復活あり', () => {
         isDefeat: true,
         isPartialRevival: false,
         respawnHealth: 0,
+        isEXActivationStep: false,
       });
     });
 
@@ -403,6 +411,7 @@ describe('calculateCostTransitions - 復活あり', () => {
         isDefeat: true,
         isPartialRevival: false,
         respawnHealth: 0,
+        isEXActivationStep: false,
       });
     });
   });
