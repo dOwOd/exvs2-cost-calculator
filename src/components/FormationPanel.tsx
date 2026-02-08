@@ -30,21 +30,18 @@ export const FormationPanel = ({
   const [canReviveB, setCanReviveB] = useState(false);
 
   // 外部からの props 変更（保存編成の読み込み等）と内部 state を同期
+  // unitA が null の場合は同期しない（コスト変更時に costA がリセットされるのを防ぐ）
   useEffect(() => {
-    setCostA(unitA?.cost ?? null);
     if (unitA) {
+      setCostA(unitA.cost);
       setCanReviveA(hasPartialRevivalForCostHealth(unitA.cost, unitA.health));
-    } else {
-      setCanReviveA(false);
     }
   }, [unitA?.cost, unitA?.health]);
 
   useEffect(() => {
-    setCostB(unitB?.cost ?? null);
     if (unitB) {
+      setCostB(unitB.cost);
       setCanReviveB(hasPartialRevivalForCostHealth(unitB.cost, unitB.health));
-    } else {
-      setCanReviveB(false);
     }
   }, [unitB?.cost, unitB?.health]);
 
