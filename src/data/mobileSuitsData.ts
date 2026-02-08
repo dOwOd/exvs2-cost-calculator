@@ -3,7 +3,7 @@
  * コスト×耐久値ごとの代表的な機体名
  */
 
-import { isCostType, isHealthType, type CostType, type HealthType } from '../lib/types';
+import { isCostType, type CostType } from '../lib/types';
 
 /**
  * 機体名マッピング（as const で定義してリテラル型を抽出可能にする）
@@ -45,6 +45,30 @@ const mobileSuitsDataConst = {
     440: ['リ・ガズィ', 'アレックス'],
   },
 } as const;
+
+/**
+ * 耐久値タイプ（mobileSuitsDataConstから自動導出）
+ */
+export type HealthType = {
+  [C in keyof typeof mobileSuitsDataConst]: keyof typeof mobileSuitsDataConst[C]
+}[keyof typeof mobileSuitsDataConst];
+
+/**
+ * 耐久値の全値をランタイムで自動抽出
+ */
+const allHealthNumbers: readonly number[] = [...new Set(
+  Object.values(mobileSuitsDataConst).flatMap(costGroup =>
+    Object.keys(costGroup).map(Number)
+  )
+)].sort((a, b) => a - b);
+
+/** 型ガード関数 */
+export const isHealthType = (value: number): value is HealthType => {
+  return allHealthNumbers.includes(value);
+};
+
+/** HealthType の全値を配列として保持（ランタイム検証用） */
+export const HEALTH_VALUES: readonly HealthType[] = allHealthNumbers.filter(isHealthType);
 
 /**
  * 機体名リテラル型を抽出

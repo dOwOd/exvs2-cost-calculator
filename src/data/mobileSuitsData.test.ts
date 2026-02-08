@@ -9,6 +9,8 @@ import {
   getAvailableHealthOptions,
   hasMobileSuitsForHealth,
   partialRevivalSuits,
+  HEALTH_VALUES,
+  isHealthType,
   type MobileSuitInfo,
 } from './mobileSuitsData';
 
@@ -120,9 +122,9 @@ describe('hasMobileSuitsForHealth', () => {
   });
 
   test('存在しない組み合わせでfalseを返す', () => {
-    expect(hasMobileSuitsForHealth(3000, 740)).toBe(false);
+    expect(hasMobileSuitsForHealth(3000, 740 as any)).toBe(false);
     expect(hasMobileSuitsForHealth(3000, 650)).toBe(false);
-    expect(hasMobileSuitsForHealth(1500, 460)).toBe(false);
+    expect(hasMobileSuitsForHealth(1500, 460 as any)).toBe(false);
   });
 
   test('無効なコストでfalseを返す', () => {
@@ -236,6 +238,52 @@ describe('partialRevivalSuits', () => {
   test('復活なし機体は含まれない', () => {
     expect(partialRevivalSuits.has('ゴッドガンダム')).toBe(false);
     expect(partialRevivalSuits.has('νガンダム')).toBe(false);
+  });
+});
+
+describe('HEALTH_VALUES（自動導出）', () => {
+  test('540が含まれる（ザクⅡ(ドアン機), イフリート改）', () => {
+    expect(HEALTH_VALUES).toContain(540);
+  });
+
+  test('460が含まれない（mobileSuitsDataに該当機体なし）', () => {
+    expect(HEALTH_VALUES).not.toContain(460);
+  });
+
+  test('740が含まれない（mobileSuitsDataに該当機体なし）', () => {
+    expect(HEALTH_VALUES).not.toContain(740);
+  });
+
+  test('昇順にソートされている', () => {
+    expect(HEALTH_VALUES).toEqual([...HEALTH_VALUES].sort((a, b) => a - b));
+  });
+
+  test('重複がない', () => {
+    const unique = [...new Set(HEALTH_VALUES)];
+    expect(HEALTH_VALUES).toHaveLength(unique.length);
+  });
+});
+
+describe('isHealthType', () => {
+  test('有効な耐久値でtrueを返す', () => {
+    expect(isHealthType(800)).toBe(true);
+    expect(isHealthType(540)).toBe(true);
+    expect(isHealthType(440)).toBe(true);
+  });
+
+  test('無効な耐久値でfalseを返す', () => {
+    expect(isHealthType(460)).toBe(false);
+    expect(isHealthType(740)).toBe(false);
+    expect(isHealthType(999)).toBe(false);
+  });
+});
+
+describe('データ整合性', () => {
+  test('機体名に重複がない', () => {
+    const { mobileSuitsList } = require('./mobileSuitsData');
+    const names = mobileSuitsList.map((s: MobileSuitInfo) => s.name);
+    const unique = [...new Set(names)];
+    expect(names).toHaveLength(unique.length);
   });
 });
 
