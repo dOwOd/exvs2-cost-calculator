@@ -62,7 +62,15 @@ export const Calculator = () => {
                 編成を選択して最適な撃墜順パターンを確認
               </p>
             </div>
-            <ThemeToggle />
+            <div class="flex items-center gap-2">
+              <a
+                href="/about"
+                class="text-sm text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              >
+                About
+              </a>
+              <ThemeToggle />
+            </div>
           </div>
         </header>
 
