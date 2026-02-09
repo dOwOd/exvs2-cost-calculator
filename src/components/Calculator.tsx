@@ -9,8 +9,10 @@ import { SavedFormationsPanel } from './SavedFormationsPanel';
 import { ResultPanel } from './ResultPanel';
 import { Footer } from './Footer';
 import { ThemeToggle } from './ThemeToggle';
+import { TutorialOverlay } from './TutorialOverlay';
 import { evaluateAllPatterns } from '../lib/evaluators';
 import { calculateMinimumDefeatHealth } from '../lib/calculator';
+import { useTutorial } from '../lib/useTutorial';
 
 export const Calculator = () => {
   const [formation, setFormation] = useState<Formation>({
@@ -23,6 +25,12 @@ export const Calculator = () => {
   >([]);
 
   const [minimumDefeatHealth, setMinimumDefeatHealth] = useState<number>(0);
+
+  const tutorial = useTutorial();
+
+  const handleHelpClick = () => {
+    tutorial.reset();
+  };
 
   // 編成変更時に自動計算
   useEffect(() => {
@@ -62,7 +70,18 @@ export const Calculator = () => {
                 編成を選択して最適な撃墜順パターンを確認
               </p>
             </div>
-            <ThemeToggle />
+            <div class="flex items-center gap-2">
+              <button
+                type="button"
+                data-testid="help-button"
+                onClick={handleHelpClick}
+                aria-label="使い方を表示"
+                class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 text-sm font-bold transition-colors"
+              >
+                ?
+              </button>
+              <ThemeToggle />
+            </div>
           </div>
         </header>
 
@@ -94,6 +113,15 @@ export const Calculator = () => {
         {/* フッター */}
         <Footer />
       </div>
+
+      {/* チュートリアルオーバーレイ */}
+      <TutorialOverlay
+        currentStep={tutorial.currentStep}
+        stepInfo={tutorial.currentStepData}
+        onNext={tutorial.next}
+        onSkip={tutorial.skip}
+        isActive={tutorial.isActive}
+      />
     </div>
   );
 };
