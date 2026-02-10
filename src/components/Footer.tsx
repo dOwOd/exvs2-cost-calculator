@@ -41,6 +41,16 @@ export const Footer = () => {
 
           <span class="text-slate-400 dark:text-slate-600">·</span>
 
+          {/* プライバシーポリシー */}
+          <a
+            href="/privacy"
+            class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          >
+            プライバシーポリシー
+          </a>
+
+          <span class="text-slate-400 dark:text-slate-600">·</span>
+
           {/* 著作権表記 */}
           <div class="text-xs text-slate-500">© {currentYear}</div>
         </div>
