@@ -94,9 +94,13 @@ pnpm storybook             # Storybook起動
 - **public/ogp.png** - OGP画像（1200x630px、generate-ogp.mjsで生成）
 
 ### CI/CD（.github/workflows/）
-- **ci.yml** - ユニットテスト・型チェック・ビルド検証（Node: `.node-version` 参照）
+- **ci.yml** - ユニットテスト（Vitest）・型チェック・ビルド検証（Node: `.node-version` 参照）
 - **e2e.yml** - E2Eテスト（Playwright、3シャード並列、Node: `.node-version` 参照）
 - **storybook.yml** - Storybookビルド（Node: `.node-version` 参照）
+- **renovate-review.yml** - Renovate PRレビュー（Claude Code Actionで依存関係PRに自動コメント）
+
+### 依存関係管理
+- **renovate.json** - Renovate設定（minor/patch自動マージ、major・Astro・Preactは手動レビュー、週末スケジュール）
 
 > **注意**: Node.js バージョンは `.node-version` で一元管理。ワークフローでは `node-version-file: '.node-version'` を使用すること
 
@@ -181,8 +185,9 @@ PatternList → PatternCard（各パターン表示）
 
 ### 現状
 
-- **CI**: ユニットテスト（Jest）、型チェック（tsc）、ビルド検証、E2Eテスト（Playwright）、Storybookビルド
-- **未導入**: lint、依存関係自動更新、Lighthouse
+- **CI**: ユニットテスト（Vitest）、型チェック（tsc）、ビルド検証、E2Eテスト（Playwright）、Storybookビルド
+- **依存関係管理**: Renovate（minor/patch自動マージ、major・フレームワーク系は手動）+ Claude Codeレビュー
+- **未導入**: lint、Lighthouse
 
 ## ドキュメント更新確認
 
