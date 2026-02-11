@@ -70,6 +70,14 @@ pnpm test                  # テスト実行
 - **overCostHealthTable.ts** - コストオーバー時の復帰耐久値テーブル
 - mobileSuitsData.ts - 機体データ（名前・コスト・耐久値）
 
+### ページ（src/pages/）
+- **index.astro** - トップページ（Calculator + 静的SEOコンテンツ + Footer）
+- **privacy.astro** - プライバシーポリシーページ
+
+### 設定・静的ファイル
+- **astro.config.mjs** - Astro設定（site, integrations: preact + sitemap）
+- **public/robots.txt** - クローラー指示（Sitemap URL含む）
+
 ## データフロー
 
 ```
@@ -114,6 +122,7 @@ PatternList → PatternCard（各パターン表示）
 
 - `/team` - エージェントチームを起動してIssueに取り組む（例: `/team #42`）
 - `/commit` - コミット規約に従ったコミット作成
+- `/docs` - セッション中の変更に基づいてドキュメントを更新
 
 ## チェックリスト
 
