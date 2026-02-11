@@ -50,15 +50,18 @@ pnpm test                  # テスト実行
 - **ResultPanel.tsx** - 結果パネル（EXフィルター + パターンリスト表示）
   - PatternList.tsx - パターン一覧（全パターンをPatternCardで描画）
     - PatternCard.tsx - 個別パターンカード（ランク・撃墜順・コスト推移テーブル・画像エクスポート）
+- CookieConsentBanner.tsx - Cookie同意バナー（広告Cookie同意/拒否）
 - ThemeToggle.tsx - ダーク/ライトモード切替
 - Tooltip.tsx - ツールチップ
-- Footer.tsx - フッター
+- Footer.tsx - フッター（Cookie設定リセットボタン含む）
 
 ### ロジック（src/lib/）
 - **calculator.ts** - コスト計算（パターン生成、コスト推移計算、総耐久計算）
 - **evaluators.ts** - パターン評価（全パターン評価、統計計算、コメント生成）
 - **types.ts** - 型定義（CostType, Formation, EvaluatedPattern, SavedFormation 等）
 - useTheme.ts - テーマ管理フック
+- useCookieConsent.ts - Cookie同意フック（カスタムイベントでコンポーネント間同期）
+- cookieConsent.ts - Cookie同意状態管理（LocalStorage CRUD）
 - recentHistory.ts - 最近の編成履歴管理
 - savedFormations.ts - 保存編成管理（LocalStorage CRUD、最大10件）
 - imageExport.ts - 画像エクスポート（html-to-image によるPNG生成、Web Share共有）
