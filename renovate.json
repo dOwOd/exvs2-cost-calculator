@@ -1,0 +1,32 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":automergeMinor",
+    ":automergeDigest",
+    "schedule:weekends"
+  ],
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["major"],
+      "automerge": false
+    },
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "minor and patch updates",
+      "automerge": true,
+      "automergeType": "pr"
+    },
+    {
+      "matchPackageNames": ["astro", "@astrojs/*"],
+      "groupName": "Astro ecosystem",
+      "automerge": false
+    },
+    {
+      "matchPackageNames": ["preact", "@preact/*"],
+      "groupName": "Preact ecosystem",
+      "automerge": false
+    }
+  ]
+}
