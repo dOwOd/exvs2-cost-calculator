@@ -2,6 +2,7 @@
  * ResultPanel ストーリー
  */
 
+import type { ComponentProps } from 'preact';
 import type { Meta, StoryObj } from '@storybook/preact';
 import { ResultPanel } from './ResultPanel';
 import {
@@ -16,17 +17,19 @@ import {
 } from '../stories/mocks/patterns';
 import { calculateMinimumDefeatHealth } from '../lib/calculator';
 
-const meta = {
+type Props = ComponentProps<typeof ResultPanel>;
+
+const meta: Meta<Props> = {
   title: 'Components/ResultPanel',
   component: ResultPanel,
   parameters: {
     layout: 'fullscreen',
   },
   tags: ['autodocs'],
-} satisfies Meta<typeof ResultPanel>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<Props>;
 
 /** デフォルト: 3000+3000編成 */
 export const Default: Story = {

@@ -2,6 +2,8 @@
  * useTheme テスト
  */
 
+import type { ThemeMode } from './useTheme';
+
 // LocalStorageをモック
 const localStorageMock = (() => {
   let store: Record<string, string> = {};
@@ -42,49 +44,41 @@ const documentMock = {
   },
 };
 
-Object.defineProperty(global, 'document', {
-  value: documentMock,
-  writable: true,
-});
-
 describe('Theme utilities', () => {
   const THEME_STORAGE_KEY = 'theme';
 
   beforeEach(() => {
-    // LocalStorageをクリア
     localStorage.clear();
-    // html要素のdarkクラスをリセット
     documentMock.documentElement.classList._classes.clear();
   });
 
   describe('getStoredTheme', () => {
-    it('LocalStorageに値がない場合はsystemを返す', () => {
+    test('LocalStorageに値がない場合はsystemを返す', () => {
       const stored = localStorage.getItem(THEME_STORAGE_KEY);
       expect(stored).toBeNull();
-      // デフォルト値の確認
       const defaultValue = stored ?? 'system';
       expect(defaultValue).toBe('system');
     });
 
-    it('LocalStorageにlightがある場合はlightを返す', () => {
+    test('LocalStorageにlightがある場合はlightを返す', () => {
       localStorage.setItem(THEME_STORAGE_KEY, 'light');
       const stored = localStorage.getItem(THEME_STORAGE_KEY);
       expect(stored).toBe('light');
     });
 
-    it('LocalStorageにdarkがある場合はdarkを返す', () => {
+    test('LocalStorageにdarkがある場合はdarkを返す', () => {
       localStorage.setItem(THEME_STORAGE_KEY, 'dark');
       const stored = localStorage.getItem(THEME_STORAGE_KEY);
       expect(stored).toBe('dark');
     });
 
-    it('LocalStorageにsystemがある場合はsystemを返す', () => {
+    test('LocalStorageにsystemがある場合はsystemを返す', () => {
       localStorage.setItem(THEME_STORAGE_KEY, 'system');
       const stored = localStorage.getItem(THEME_STORAGE_KEY);
       expect(stored).toBe('system');
     });
 
-    it('LocalStorageに無効な値がある場合はsystemをデフォルトとする', () => {
+    test('LocalStorageに無効な値がある場合はsystemをデフォルトとする', () => {
       localStorage.setItem(THEME_STORAGE_KEY, 'invalid');
       const stored = localStorage.getItem(THEME_STORAGE_KEY);
       const validThemes = ['light', 'dark', 'system'];
@@ -94,12 +88,12 @@ describe('Theme utilities', () => {
   });
 
   describe('applyThemeToDOM', () => {
-    it('darkテーマの場合、html要素にdarkクラスを追加', () => {
+    test('darkテーマの場合、html要素にdarkクラスを追加', () => {
       documentMock.documentElement.classList.add('dark');
       expect(documentMock.documentElement.classList.contains('dark')).toBe(true);
     });
 
-    it('lightテーマの場合、html要素からdarkクラスを削除', () => {
+    test('lightテーマの場合、html要素からdarkクラスを削除', () => {
       documentMock.documentElement.classList.add('dark');
       documentMock.documentElement.classList.remove('dark');
       expect(documentMock.documentElement.classList.contains('dark')).toBe(false);
@@ -107,21 +101,21 @@ describe('Theme utilities', () => {
   });
 
   describe('resolveTheme', () => {
-    it('lightモードの場合はlightを返す', () => {
-      const mode = 'light';
-      const resolved = mode === 'system' ? 'dark' : mode; // system時はmockとしてdarkを返す
-      expect(resolved).toBe('light');
+    test('lightモードの場合はlightを返す', () => {
+      const mode: ThemeMode = 'light';
+      const resolveTheme = (m: ThemeMode) => m === 'system' ? 'dark' : m;
+      expect(resolveTheme(mode)).toBe('light');
     });
 
-    it('darkモードの場合はdarkを返す', () => {
-      const mode = 'dark';
-      const resolved = mode === 'system' ? 'dark' : mode;
-      expect(resolved).toBe('dark');
+    test('darkモードの場合はdarkを返す', () => {
+      const mode: ThemeMode = 'dark';
+      const resolveTheme = (m: ThemeMode) => m === 'system' ? 'dark' : m;
+      expect(resolveTheme(mode)).toBe('dark');
     });
   });
 
   describe('Theme persistence', () => {
-    it('テーマ設定がLocalStorageに保存される', () => {
+    test('テーマ設定がLocalStorageに保存される', () => {
       localStorage.setItem(THEME_STORAGE_KEY, 'dark');
       expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe('dark');
 
