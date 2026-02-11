@@ -73,11 +73,16 @@ pnpm storybook             # Storybook起動
 - **overCostHealthTable.ts** - コストオーバー時の復帰耐久値テーブル
 - mobileSuitsData.ts - 機体データ（名前・コスト・耐久値）
 
+### レイアウト（src/layouts/）
+- **BaseLayout.astro** - 共通レイアウト（head共通要素、OGP、テーマ初期化、named slot `head` で拡張可能）
+
 ### ページ（src/pages/）
 - **index.astro** - トップページ（Calculator + 静的SEOコンテンツ + Footer + WebApplication JSON-LD）
+- **guide.astro** - コスト管理ガイドページ（BreadcrumbList JSON-LD）
+- **faq.astro** - よくある質問ページ（FAQPage + BreadcrumbList JSON-LD）
 - **privacy.astro** - プライバシーポリシーページ（BreadcrumbList JSON-LD）
 
-> **注意**: 新しいページを追加した場合は、JSON-LD 構造化データの追加・更新も検討すること
+> **注意**: 新しいページを追加した場合は、BaseLayout を使用し、JSON-LD 構造化データの追加・更新も検討すること
 
 ### スクリプト（scripts/）
 - **generate-ogp.mjs** - OGP画像生成（satori + @resvg/resvg-js、`node scripts/generate-ogp.mjs` で実行）

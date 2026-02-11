@@ -1,0 +1,346 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+	title="コストの仕組みとセオリー解説 - EXVS2 コスト計算機"
+	description="EXVS2のチーム共有コスト6000の仕組み、コストオーバーのペナルティ、EXオーバーリミットの発動条件、高コスト先撃墜セオリーなどを詳しく解説する。"
+	ogType="article"
+>
+	<Fragment slot="head">
+		<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{ "@type": "ListItem", "position": 1, "name": "トップ", "item": "https://dowo.dev/" },
+				{ "@type": "ListItem", "position": 2, "name": "コストの仕組みとセオリー解説", "item": "https://dowo.dev/guide/" }
+			]
+		}
+		</script>
+	</Fragment>
+
+	<div class="container mx-auto px-4 py-8 max-w-3xl">
+		<nav class="mb-8">
+			<a
+				href="/"
+				class="text-blue-600 dark:text-blue-400 hover:underline"
+			>
+				&larr; トップページに戻る
+			</a>
+		</nav>
+
+		<h1 class="text-2xl font-bold mb-8">コストの仕組みとセオリー解説</h1>
+
+		<div class="space-y-8 text-slate-700 dark:text-slate-300 leading-relaxed">
+
+			<!-- チーム共有コスト -->
+			<section>
+				<h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">チーム共有コストとは</h2>
+				<p>
+					EXVS2では、2機編成のチームが合計6000のコストを共有する。
+					A機とB機が別々のコストを持つのではなく、チーム全体で1つの残コストを管理する仕組みである。
+				</p>
+				<p class="mt-2">
+					機体が撃墜されると、その機体のコスト分が残コストから差し引かれる。
+					残コストが0以下になると敗北となる。
+				</p>
+			</section>
+
+			<!-- コストタイプ -->
+			<section>
+				<h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">コストタイプと性能</h2>
+				<p>機体のコストは1500・2000・2500・3000の4段階に分かれている。コストが高いほど基本性能に優れるが、撃墜時にチームが失うコストも大きくなる。ここではコスト計算の観点から各コスト帯の特徴を整理する。</p>
+
+				<h3 class="text-lg font-semibold mt-5 mb-2 text-slate-900 dark:text-slate-100">3000コスト</h3>
+				<p>
+					4つのコスト帯の中で最も機体性能が高い。ブースト量に余裕があり、行動の選択肢が多い。
+					その反面、たった2回の撃墜でチームのコスト6000を使い切ってしまうため、コスト管理上は最もシビアなコスト帯でもある。
+				</p>
+				<p class="mt-2">
+					今作特有の仕様として、3000コストが2回撃墜されると即敗北となる。一方で、僚機の被撃墜はEXオーバーリミット発動の要因となる。
+					そのため、相手側には「3000を集中攻撃して試合を終わらせる」という明確な勝ち筋が生まれる。特に1回撃墜後の3000コストは、最もリスクの高い標的として狙われやすくなるため注意が必要である。
+				</p>
+				<p class="mt-2">
+					基本的には前衛として立ち回り、2000や2500の僚機と連携して戦う。
+				</p>
+
+				<h3 class="text-lg font-semibold mt-5 mb-2 text-slate-900 dark:text-slate-100">2500コスト</h3>
+				<p>
+					性能と汎用性のバランスに優れたコスト帯である。
+					極端に不利な組み合わせが少なく、どのコストと編成しても一定の戦い方ができる。
+				</p>
+				<p class="mt-2">
+					僚機のコストによって前衛にも後衛にもなれる柔軟性がある一方、1試合あたりの総耐久値はやや控えめである。
+					当ツールでパターンを確認すると、2500を含む編成はコストオーバーの影響度が中程度であることがわかる。
+				</p>
+
+				<h3 class="text-lg font-semibold mt-5 mb-2 text-slate-900 dark:text-slate-100">2000コスト</h3>
+				<p>
+					機体性能では2500に及ばないが、撃墜回数が多くなるぶん総耐久値に優れる。
+					コストオーバーのペナルティも2500や3000より軽く、復帰後の耐久に余裕が残りやすい。
+					覚醒ゲージを安定して溜められる点も強みである。
+				</p>
+
+				<h3 class="text-lg font-semibold mt-5 mb-2 text-slate-900 dark:text-slate-100">1500コスト</h3>
+				<p>
+					基本性能は最も低いが、特定の局面で高コスト機を上回る爆発力を持つ機体が多い。
+					単なる低コストではなく、限られた強みを最大限に活かすことが求められるコスト帯である。
+				</p>
+				<p class="mt-2">
+					コスト計算の観点では、3000と組んだ場合にEXオーバーリミットが発動できない撃墜順が生まれやすく、編成の難易度が高い。
+					耐久が低く覚醒管理も難しいため、上級者向けのコスト帯といえる。
+				</p>
+			</section>
+
+			<!-- コストオーバー -->
+			<section>
+				<h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">コストオーバーとは</h2>
+				<p>
+					撃墜された機体が再出撃する際、残コストがその機体のコスト未満だと「コストオーバー」状態になる。
+					コストオーバーでは、初期耐久値より低い耐久で復帰する。
+				</p>
+				<ul class="list-disc list-inside mt-3 space-y-1">
+					<li>残コストが機体コスト以上: 初期耐久値で再出撃</li>
+					<li>残コストが機体コスト未満かつ0より大きい: 低い耐久値で再出撃（コストオーバー）</li>
+					<li>残コストが0以下: 再出撃不可（敗北）</li>
+				</ul>
+				<p class="mt-3">
+					高コストの機体ほどコストオーバーのペナルティが深刻である。
+					同じ残コストでも、3000コスト機は2000コスト機より大幅に低い耐久で復帰する。
+				</p>
+				<div class="mt-3 overflow-x-auto">
+					<table class="w-full text-sm border-collapse">
+						<thead>
+							<tr class="border-b border-slate-300 dark:border-slate-600">
+								<th class="text-left py-2 pr-4">コスト</th>
+								<th class="text-left py-2 pr-4">残コスト500での復帰耐久</th>
+								<th class="text-left py-2">初期耐久に対する割合（初期耐久680の場合）</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="border-b border-slate-200 dark:border-slate-700">
+								<td class="py-2 pr-4 font-mono">3000</td>
+								<td class="py-2 pr-4 font-mono">120</td>
+								<td class="py-2">約17.6%</td>
+							</tr>
+							<tr class="border-b border-slate-200 dark:border-slate-700">
+								<td class="py-2 pr-4 font-mono">2500</td>
+								<td class="py-2 pr-4 font-mono">140</td>
+								<td class="py-2">約20.6%</td>
+							</tr>
+							<tr>
+								<td class="py-2 pr-4 font-mono">2000</td>
+								<td class="py-2 pr-4 font-mono">170</td>
+								<td class="py-2">25.0%</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</section>
+
+			<!-- EXオーバーリミット -->
+			<section>
+				<h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">EXオーバーリミットの発動条件</h2>
+				<p>
+					EXオーバーリミットは、チームの残コストが編成内の最低コスト以下になった時に1度だけ発動可能になるシステムである。
+				</p>
+				<p class="mt-2 font-mono bg-slate-200 dark:bg-slate-700 px-3 py-2 rounded text-sm">
+					発動条件: 残コスト &le; min(A機コスト, B機コスト)
+				</p>
+				<p class="mt-3">
+					つまり「自機と僚機のいずれが撃墜されても敗北する状況」で発動できる。
+				</p>
+
+				<h3 class="text-lg font-semibold mt-5 mb-2 text-slate-900 dark:text-slate-100">発動時の効果</h3>
+				<ul class="list-disc list-inside space-y-1">
+					<li>発動時間: 10秒間</li>
+					<li>攻撃力・機動力が上昇</li>
+					<li>100ダメージ分のバリアを展開</li>
+					<li>発動中に与えたダメージの30%を自身の耐久として回復（上限: フル耐久）</li>
+				</ul>
+
+				<h3 class="text-lg font-semibold mt-5 mb-2 text-slate-900 dark:text-slate-100">発動タイミングの注意</h3>
+				<p>
+					僚機が撃墜されてから復活するまで約3秒かかる。
+					その間はEXオーバーリミットが発動しないため、両機が瀕死の状態で片方が撃墜されると、残りの機体もEXオーバーリミット発動前に撃墜されて敗北となる危険性がある。
+				</p>
+			</section>
+
+			<!-- 覚醒システム -->
+			<section>
+				<h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">覚醒（EXバースト）システム</h2>
+				<p>
+					EXオーバーリミットとは別のシステムである。
+					正式名称はEXバーストだが、プレイヤー間では「覚醒」という俗称が広く定着しており、当ページでもこの呼称を用いる。
+					ダメージを与える・受けることで覚醒ゲージが溜まり、発動すると一時的にパワーアップする。
+				</p>
+				<ul class="list-disc list-inside mt-3 space-y-1">
+					<li><strong>ハーフバースト（半覚）</strong>: ゲージ100%で発動。効果時間は短いが、1試合で2回以上使える</li>
+					<li><strong>フルバースト（全覚）</strong>: ゲージ200%で発動。効果時間が長く強力だが、使える回数が少ない</li>
+					<li><strong>抜け覚醒</strong>: 被弾中に覚醒を発動して脱出する防御的な使い方</li>
+				</ul>
+				<p class="mt-3">
+					覚醒回数を多く確保することが試合を有利に進める鍵である。
+					耐久調整が崩れると覚醒回数が減り、大幅に不利になる。
+					覚醒タイプにはF覚醒（格闘強化）やS覚醒（射撃強化）などがあり、機体や戦術に合わせて選択する。
+				</p>
+			</section>
+
+			<!-- セオリー -->
+			<section>
+				<h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">高コスト先撃墜セオリー</h2>
+				<p>
+					異なるコストの2機編成では、高コストが先に撃墜され、次に低コストが撃墜される順番がセオリーとされている。
+				</p>
+				<p class="mt-2">
+					低コストが先に撃墜されると、高コスト機がコストオーバーで低耐久復帰になる。
+					高性能な機体が低耐久で慎重に動かざるを得なくなり、相手2機に集中攻撃される不利な展開になりやすいためである。
+				</p>
+
+				<h3 class="text-lg font-semibold mt-5 mb-2 text-slate-900 dark:text-slate-100">今作でのリスク</h3>
+				<p>
+					従来作品では3000が先に撃墜されるのがセオリーだったが、今作ではEXオーバーリミットの仕組みにより事情が変わっている。
+					3000が1回撃墜されると残コストは3000となり、もう1回撃墜されれば即敗北となる。相手からすれば3000だけを狙い続ければ勝てるため、1回撃墜後の3000は集中攻撃を受けやすくなる。
+					そのため3000コストが先に撃墜されることが必ずしも理想とは言い難くなった。
+				</p>
+				<p class="mt-2">
+					さらに、高コストが連続で撃墜されるとEXオーバーリミットが発動できないまま敗北する危険がある。
+					特に3000+2500や3000+2000の編成では、低コスト側が一度も撃墜されずに3000が2回撃墜されるとEXオーバーリミット発動出来ずに敗北となる。
+				</p>
+			</section>
+
+			<!-- 編成別コスト管理 -->
+			<section>
+				<h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">編成別のコスト管理</h2>
+				<p>撃墜される順序やタイミングが勝敗を大きく左右する。主な編成のセオリーを紹介する。</p>
+
+				<h3 class="text-lg font-semibold mt-5 mb-2 text-slate-900 dark:text-slate-100">3000 + 3000</h3>
+				<p>
+					基本的に推奨されない組み合わせだが、EXオーバーリミットが発動できない撃墜順が存在しないのが利点である。
+					前衛後衛に分かれ、前衛が被弾覚悟で暴れ、後衛は回避最優先で援護する。
+					覚醒は前衛2回、後衛は全覚1回 or 半覚2回が目安である。
+				</p>
+
+				<h3 class="text-lg font-semibold mt-5 mb-2 text-slate-900 dark:text-slate-100">3000 + 2500</h3>
+				<p>
+					最もメジャーな組み合わせの一つ。盤面に出せる戦力が最も充実している。
+					基本的には3000が前衛を務めるが、2500が耐久を残しすぎると3000が先に撃墜された後に無視されるリスクがある。2500も多少は前に出て存在感を示しつつ後衛を務めるのが理想である。
+					2500が一度も撃墜されずに3000が2回撃墜されるとEXオーバーリミット発動不可のまま敗北する点に注意が必要である。
+					コストオーバーの影響が大きいため、復帰後は回避を優先して立ち回る。
+				</p>
+
+				<h3 class="text-lg font-semibold mt-5 mb-2 text-slate-900 dark:text-slate-100">3000 + 2000</h3>
+				<p>
+					こちらもメジャーな組み合わせ。コストオーバーの影響が比較的少なく、爆発力と安定性のバランスが良いのがメリットである。
+					3000が前衛で暴れ、2000は後方から援護する。
+					ただし3000が先に撃墜された後に2000の耐久が多く残っていると、相手から無視されやすい。2000は2500と比べて性能面で主張が難しいため、この傾向がより顕著である。
+					2000が一度も撃墜されずに3000が2回撃墜されるとEXオーバーリミット発動不可のまま敗北となる。
+				</p>
+
+				<h3 class="text-lg font-semibold mt-5 mb-2 text-slate-900 dark:text-slate-100">3000 + 1500</h3>
+				<p>
+					3000の圧倒的な性能と1500の一芸特化を組み合わせた編成だが、コスト管理上は非常に厳しい。
+					3000が連続で撃墜される、または1500が2回撃墜された後に3000が撃墜されるとEXオーバーリミット発動不可のまま敗北する。
+					1500は性能面で相手に無視されやすく、3000に攻撃が集中しやすいためこの展開に陥りやすい。
+					この計算機で撃墜順ごとのEXオーバーリミット発動可否を事前に確認しておくことが特に重要な編成である。
+				</p>
+
+				<h3 class="text-lg font-semibold mt-5 mb-2 text-slate-900 dark:text-slate-100">2500 + 2500</h3>
+				<p>
+					どのような撃墜順でもEXオーバーリミットが発動するため安定感がある。
+					基本はダブル前衛として立ち回り、ダメージを負い過ぎた側が先に撃墜される形をとる。
+					後から撃墜された側は耐久40%で復帰するが、EXオーバーリミットのバリアで1回のミスは許される。
+				</p>
+
+				<h3 class="text-lg font-semibold mt-5 mb-2 text-slate-900 dark:text-slate-100">2500 + 2000</h3>
+				<p>
+					2500が先に撃墜されるのが基本だが、2000が先に撃墜されても影響は少なく柔軟性がある。
+					どの撃墜順でもEXオーバーリミットが発動する安定感があるが、先にEXオーバーリミットの発動条件を満たしやすいのが弱点である。
+					両前衛として積極的に攻めつつ耐久調整していく。
+				</p>
+
+				<h3 class="text-lg font-semibold mt-5 mb-2 text-slate-900 dark:text-slate-100">2500 + 1500</h3>
+				<p>
+					今作でかなり厳しくなった組み合わせである。
+				</p>
+				<p class="mt-2">
+					お互い1回ずつ撃墜された後に2500が撃墜されるとEXオーバーリミットが発動できずに敗北する。
+					さらに1500→2500の順で撃墜された場合は「EXオーバーリミット発動不可 + 2500がコスオバ復帰で即負けのリスク」という極めて厳しい状況になる。
+				</p>
+
+				<h3 class="text-lg font-semibold mt-5 mb-2 text-slate-900 dark:text-slate-100">2000 + 2000</h3>
+				<p>
+					EXオーバーリミットは必ず発動するが、3000や2500のように単機で前線を張れるだけの性能（攻撃力・機動力・武装の豊富さ）を持っていないため両前衛で積極的に攻める必要がある。
+					ほぼ同時に撃墜されるのが理想で、味方が先に撃墜された場合は残った側も守りに入らず積極的に前に出ることが重要である。
+					「後から撃墜されたから守りに入ろう」という判断が、低コスト編成の強みである総耐久の高さを無駄にし、結果として負けにつながってしまうので注意。
+				</p>
+
+				<h3 class="text-lg font-semibold mt-5 mb-2 text-slate-900 dark:text-slate-100">2000 + 1500</h3>
+				<p>
+					どちらも1回撃墜まではコスオバしないため、序盤から2機で圧力をかけられる。
+					1500が2回撃墜されるのが基本で、理想の撃墜順は1500→2000→1500である。
+					EXオーバーリミット発動不可になるのは「1500が一度も撃墜されずに2000が3回撃墜される」ケースのみで、ほぼ確実にEXオーバーリミットが発動可能である。
+				</p>
+			<h3 class="text-lg font-semibold mt-5 mb-2 text-slate-900 dark:text-slate-100">1500 + 1500</h3>
+				<p>
+					敗北までに合計4回の撃墜が必要で、全編成中最も多い。コストオーバーも一切発生しないため、数値上の総耐久値は非常に高くなる。
+					EXオーバーリミットもどの撃墜順でも必ず発動する。
+				</p>
+				<p class="mt-2">
+					しかし実際には、両機とも性能が低いため与ダメージより被ダメージが上回りやすく、数値上の耐久の厚みが勝利に直結しにくい。
+					被ダメージの多さから相手側の覚醒ゲージも溜まりやすく、試合が長引くほど不利が蓄積しやすい構造である。
+				</p>
+				<p class="mt-2">
+					EXオーバーリミット発動時にフル耐久の2機が揃っている状態が理想だが、1500は耐久が低く1回の被弾が致命的になりやすいため、計画通りの耐久管理は難しい。
+				</p>
+			</section>
+
+			<!-- 総耐久値と最短敗北耐久 -->
+			<section>
+				<h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">総耐久値と最短敗北時の耐久値</h2>
+				<p>
+					総耐久値は、初期耐久A + 初期耐久B に再出撃時の耐久値の合計を加えた値である。
+					この値が高いほど、チーム全体の継戦能力が高くなる。
+				</p>
+				<p class="mt-2">
+					最短敗北時の耐久値は、片方の機体だけが集中的に狙われ続けた場合の耐久値である。
+					相手が最も効率的に攻めてきた場合の最悪ケースを示している。
+				</p>
+				<p class="mt-2">
+					当ツールでは、すべての撃墜順パターンについて総耐久値とコスト推移を計算し、一覧で比較できる。
+				</p>
+			</section>
+
+			<!-- コスト計算機の活用 -->
+			<section>
+				<h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">コスト計算機の活用方法</h2>
+				<ol class="list-decimal list-inside space-y-2">
+					<li>A機・B機それぞれのコストと耐久値を選択する</li>
+					<li>全撃墜順パターンが自動的に計算・表示される</li>
+					<li>EXオーバーリミット発動可能パターンに絞り込みができる</li>
+					<li>各パターンのコスト推移テーブルで、撃墜ごとの残コストと復帰耐久を確認できる</li>
+					<li>パターンカードを画像としてエクスポートし、SNSで共有できる</li>
+				</ol>
+				<p class="mt-3">
+					事前に撃墜順ごとの展開を把握しておくことで、試合中の立ち回りや意思決定に役立てることができる。
+				</p>
+			</section>
+		</div>
+
+		<nav class="mt-12 mb-8 flex justify-between">
+			<a
+				href="/"
+				class="text-blue-600 dark:text-blue-400 hover:underline"
+			>
+				&larr; トップページに戻る
+			</a>
+			<a
+				href="/faq"
+				class="text-blue-600 dark:text-blue-400 hover:underline"
+			>
+				よくある質問（FAQ） &rarr;
+			</a>
+		</nav>
+	</div>
+</BaseLayout>
