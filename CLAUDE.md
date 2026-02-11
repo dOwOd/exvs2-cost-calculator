@@ -89,17 +89,19 @@ pnpm storybook             # Storybook起動
 
 ### 設定・静的ファイル
 - **astro.config.mjs** - Astro設定（site, integrations: preact + sitemap）
+- **.node-version** - Node.js バージョン一元管理（CI・Docker・ローカル共通）
 - **public/robots.txt** - クローラー指示（Sitemap URL含む）
 - **public/ogp.png** - OGP画像（1200x630px、generate-ogp.mjsで生成）
 
 ### CI/CD（.github/workflows/）
-- **e2e.yml** - E2Eテスト（Playwright、3シャード並列、Node 20）
-- **storybook.yml** - Storybookビルド（Node 24 ⚠️ e2e.ymlと不整合、#90 で統一予定）
+- **ci.yml** - ユニットテスト・型チェック・ビルド検証（Node: `.node-version` 参照）
+- **e2e.yml** - E2Eテスト（Playwright、3シャード並列、Node: `.node-version` 参照）
+- **storybook.yml** - Storybookビルド（Node: `.node-version` 参照）
 
-> **注意**: 新しいワークフロー追加時は Node.js バージョンを既存と統一すること
+> **注意**: Node.js バージョンは `.node-version` で一元管理。ワークフローでは `node-version-file: '.node-version'` を使用すること
 
 ### Docker
-- **Dockerfile** - マルチステージビルド（Node 24-alpine、非rootユーザー）
+- **Dockerfile** - マルチステージビルド（Node: ARG NODE_MAJOR、非rootユーザー）
 - **docker-compose.yml** - app（本番）/ dev（開発）の2サービス構成
 
 ## データフロー
@@ -179,8 +181,8 @@ PatternList → PatternCard（各パターン表示）
 
 ### 現状
 
-- **CI**: E2Eテスト（Playwright）、Storybookビルドのみ
-- **未導入**: ユニットテストCI、型チェックCI、lint、依存関係自動更新、Lighthouse
+- **CI**: ユニットテスト（Jest）、型チェック（tsc）、ビルド検証、E2Eテスト（Playwright）、Storybookビルド
+- **未導入**: lint、依存関係自動更新、Lighthouse
 
 ## ドキュメント更新確認
 

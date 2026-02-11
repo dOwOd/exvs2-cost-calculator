@@ -31,10 +31,8 @@
 
 ## CI/CDワークフロー
 
-❌ **間違い**: GitHub Actionsワークフローで Node.js バージョンをバラバラに指定する
-✅ **正解**: 全ワークフローで同一の Node.js バージョンを使用する
-
-現状: `e2e.yml` は Node 20、`storybook.yml` は Node 24 と不整合がある（#90 で統一予定）
+❌ **間違い**: GitHub Actionsワークフローで `node-version: '22'` のようにバージョンを直接指定する
+✅ **正解**: `.node-version` で一元管理し、ワークフローでは `node-version-file: '.node-version'` を使用する
 
 ## コンテンツページの用語
 
