@@ -8,6 +8,7 @@ import { FormationPanel } from './FormationPanel';
 import { SavedFormationsPanel } from './SavedFormationsPanel';
 import { ResultPanel } from './ResultPanel';
 import { Footer } from './Footer';
+import { CookieConsentBanner } from './CookieConsentBanner';
 import { ThemeToggle } from './ThemeToggle';
 import { evaluateAllPatterns } from '../lib/evaluators';
 import { calculateMinimumDefeatHealth } from '../lib/calculator';
@@ -94,6 +95,9 @@ export const Calculator = () => {
         {/* フッター */}
         <Footer />
       </div>
+
+      {/* Cookie同意バナー */}
+      <CookieConsentBanner />
     </div>
   );
 };

@@ -1,0 +1,58 @@
+/**
+ * Cookie同意状態の管理
+ * LocalStorageを使用して広告Cookieの同意状態を保存・取得する
+ */
+
+/**
+ * Cookie同意状態の型
+ */
+export type CookieConsentStatus = 'granted' | 'denied' | 'undecided';
+
+/**
+ * LocalStorageのキー
+ */
+const STORAGE_KEY = 'exvs2-cookie-consent';
+
+/**
+ * Cookie同意状態を取得
+ */
+export const getCookieConsent = (): CookieConsentStatus => {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored === 'granted' || stored === 'denied') {
+      return stored;
+    }
+    return 'undecided';
+  } catch {
+    return 'undecided';
+  }
+};
+
+/**
+ * Cookie同意状態を保存
+ */
+export const setCookieConsent = (status: 'granted' | 'denied'): void => {
+  try {
+    localStorage.setItem(STORAGE_KEY, status);
+  } catch {
+    // LocalStorage容量不足等のエラーは無視
+  }
+};
+
+/**
+ * Cookie同意状態をリセット（undecidedに戻す）
+ */
+export const resetCookieConsent = (): void => {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch {
+    // エラーは無視
+  }
+};
+
+/**
+ * 広告Cookieが許可されているか
+ */
+export const isAdCookieAllowed = (): boolean => {
+  return getCookieConsent() === 'granted';
+};
