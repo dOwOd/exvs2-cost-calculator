@@ -1,5 +1,8 @@
+# Node.js version — .node-version と同期すること
+ARG NODE_MAJOR=22
+
 # Build stage
-FROM node:24-alpine AS builder
+FROM node:${NODE_MAJOR}-alpine AS builder
 
 # Enable corepack and install pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
@@ -29,7 +32,7 @@ RUN pnpm install --frozen-lockfile --offline --prod
 
 
 # Runtime stage
-FROM node:24-alpine AS runtime
+FROM node:${NODE_MAJOR}-alpine AS runtime
 
 WORKDIR /app
 
