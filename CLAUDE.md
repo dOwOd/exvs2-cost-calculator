@@ -127,11 +127,12 @@ PatternList → PatternCard（各パターン表示）
 
 `.claude/agents/` にカスタムエージェント定義を配置。プロジェクト単位でチームを構成する。
 
-- **lead.md** - チームリーダー（タスク分割・割当、統合・レビュー、Git/PR管理）
+- **lead.md** - チームリーダー（タスク分割・割当、統合・レビュー、Git/PR管理、CI/CD設定）
 - **logic.md** - ゲームロジック＆テスト担当（`src/lib/`, `src/data/`, テストファイル）
 - **ui.md** - UIコンポーネント担当（`src/components/`）
+- **pages.md** - ページ＆SEO担当（`src/pages/`, `src/layouts/`, JSON-LD, OGP, 内部リンク, コンテンツ執筆）
 - **refactor.md** - DRYリファクタリング担当（重複検出、共通関数切り出し、コンポーネント化）
-- **qa.md** - 品質保証担当（テスト網羅性、仕様整合性検証、境界値テスト）
+- **qa.md** - 品質保証担当（ユニットテスト、E2Eテスト、Lighthouse、仕様整合性検証）
 
 ### チーム運用
 
