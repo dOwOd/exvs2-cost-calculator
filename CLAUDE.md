@@ -1,6 +1,6 @@
 # EXVS2 Cost Calculator
 
-機動戦士ガンダム EXVS2 XB のコスト計算ツール
+機動戦士ガンダム EXVS2 のコスト計算ツール
 
 ## Gitワークフロー
 
