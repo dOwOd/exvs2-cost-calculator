@@ -15,6 +15,21 @@ import { CookieConsentBanner } from '../components/CookieConsentBanner';
 		<meta name="description" content="EXVS2 コスト計算機のプライバシーポリシー" />
 		<link rel="canonical" href={new URL(Astro.url.pathname, Astro.site).href} />
 
+		<!-- OGP -->
+		<meta property="og:title" content="プライバシーポリシー - EXVS2 コスト計算機" />
+		<meta property="og:description" content="EXVS2 コスト計算機のプライバシーポリシー" />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={new URL(Astro.url.pathname, Astro.site).href} />
+		<meta property="og:image" content={new URL('/ogp.png', Astro.site).href} />
+		<meta property="og:site_name" content="EXVS2 コスト計算機" />
+		<meta property="og:locale" content="ja_JP" />
+
+		<!-- Twitter Card -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="プライバシーポリシー - EXVS2 コスト計算機" />
+		<meta name="twitter:description" content="EXVS2 コスト計算機のプライバシーポリシー" />
+		<meta name="twitter:image" content={new URL('/ogp.png', Astro.site).href} />
+
 		<meta name="theme-color" content="#0f172a" id="theme-color-meta" />
 
 		<!-- テーマ初期化（FOUCを防ぐためhead内で実行） -->

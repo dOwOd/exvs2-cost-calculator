@@ -13,9 +13,24 @@ import '../styles/global.css';
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="generator" content={Astro.generator} />
-		<title>EXVS2 コスト計算機 v1.0</title>
-		<meta name="description" content="機動戦士ガンダム EXTREME VS. 2 コスト計算機 - 最適な撃墜順パターンを計算" />
+		<title>EXVS2 コスト計算機 | 撃墜順・EXオーバーリミット最適パターン計算</title>
+		<meta name="description" content="機動戦士ガンダム EXVS2 XBのコスト計算ツール。2機編成の撃墜順パターンを網羅的に算出し、総耐久値やEXオーバーリミット発動条件を一覧で確認できます。" />
 		<link rel="canonical" href={new URL(Astro.url.pathname, Astro.site).href} />
+
+		<!-- OGP -->
+		<meta property="og:title" content="EXVS2 コスト計算機 | 撃墜順・EXオーバーリミット最適パターン計算" />
+		<meta property="og:description" content="機動戦士ガンダム EXVS2 XBのコスト計算ツール。2機編成の撃墜順パターンを網羅的に算出し、総耐久値やEXオーバーリミット発動条件を一覧で確認できます。" />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={new URL(Astro.url.pathname, Astro.site).href} />
+		<meta property="og:image" content={new URL('/ogp.png', Astro.site).href} />
+		<meta property="og:site_name" content="EXVS2 コスト計算機" />
+		<meta property="og:locale" content="ja_JP" />
+
+		<!-- Twitter Card -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="EXVS2 コスト計算機 | 撃墜順・EXオーバーリミット最適パターン計算" />
+		<meta name="twitter:description" content="機動戦士ガンダム EXVS2 XBのコスト計算ツール。2機編成の撃墜順パターンを網羅的に算出し、総耐久値やEXオーバーリミット発動条件を一覧で確認できます。" />
+		<meta name="twitter:image" content={new URL('/ogp.png', Astro.site).href} />
 
 		<!-- PWA -->
 		<link rel="manifest" href="/manifest.json" />
