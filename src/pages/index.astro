@@ -52,20 +52,17 @@ import '../styles/global.css';
 		<link rel="apple-touch-icon" href="/icons/icon-180x180.png" />
 	</head>
 	<body>
+		<!-- 静的HTMLコンテンツ: 上部（h1・ツール説明 - SEOクローラー・スクリーンリーダー向け） -->
+		<div class="sr-only">
+			<h1>EXVS2 コスト計算機 - 機動戦士ガンダム EXTREME VS. 2 CROSS BOOST 編成コスト計算ツール</h1>
+			<p>EXVS2 XB の撃墜順パターンを自動算出し、総耐久値やEXオーバーリミット発動条件を確認できるコスト計算ツールです。エクストリームバーサス2の編成最適化をサポートします。</p>
+		</div>
+
 		<Calculator client:load />
 
-		<!-- 静的HTMLコンテンツ（SEOクローラー向け） -->
+		<!-- 静的HTMLコンテンツ: 下部（詳細情報） -->
 		<div class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100">
 			<div class="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-8 md:py-12">
-				<section class="mb-8">
-					<h2 class="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400 mb-3">
-						EXVS2 コスト計算機とは
-					</h2>
-					<p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-						機動戦士ガンダム EXTREME VS. 2 CROSS BOOST（EXVS2 XB）の編成コスト計算ツールです。2機編成のコスト配分から、全撃墜順パターンを自動算出し、総耐久値やEXオーバーリミット発動条件を一覧で確認できます。
-					</p>
-				</section>
-
 				<section class="mb-8">
 					<h2 class="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400 mb-3">
 						主な機能
