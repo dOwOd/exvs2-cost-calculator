@@ -74,9 +74,13 @@ pnpm test                  # テスト実行
 - **index.astro** - トップページ（Calculator + 静的SEOコンテンツ + Footer）
 - **privacy.astro** - プライバシーポリシーページ
 
+### スクリプト（scripts/）
+- **generate-ogp.mjs** - OGP画像生成（satori + @resvg/resvg-js、`node scripts/generate-ogp.mjs` で実行）
+
 ### 設定・静的ファイル
 - **astro.config.mjs** - Astro設定（site, integrations: preact + sitemap）
 - **public/robots.txt** - クローラー指示（Sitemap URL含む）
+- **public/ogp.png** - OGP画像（1200x630px、generate-ogp.mjsで生成）
 
 ## データフロー
 
