@@ -31,6 +31,26 @@ export const Footer = () => {
 
           <span class="text-slate-400 dark:text-slate-600">·</span>
 
+          {/* コスト解説 */}
+          <a
+            href="/guide"
+            class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          >
+            コスト解説
+          </a>
+
+          <span class="text-slate-400 dark:text-slate-600">·</span>
+
+          {/* FAQ */}
+          <a
+            href="/faq"
+            class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          >
+            FAQ
+          </a>
+
+          <span class="text-slate-400 dark:text-slate-600">·</span>
+
           {/* EXVS2公式サイトリンク */}
           <a
             href="https://gundam-vs.jp/extreme/ac2ib/"

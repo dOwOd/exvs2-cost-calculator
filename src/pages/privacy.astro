@@ -1,63 +1,13 @@
 ---
-import '../styles/global.css';
+import BaseLayout from '../layouts/BaseLayout.astro';
 import { CookieConsentBanner } from '../components/CookieConsentBanner';
 ---
 
-<!DOCTYPE html>
-<html lang="ja">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="generator" content={Astro.generator} />
-		<title>プライバシーポリシー - EXVS2 コスト計算機</title>
-		<meta name="description" content="EXVS2 コスト計算機のプライバシーポリシー" />
-		<link rel="canonical" href={new URL(Astro.url.pathname, Astro.site).href} />
-
-		<!-- OGP -->
-		<meta property="og:title" content="プライバシーポリシー - EXVS2 コスト計算機" />
-		<meta property="og:description" content="EXVS2 コスト計算機のプライバシーポリシー" />
-		<meta property="og:type" content="website" />
-		<meta property="og:url" content={new URL(Astro.url.pathname, Astro.site).href} />
-		<meta property="og:image" content={new URL('/ogp.png', Astro.site).href} />
-		<meta property="og:site_name" content="EXVS2 コスト計算機" />
-		<meta property="og:locale" content="ja_JP" />
-
-		<!-- Twitter Card -->
-		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:title" content="プライバシーポリシー - EXVS2 コスト計算機" />
-		<meta name="twitter:description" content="EXVS2 コスト計算機のプライバシーポリシー" />
-		<meta name="twitter:image" content={new URL('/ogp.png', Astro.site).href} />
-
-		<meta name="theme-color" content="#0f172a" id="theme-color-meta" />
-
-		<!-- テーマ初期化（FOUCを防ぐためhead内で実行） -->
-		<script is:inline>
-			(function() {
-				const stored = localStorage.getItem('theme');
-				const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-				let isDark;
-				if (stored === 'dark') {
-					isDark = true;
-				} else if (stored === 'light') {
-					isDark = false;
-				} else {
-					isDark = systemDark;
-				}
-
-				if (isDark) {
-					document.documentElement.classList.add('dark');
-				}
-
-				const meta = document.getElementById('theme-color-meta');
-				if (meta) {
-					meta.setAttribute('content', isDark ? '#0f172a' : '#f1f5f9');
-				}
-			})();
-		</script>
-
+<BaseLayout
+	title="プライバシーポリシー - EXVS2 コスト計算機"
+	description="EXVS2 コスト計算機のプライバシーポリシー"
+>
+	<Fragment slot="head">
 		<!-- JSON-LD 構造化データ -->
 		<script type="application/ld+json">
 		{
@@ -69,114 +19,113 @@ import { CookieConsentBanner } from '../components/CookieConsentBanner';
 			]
 		}
 		</script>
-	</head>
-	<body class="bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-slate-100 min-h-screen">
-		<div class="container mx-auto px-4 py-8 max-w-3xl">
-			<nav class="mb-8">
-				<a
-					href="/"
-					class="text-blue-600 dark:text-blue-400 hover:underline"
-				>
-					← トップページに戻る
-				</a>
-			</nav>
+	</Fragment>
 
-			<h1 class="text-2xl font-bold mb-8">プライバシーポリシー</h1>
+	<div class="container mx-auto px-4 py-8 max-w-3xl">
+		<nav class="mb-8">
+			<a
+				href="/"
+				class="text-blue-600 dark:text-blue-400 hover:underline"
+			>
+				← トップページに戻る
+			</a>
+		</nav>
 
-			<div class="space-y-8 text-slate-700 dark:text-slate-300 leading-relaxed">
-				<section>
-					<h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">当サイトについて</h2>
-					<p>
-						当サイト「EXVS2 コスト計算機」（以下、当サイト）は、機動戦士ガンダム EXTREME VS. 2 のコスト計算ツールです。
-						当サイトのURL: <code class="text-sm bg-slate-200 dark:bg-slate-700 px-1 rounded">https://dowo.dev</code>
-					</p>
-				</section>
+		<h1 class="text-2xl font-bold mb-8">プライバシーポリシー</h1>
 
-				<section>
-					<h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">広告配信について</h2>
-					<p>
-						当サイトでは、第三者配信の広告サービス「Google AdSense（グーグルアドセンス）」を利用しています。
-					</p>
-					<p class="mt-2">
-						Google などの第三者配信事業者は、Cookie を使用して、当サイトや他のウェブサイトへの過去のアクセス情報に基づいて広告を配信します。
-						Google が広告 Cookie を使用することにより、当サイトや他のサイトにアクセスした際の情報に基づいて、Google やそのパートナーは適切な広告を表示します。
-					</p>
-					<p class="mt-2">
-						パーソナライズ広告を無効にする場合は、
-						<a
-							href="https://www.google.com/settings/ads"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="text-blue-600 dark:text-blue-400 hover:underline"
-						>Google 広告設定</a>
-						から設定できます。
-						また、
-						<a
-							href="https://www.aboutads.info/choices/"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="text-blue-600 dark:text-blue-400 hover:underline"
-						>aboutads.info</a>
-						にアクセスすることで、第三者配信事業者の Cookie を使用したパーソナライズ広告を無効にできます。
-					</p>
-				</section>
+		<div class="space-y-8 text-slate-700 dark:text-slate-300 leading-relaxed">
+			<section>
+				<h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">当サイトについて</h2>
+				<p>
+					当サイト「EXVS2 コスト計算機」（以下、当サイト）は、機動戦士ガンダム EXTREME VS. 2 のコスト計算ツールです。
+					当サイトのURL: <code class="text-sm bg-slate-200 dark:bg-slate-700 px-1 rounded">https://dowo.dev</code>
+				</p>
+			</section>
 
-				<section>
-					<h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">Cookie について</h2>
-					<p>
-						Cookie とは、ウェブサイトがお客様のブラウザに送信する小さなテキストファイルです。
-						当サイトでは以下の目的で Cookie を使用しています。
-					</p>
-					<ul class="list-disc list-inside mt-2 space-y-1">
-						<li>テーマ設定（ダークモード / ライトモード）の保存</li>
-						<li>編成データの保存（LocalStorage）</li>
-						<li>第三者配信事業者（Google AdSense）による広告配信</li>
-					</ul>
-					<p class="mt-2">
-						ブラウザの設定により Cookie を無効にすることも可能ですが、一部の機能が正しく動作しなくなる場合があります。
-					</p>
-				</section>
+			<section>
+				<h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">広告配信について</h2>
+				<p>
+					当サイトでは、第三者配信の広告サービス「Google AdSense（グーグルアドセンス）」を利用しています。
+				</p>
+				<p class="mt-2">
+					Google などの第三者配信事業者は、Cookie を使用して、当サイトや他のウェブサイトへの過去のアクセス情報に基づいて広告を配信します。
+					Google が広告 Cookie を使用することにより、当サイトや他のサイトにアクセスした際の情報に基づいて、Google やそのパートナーは適切な広告を表示します。
+				</p>
+				<p class="mt-2">
+					パーソナライズ広告を無効にする場合は、
+					<a
+						href="https://www.google.com/settings/ads"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="text-blue-600 dark:text-blue-400 hover:underline"
+					>Google 広告設定</a>
+					から設定できます。
+					また、
+					<a
+						href="https://www.aboutads.info/choices/"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="text-blue-600 dark:text-blue-400 hover:underline"
+					>aboutads.info</a>
+					にアクセスすることで、第三者配信事業者の Cookie を使用したパーソナライズ広告を無効にできます。
+				</p>
+			</section>
 
-				<section>
-					<h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">免責事項</h2>
-					<p>
-						当サイトに掲載されている情報の正確性には万全を期しておりますが、その内容について保証するものではありません。
-						当サイトの利用によって生じた損害等の一切の責任を負いかねますのでご了承ください。
-					</p>
-					<p class="mt-2">
-						当サイトは、機動戦士ガンダム EXTREME VS. 2 の非公式ファンサイトであり、バンダイナムコエンターテインメントとは一切関係ありません。
-					</p>
-				</section>
+			<section>
+				<h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">Cookie について</h2>
+				<p>
+					Cookie とは、ウェブサイトがお客様のブラウザに送信する小さなテキストファイルです。
+					当サイトでは以下の目的で Cookie を使用しています。
+				</p>
+				<ul class="list-disc list-inside mt-2 space-y-1">
+					<li>テーマ設定（ダークモード / ライトモード）の保存</li>
+					<li>編成データの保存（LocalStorage）</li>
+					<li>第三者配信事業者（Google AdSense）による広告配信</li>
+				</ul>
+				<p class="mt-2">
+					ブラウザの設定により Cookie を無効にすることも可能ですが、一部の機能が正しく動作しなくなる場合があります。
+				</p>
+			</section>
 
-				<section>
-					<h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">お問い合わせ</h2>
-					<p>
-						当サイトに関するお問い合わせは、
-						<a
-							href="https://github.com/dOwOd/exvs2-cost-calculator/issues"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="text-blue-600 dark:text-blue-400 hover:underline"
-						>GitHub Issues</a>
-						よりお願いいたします。
-					</p>
-				</section>
+			<section>
+				<h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">免責事項</h2>
+				<p>
+					当サイトに掲載されている情報の正確性には万全を期しておりますが、その内容について保証するものではありません。
+					当サイトの利用によって生じた損害等の一切の責任を負いかねますのでご了承ください。
+				</p>
+				<p class="mt-2">
+					当サイトは、機動戦士ガンダム EXTREME VS. 2 の非公式ファンサイトであり、バンダイナムコエンターテインメントとは一切関係ありません。
+				</p>
+			</section>
 
-				<section class="text-sm text-slate-500 dark:text-slate-400">
-					<p>制定日: 2026年2月10日</p>
-				</section>
-			</div>
+			<section>
+				<h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">お問い合わせ</h2>
+				<p>
+					当サイトに関するお問い合わせは、
+					<a
+						href="https://github.com/dOwOd/exvs2-cost-calculator/issues"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="text-blue-600 dark:text-blue-400 hover:underline"
+					>GitHub Issues</a>
+					よりお願いいたします。
+				</p>
+			</section>
 
-			<nav class="mt-12 mb-8">
-				<a
-					href="/"
-					class="text-blue-600 dark:text-blue-400 hover:underline"
-				>
-					← トップページに戻る
-				</a>
-			</nav>
+			<section class="text-sm text-slate-500 dark:text-slate-400">
+				<p>制定日: 2026年2月10日</p>
+			</section>
 		</div>
 
-		<CookieConsentBanner client:load />
-	</body>
-</html>
+		<nav class="mt-12 mb-8">
+			<a
+				href="/"
+				class="text-blue-600 dark:text-blue-400 hover:underline"
+			>
+				← トップページに戻る
+			</a>
+		</nav>
+	</div>
+
+	<CookieConsentBanner client:load />
+</BaseLayout>
