@@ -34,7 +34,10 @@
 
 ```bash
 pnpm install && pnpm dev   # 開発開始
-pnpm test                  # テスト実行
+pnpm test                  # ユニットテスト実行（Jest）
+pnpm test:e2e              # E2Eテスト実行（Playwright）
+pnpm build                 # 本番ビルド
+pnpm storybook             # Storybook起動
 ```
 
 ## ファイル構造
@@ -89,6 +92,16 @@ pnpm test                  # テスト実行
 - **public/robots.txt** - クローラー指示（Sitemap URL含む）
 - **public/ogp.png** - OGP画像（1200x630px、generate-ogp.mjsで生成）
 
+### CI/CD（.github/workflows/）
+- **e2e.yml** - E2Eテスト（Playwright、3シャード並列、Node 20）
+- **storybook.yml** - Storybookビルド（Node 24 ⚠️ e2e.ymlと不整合、#90 で統一予定）
+
+> **注意**: 新しいワークフロー追加時は Node.js バージョンを既存と統一すること
+
+### Docker
+- **Dockerfile** - マルチステージビルド（Node 24-alpine、非rootユーザー）
+- **docker-compose.yml** - app（本番）/ dev（開発）の2サービス構成
+
 ## データフロー
 
 ```
@@ -119,11 +132,12 @@ PatternList → PatternCard（各パターン表示）
 
 `.claude/agents/` にカスタムエージェント定義を配置。プロジェクト単位でチームを構成する。
 
-- **lead.md** - チームリーダー（タスク分割・割当、統合・レビュー、Git/PR管理）
+- **lead.md** - チームリーダー（タスク分割・割当、統合・レビュー、Git/PR管理、CI/CD設定）
 - **logic.md** - ゲームロジック＆テスト担当（`src/lib/`, `src/data/`, テストファイル）
 - **ui.md** - UIコンポーネント担当（`src/components/`）
+- **pages.md** - ページ＆SEO担当（`src/pages/`, `src/layouts/`, JSON-LD, OGP, 内部リンク, コンテンツ執筆）
 - **refactor.md** - DRYリファクタリング担当（重複検出、共通関数切り出し、コンポーネント化）
-- **qa.md** - 品質保証担当（テスト網羅性、仕様整合性検証、境界値テスト）
+- **qa.md** - 品質保証担当（ユニットテスト、E2Eテスト、Lighthouse、仕様整合性検証）
 
 ### チーム運用
 
@@ -143,6 +157,34 @@ PatternList → PatternCard（各パターン表示）
 - [ ] コミット規約に従う
 - [ ] PR作成（`Closes #番号`でIssue紐づけ）
 
-## セッション終了時
+## CI/CD・自動化ロードマップ
 
-ドキュメント更新が必要かどうか確認すること（詳細: `.claude/rules/session-update.md`）
+持続的な品質維持のため、以下の自動化を段階的に導入予定:
+
+```
+#90 CIパイプライン強化（ユニットテスト・型チェック・ビルド検証）
+ ↓
+#89 Renovate導入 + Claude Codeによる依存関係PRレビュー自動化
+ ↓
+#94 Pre-commitフック（Husky + lint-staged + ESLint + Prettier）
+ ↓
+#91 Lighthouse CI（定期品質監査: SEO・パフォーマンス・アクセシビリティ）
+ ↓
+#92 Claude Code開発体験の改善（ルール・メモリ・エージェント最適化）
+ ↓
+#93 Issueテンプレート・ラベル自動化
+ ↓
+#95 機体データ鮮度チェック（定期リマインダー）
+```
+
+### 現状
+
+- **CI**: E2Eテスト（Playwright）、Storybookビルドのみ
+- **未導入**: ユニットテストCI、型チェックCI、lint、依存関係自動更新、Lighthouse
+
+## ドキュメント更新確認
+
+以下のタイミングでドキュメント更新が必要かどうか確認すること（詳細: `.claude/rules/session-update.md`）:
+
+- **セッション終了時**
+- **PR作成時**
