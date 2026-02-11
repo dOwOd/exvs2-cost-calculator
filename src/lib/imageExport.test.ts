@@ -2,6 +2,7 @@
  * 画像エクスポートユーティリティのテスト
  */
 
+import { vi } from 'vitest';
 import type { Formation } from './types';
 import {
   canShareFiles,
@@ -10,8 +11,8 @@ import {
 } from './imageExport';
 
 // html-to-imageをモック
-const mockToPng = jest.fn();
-jest.mock('html-to-image', () => ({
+const mockToPng = vi.fn();
+vi.mock('html-to-image', () => ({
   toPng: (...args: unknown[]) => mockToPng(...args),
 }));
 
@@ -35,7 +36,7 @@ describe('canShareFiles', () => {
 
   test('navigator.canShareが未定義の場合はfalse', () => {
     Object.defineProperty(global, 'navigator', {
-      value: { ...originalNavigator, share: jest.fn(), canShare: undefined },
+      value: { ...originalNavigator, share: vi.fn(), canShare: undefined },
       configurable: true,
     });
     expect(canShareFiles()).toBe(false);
@@ -43,7 +44,7 @@ describe('canShareFiles', () => {
 
   test('canShareがfalseを返す場合はfalse', () => {
     Object.defineProperty(global, 'navigator', {
-      value: { ...originalNavigator, share: jest.fn(), canShare: () => false },
+      value: { ...originalNavigator, share: vi.fn(), canShare: () => false },
       configurable: true,
     });
     expect(canShareFiles()).toBe(false);
@@ -51,7 +52,7 @@ describe('canShareFiles', () => {
 
   test('canShareがtrueを返す場合はtrue', () => {
     Object.defineProperty(global, 'navigator', {
-      value: { ...originalNavigator, share: jest.fn(), canShare: () => true },
+      value: { ...originalNavigator, share: vi.fn(), canShare: () => true },
       configurable: true,
     });
     expect(canShareFiles()).toBe(true);
@@ -61,7 +62,7 @@ describe('canShareFiles', () => {
     Object.defineProperty(global, 'navigator', {
       value: {
         ...originalNavigator,
-        share: jest.fn(),
+        share: vi.fn(),
         canShare: () => {
           throw new Error('not supported');
         },
@@ -120,7 +121,7 @@ describe('generatePatternCardImage', () => {
   beforeEach(() => {
     mockToPng.mockReset();
     // fetchをモック（dataURL → Blob変換）
-    global.fetch = jest.fn(() =>
+    global.fetch = vi.fn(() =>
       Promise.resolve({
         blob: () => Promise.resolve(mockBlob),
       }),
@@ -133,8 +134,8 @@ describe('generatePatternCardImage', () => {
 
     const mockElement = {
       classList: {
-        add: jest.fn(),
-        remove: jest.fn(),
+        add: vi.fn(),
+        remove: vi.fn(),
       },
       dataset: {},
     } as unknown as HTMLElement;
@@ -155,7 +156,7 @@ describe('generatePatternCardImage', () => {
     mockToPng.mockResolvedValue(mockDataUrl);
 
     const mockElement = {
-      classList: { add: jest.fn(), remove: jest.fn() },
+      classList: { add: vi.fn(), remove: vi.fn() },
       dataset: {},
     } as unknown as HTMLElement;
 
@@ -175,8 +176,8 @@ describe('generatePatternCardImage', () => {
 
     const mockElement = {
       classList: {
-        add: jest.fn(),
-        remove: jest.fn(),
+        add: vi.fn(),
+        remove: vi.fn(),
       },
       dataset: {},
     } as unknown as HTMLElement;

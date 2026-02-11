@@ -34,7 +34,7 @@
 
 ```bash
 pnpm install && pnpm dev   # 開発開始
-pnpm test                  # ユニットテスト実行（Jest）
+pnpm test                  # ユニットテスト実行（Vitest）
 pnpm test:e2e              # E2Eテスト実行（Playwright）
 pnpm build                 # 本番ビルド
 pnpm storybook             # Storybook起動
@@ -94,7 +94,7 @@ pnpm storybook             # Storybook起動
 - **public/ogp.png** - OGP画像（1200x630px、generate-ogp.mjsで生成）
 
 ### CI/CD（.github/workflows/）
-- **ci.yml** - ユニットテスト・型チェック・ビルド検証（Node: `.node-version` 参照）
+- **ci.yml** - ユニットテスト（Vitest）・型チェック・ビルド検証（Node: `.node-version` 参照）
 - **e2e.yml** - E2Eテスト（Playwright、3シャード並列、Node: `.node-version` 参照）
 - **storybook.yml** - Storybookビルド（Node: `.node-version` 参照）
 
@@ -181,7 +181,7 @@ PatternList → PatternCard（各パターン表示）
 
 ### 現状
 
-- **CI**: ユニットテスト（Jest）、型チェック（tsc）、ビルド検証、E2Eテスト（Playwright）、Storybookビルド
+- **CI**: ユニットテスト（Vitest）、型チェック（tsc）、ビルド検証、E2Eテスト（Playwright）、Storybookビルド
 - **未導入**: lint、依存関係自動更新、Lighthouse
 
 ## ドキュメント更新確認
