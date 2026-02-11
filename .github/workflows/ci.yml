@@ -31,7 +31,7 @@ jobs:
         run: pnpm test
 
       - name: Type check
-        run: npx tsc --noEmit
+        run: pnpm exec tsc --noEmit
 
       - name: Build
         run: pnpm build
