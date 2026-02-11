@@ -2,20 +2,23 @@
  * MobileSuitSearch ストーリー
  */
 
+import type { ComponentProps } from 'preact';
 import type { Meta, StoryObj } from '@storybook/preact';
 import { MobileSuitSearch } from './MobileSuitSearch';
 
-const meta = {
+type Props = ComponentProps<typeof MobileSuitSearch>;
+
+const meta: Meta<Props> = {
   title: 'Components/MobileSuitSearch',
   component: MobileSuitSearch,
   parameters: {
     layout: 'padded',
   },
   tags: ['autodocs'],
-} satisfies Meta<typeof MobileSuitSearch>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<Props>;
 
 /** デフォルト: 基本表示 */
 export const Default: Story = {

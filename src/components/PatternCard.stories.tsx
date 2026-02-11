@@ -2,6 +2,7 @@
  * PatternCard ストーリー
  */
 
+import type { ComponentProps } from 'preact';
 import type { Meta, StoryObj } from '@storybook/preact';
 import { PatternCard } from './PatternCard';
 import {
@@ -17,17 +18,19 @@ import {
   overCostPattern,
 } from '../stories/mocks/patterns';
 
-const meta = {
+type Props = ComponentProps<typeof PatternCard>;
+
+const meta: Meta<Props> = {
   title: 'Components/PatternCard',
   component: PatternCard,
   parameters: {
     layout: 'padded',
   },
   tags: ['autodocs'],
-} satisfies Meta<typeof PatternCard>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<Props>;
 
 /** デフォルト: 通常のパターン表示 */
 export const Default: Story = {

@@ -47,7 +47,7 @@ const testFormation: Formation = {
 
 const testFormation2: Formation = {
   unitA: { cost: 2000, health: 580 },
-  unitB: { cost: 1500, health: 450 },
+  unitB: { cost: 1500, health: 440 },
 };
 
 describe('getSavedFormations', () => {

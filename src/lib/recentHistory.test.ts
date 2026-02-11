@@ -7,6 +7,7 @@ import {
   addToRecentSuits,
   clearRecentSuits,
 } from './recentHistory';
+import type { MobileSuitInfo } from '../data/mobileSuitsData';
 
 // LocalStorageをモック
 const localStorageMock = (() => {
@@ -40,9 +41,9 @@ describe('getRecentSuits', () => {
   });
 
   test('保存された履歴を取得できる', () => {
-    const suits = [
-      { name: 'νガンダム' as any, cost: 3000 as const, health: 680 as const },
-      { name: 'ゴッドガンダム' as any, cost: 3000 as const, health: 800 as const },
+    const suits: MobileSuitInfo[] = [
+      { name: 'νガンダム', cost: 3000, health: 680, hasPartialRevival: false },
+      { name: 'ゴッドガンダム', cost: 3000, health: 800, hasPartialRevival: false },
     ];
     localStorage.setItem('exvs2-recent-suits', JSON.stringify(suits));
 
@@ -64,7 +65,7 @@ describe('addToRecentSuits', () => {
   });
 
   test('新しい機体を追加できる', () => {
-    addToRecentSuits({ name: 'νガンダム' as any, cost: 3000, health: 680 });
+    addToRecentSuits({ name: 'νガンダム', cost: 3000, health: 680, hasPartialRevival: false });
 
     const recent = getRecentSuits();
     expect(recent).toHaveLength(1);
@@ -74,9 +75,9 @@ describe('addToRecentSuits', () => {
   });
 
   test('重複する機体は先頭に移動する', () => {
-    addToRecentSuits({ name: 'νガンダム' as any, cost: 3000, health: 680 });
-    addToRecentSuits({ name: 'ゴッドガンダム' as any, cost: 3000, health: 800 });
-    addToRecentSuits({ name: 'νガンダム' as any, cost: 3000, health: 680 });
+    addToRecentSuits({ name: 'νガンダム', cost: 3000, health: 680, hasPartialRevival: false });
+    addToRecentSuits({ name: 'ゴッドガンダム', cost: 3000, health: 800, hasPartialRevival: false });
+    addToRecentSuits({ name: 'νガンダム', cost: 3000, health: 680, hasPartialRevival: false });
 
     const recent = getRecentSuits();
     expect(recent).toHaveLength(2);
@@ -85,12 +86,20 @@ describe('addToRecentSuits', () => {
   });
 
   test('最大5件に制限される', () => {
-    for (let i = 0; i < 10; i++) {
-      addToRecentSuits({
-        name: `機体${i}` as any,
-        cost: 3000,
-        health: 680,
-      });
+    const testSuits: MobileSuitInfo[] = [
+      { name: 'νガンダム', cost: 3000, health: 680, hasPartialRevival: false },
+      { name: 'サザビー', cost: 3000, health: 680, hasPartialRevival: false },
+      { name: 'ユニコーンガンダム', cost: 3000, health: 680, hasPartialRevival: false },
+      { name: 'Hi-νガンダム', cost: 3000, health: 680, hasPartialRevival: false },
+      { name: 'ウイングガンダムゼロ', cost: 3000, health: 680, hasPartialRevival: false },
+      { name: 'V2ガンダム', cost: 3000, health: 680, hasPartialRevival: false },
+      { name: 'ゴッドガンダム', cost: 3000, health: 800, hasPartialRevival: false },
+      { name: 'マスターガンダム', cost: 3000, health: 800, hasPartialRevival: false },
+      { name: 'ペーネロペー', cost: 3000, health: 750, hasPartialRevival: false },
+      { name: 'ナイチンゲール', cost: 3000, health: 700, hasPartialRevival: false },
+    ];
+    for (const suit of testSuits) {
+      addToRecentSuits(suit);
     }
 
     const recent = getRecentSuits();
@@ -98,8 +107,8 @@ describe('addToRecentSuits', () => {
   });
 
   test('最新の機体が先頭に来る', () => {
-    addToRecentSuits({ name: 'νガンダム' as any, cost: 3000, health: 680 });
-    addToRecentSuits({ name: 'ゴッドガンダム' as any, cost: 3000, health: 800 });
+    addToRecentSuits({ name: 'νガンダム', cost: 3000, health: 680, hasPartialRevival: false });
+    addToRecentSuits({ name: 'ゴッドガンダム', cost: 3000, health: 800, hasPartialRevival: false });
 
     const recent = getRecentSuits();
     expect(recent[0].name).toBe('ゴッドガンダム');
@@ -107,17 +116,17 @@ describe('addToRecentSuits', () => {
   });
 
   test('最大件数を超えると最古の1件が削除される', () => {
-    addToRecentSuits({ name: '機体1' as any, cost: 3000, health: 680 });
-    addToRecentSuits({ name: '機体2' as any, cost: 3000, health: 680 });
-    addToRecentSuits({ name: '機体3' as any, cost: 3000, health: 680 });
-    addToRecentSuits({ name: '機体4' as any, cost: 3000, health: 680 });
-    addToRecentSuits({ name: '機体5' as any, cost: 3000, health: 680 });
-    addToRecentSuits({ name: '機体6' as any, cost: 3000, health: 680 });
+    addToRecentSuits({ name: 'νガンダム', cost: 3000, health: 680, hasPartialRevival: false });
+    addToRecentSuits({ name: 'サザビー', cost: 3000, health: 680, hasPartialRevival: false });
+    addToRecentSuits({ name: 'ユニコーンガンダム', cost: 3000, health: 680, hasPartialRevival: false });
+    addToRecentSuits({ name: 'Hi-νガンダム', cost: 3000, health: 680, hasPartialRevival: false });
+    addToRecentSuits({ name: 'V2ガンダム', cost: 3000, health: 680, hasPartialRevival: false });
+    addToRecentSuits({ name: 'ゴッドガンダム', cost: 3000, health: 800, hasPartialRevival: false });
 
     const recent = getRecentSuits();
     expect(recent).toHaveLength(5);
-    expect(recent[0].name).toBe('機体6');
-    expect(recent.find((s) => s.name === '機体1')).toBeUndefined();
+    expect(recent[0].name).toBe('ゴッドガンダム');
+    expect(recent.find((s) => s.name === 'νガンダム')).toBeUndefined();
   });
 });
 
@@ -127,7 +136,7 @@ describe('clearRecentSuits', () => {
   });
 
   test('履歴をクリアできる', () => {
-    addToRecentSuits({ name: 'νガンダム' as any, cost: 3000, health: 680 });
+    addToRecentSuits({ name: 'νガンダム', cost: 3000, health: 680, hasPartialRevival: false });
     expect(getRecentSuits()).toHaveLength(1);
 
     clearRecentSuits();
