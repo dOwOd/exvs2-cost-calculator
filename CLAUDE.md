@@ -71,8 +71,10 @@ pnpm test                  # テスト実行
 - mobileSuitsData.ts - 機体データ（名前・コスト・耐久値）
 
 ### ページ（src/pages/）
-- **index.astro** - トップページ（Calculator + 静的SEOコンテンツ + Footer）
-- **privacy.astro** - プライバシーポリシーページ
+- **index.astro** - トップページ（Calculator + 静的SEOコンテンツ + Footer + WebApplication JSON-LD）
+- **privacy.astro** - プライバシーポリシーページ（BreadcrumbList JSON-LD）
+
+> **注意**: 新しいページを追加した場合は、JSON-LD 構造化データの追加・更新も検討すること
 
 ### スクリプト（scripts/）
 - **generate-ogp.mjs** - OGP画像生成（satori + @resvg/resvg-js、`node scripts/generate-ogp.mjs` で実行）

@@ -68,6 +68,25 @@ import '../styles/global.css';
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 		<meta name="apple-mobile-web-app-title" content="EXVS2計算機" />
 		<link rel="apple-touch-icon" href="/icons/icon-180x180.png" />
+
+		<!-- JSON-LD 構造化データ -->
+		<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "WebApplication",
+			"name": "EXVS2 コスト計算機",
+			"description": "機動戦士ガンダム EXTREME VS. 2 の撃墜順コスト計算ツール",
+			"url": "https://dowo.dev/",
+			"applicationCategory": "GameApplication",
+			"operatingSystem": "All",
+			"offers": {
+				"@type": "Offer",
+				"price": "0",
+				"priceCurrency": "JPY"
+			},
+			"inLanguage": "ja"
+		}
+		</script>
 	</head>
 	<body class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100">
 		<Calculator client:load />
