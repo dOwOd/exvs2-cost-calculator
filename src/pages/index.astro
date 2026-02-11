@@ -1,5 +1,7 @@
 ---
 import {Calculator} from '../components/Calculator';
+import {Footer} from '../components/Footer';
+import {CookieConsentBanner} from '../components/CookieConsentBanner';
 import '../styles/global.css';
 ---
 
@@ -51,14 +53,60 @@ import '../styles/global.css';
 		<meta name="apple-mobile-web-app-title" content="EXVS2計算機" />
 		<link rel="apple-touch-icon" href="/icons/icon-180x180.png" />
 	</head>
-	<body>
-		<!-- 静的HTMLコンテンツ（h1・ツール説明 - SEOクローラー・スクリーンリーダー向け） -->
-		<div class="sr-only">
-			<h1>EXVS2 コスト計算機 - 機動戦士ガンダム EXTREME VS. 2 CROSS BOOST 編成コスト計算ツール</h1>
-			<p>EXVS2 XB の撃墜順パターンを自動算出し、総耐久値やEXオーバーリミット発動条件を確認できるコスト計算ツールです。エクストリームバーサス2の編成最適化をサポートします。</p>
-		</div>
-
+	<body class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100">
 		<Calculator client:load />
+
+		<!-- 静的HTMLコンテンツ（Astroで静的レンダリング - SEOクローラーに読める） -->
+		<section class="container mx-auto px-3 sm:px-4 md:px-6 pb-8">
+			<div class="border-t border-slate-200 dark:border-slate-700 pt-8 space-y-8">
+				<div>
+					<h2 class="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400 mb-3">
+						EXVS2 コスト計算機とは
+					</h2>
+					<p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+						機動戦士ガンダム EXTREME VS. 2 CROSS BOOST（EXVS2 XB）の編成コスト計算ツールです。2機編成のコスト配分から、全撃墜順パターンを自動算出し、総耐久値やEXオーバーリミット発動条件を一覧で確認できます。
+					</p>
+				</div>
+
+				<div>
+					<h2 class="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400 mb-3">
+						主な機能
+					</h2>
+					<ul class="space-y-2 text-slate-600 dark:text-slate-400">
+						<li>チーム共有コスト6000の配分に基づく撃墜順パターンの網羅的な算出</li>
+						<li>各パターンの総耐久値と最短敗北時の耐久値を自動計算</li>
+						<li>EXオーバーリミット発動可能パターンのフィルタリング</li>
+						<li>コストオーバー時の復帰耐久値と減少率の表示</li>
+						<li>1500/2000/2500/3000コストの全機体に対応</li>
+						<li>編成の保存・読込機能とパターン画像のエクスポート</li>
+					</ul>
+				</div>
+
+				<div>
+					<h2 class="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400 mb-3">
+						使い方
+					</h2>
+					<ol class="space-y-2 text-slate-600 dark:text-slate-400 list-decimal list-inside">
+						<li>A機・B機それぞれのコスト（1500/2000/2500/3000）と耐久値を選択</li>
+						<li>計算は自動で実行され、全撃墜順パターンが一覧表示されます</li>
+						<li>EXオーバーリミット発動可能パターンのみに絞り込むことも可能</li>
+						<li>各パターンのコスト推移テーブルで、撃墜ごとの残コストと復帰耐久を確認</li>
+					</ol>
+				</div>
+
+				<div>
+					<h2 class="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400 mb-3">
+						EXオーバーリミットについて
+					</h2>
+					<p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+						EXオーバーリミットは、チームの残コストが編成内の最低コスト以下になった時に発動可能になるシステムです。発動中は攻撃力・機動力が上昇し、100ダメージ分のバリアと与ダメージ30%の耐久回復効果を得られます。撃墜順によって発動タイミングが変わるため、編成に応じた最適なパターンを事前に把握することが重要です。
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<Footer client:load />
+		<CookieConsentBanner client:load />
 
 		<!-- Service Worker登録 -->
 		<script>
