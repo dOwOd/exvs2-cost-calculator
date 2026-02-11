@@ -8,7 +8,11 @@ import {
   getAllMobileSuitNames,
   getAvailableHealthOptions,
   hasMobileSuitsForHealth,
+  hasPartialRevivalForCostHealth,
   partialRevivalSuits,
+  mobileSuitsList,
+  normalizeString,
+  searchMobileSuits,
   HEALTH_VALUES,
   isHealthType,
   type MobileSuitInfo,
@@ -134,67 +138,56 @@ describe('hasMobileSuitsForHealth', () => {
 
 describe('normalizeString', () => {
   test('ひらがなをカタカナに変換', () => {
-    const { normalizeString } = require('./mobileSuitsData');
     expect(normalizeString('ごっどがんだむ')).toBe('ゴッドガンダム');
   });
 
   test('全角英数字を半角に変換', () => {
-    const { normalizeString } = require('./mobileSuitsData');
     expect(normalizeString('ＡＢＣ１２３')).toBe('abc123');
   });
 
   test('大文字を小文字に変換', () => {
-    const { normalizeString } = require('./mobileSuitsData');
     expect(normalizeString('ABC')).toBe('abc');
   });
 
   test('複合的な変換', () => {
-    const { normalizeString } = require('./mobileSuitsData');
     expect(normalizeString('がんだむえっくす')).toBe('ガンダムエックス');
   });
 });
 
 describe('searchMobileSuits', () => {
   test('カタカナで検索できる', () => {
-    const { searchMobileSuits } = require('./mobileSuitsData');
     const results = searchMobileSuits('ゴッド');
     expect(results.length).toBeGreaterThan(0);
-    expect(results.some((r: MobileSuitInfo) => r.name === 'ゴッドガンダム')).toBe(true);
+    expect(results.some((r) => r.name === 'ゴッドガンダム')).toBe(true);
   });
 
   test('ひらがなで検索できる', () => {
-    const { searchMobileSuits } = require('./mobileSuitsData');
     const results = searchMobileSuits('ごっど');
     expect(results.length).toBeGreaterThan(0);
-    expect(results.some((r: MobileSuitInfo) => r.name === 'ゴッドガンダム')).toBe(true);
+    expect(results.some((r) => r.name === 'ゴッドガンダム')).toBe(true);
   });
 
   test('部分一致で検索できる', () => {
-    const { searchMobileSuits } = require('./mobileSuitsData');
     const results = searchMobileSuits('ガンダム');
     expect(results.length).toBeGreaterThanOrEqual(10);
   });
 
   test('最大10件まで返す', () => {
-    const { searchMobileSuits } = require('./mobileSuitsData');
     const results = searchMobileSuits('ガンダム');
     expect(results.length).toBeLessThanOrEqual(10);
   });
 
   test('空文字列で空配列を返す', () => {
-    const { searchMobileSuits } = require('./mobileSuitsData');
     const results = searchMobileSuits('');
     expect(results).toEqual([]);
   });
 
   test('該当なしで空配列を返す', () => {
-    const { searchMobileSuits } = require('./mobileSuitsData');
     const results = searchMobileSuits('存在しない機体名xyz');
     expect(results).toEqual([]);
   });
 
   test('検索結果にコストと耐久値が含まれる', () => {
-    const { searchMobileSuits } = require('./mobileSuitsData');
     const results = searchMobileSuits('ゴッドガンダム');
     expect(results.length).toBeGreaterThan(0);
     expect(results[0]).toHaveProperty('name');
@@ -206,16 +199,14 @@ describe('searchMobileSuits', () => {
   });
 
   test('復活あり機体の検索結果に hasPartialRevival: true が含まれる', () => {
-    const { searchMobileSuits } = require('./mobileSuitsData');
     const results = searchMobileSuits('リボーンズ');
     expect(results.length).toBeGreaterThan(0);
-    const reborns = results.find((r: MobileSuitInfo) => r.name === 'リボーンズガンダム');
+    const reborns = results.find((r) => r.name === 'リボーンズガンダム');
     expect(reborns).toBeDefined();
-    expect(reborns.hasPartialRevival).toBe(true);
+    expect(reborns!.hasPartialRevival).toBe(true);
   });
 
   test('復活なし機体の検索結果に hasPartialRevival: false が含まれる', () => {
-    const { searchMobileSuits } = require('./mobileSuitsData');
     const results = searchMobileSuits('ゴッドガンダム');
     expect(results.length).toBeGreaterThan(0);
     expect(results[0].hasPartialRevival).toBe(false);
@@ -280,8 +271,7 @@ describe('isHealthType', () => {
 
 describe('データ整合性', () => {
   test('機体名に重複がない', () => {
-    const { mobileSuitsList } = require('./mobileSuitsData');
-    const names = mobileSuitsList.map((s: MobileSuitInfo) => s.name);
+    const names = mobileSuitsList.map((s) => s.name);
     const unique = [...new Set(names)];
     expect(names).toHaveLength(unique.length);
   });
@@ -289,19 +279,16 @@ describe('データ整合性', () => {
 
 describe('hasPartialRevivalForCostHealth', () => {
   test('全機体が復活持ちのコスト/耐久でtrueを返す', () => {
-    const { hasPartialRevivalForCostHealth } = require('./mobileSuitsData');
     // 3000/640: リボーンズガンダム、ガンダム・バルバトスルプスレクス（両方復活持ち）
     expect(hasPartialRevivalForCostHealth(3000, 640)).toBe(true);
   });
 
   test('一部が復活持ちのコスト/耐久でtrueを返す', () => {
-    const { hasPartialRevivalForCostHealth } = require('./mobileSuitsData');
     // 2500/620: 百式（復活持ち）+ 他の機体
     expect(hasPartialRevivalForCostHealth(2500, 620)).toBe(true);
   });
 
   test('復活持ちがいないコスト/耐久でfalseを返す', () => {
-    const { hasPartialRevivalForCostHealth } = require('./mobileSuitsData');
     // 3000/800: ゴッドガンダム、マスターガンダム（復活なし）
     expect(hasPartialRevivalForCostHealth(3000, 800)).toBe(false);
   });
