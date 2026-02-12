@@ -65,6 +65,18 @@ export type SavedFormation = {
   savedAt: number;
 }
 
+/** 比較指標 */
+export type ComparisonMetrics = {
+  /** 総耐久値の範囲（最小・最大） */
+  totalHealthRange: { min: number; max: number };
+  /** 最短敗北時の耐久値 */
+  minimumDefeatHealth: number;
+  /** EXオーバーリミット発動可能なパターン数 */
+  exAvailableCount: number;
+  /** 総パターン数 */
+  totalPatternCount: number;
+};
+
 /** 評価済みパターン */
 export type EvaluatedPattern = {
   /** 撃墜順パターン */

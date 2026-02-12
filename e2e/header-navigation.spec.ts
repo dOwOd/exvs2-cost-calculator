@@ -32,7 +32,7 @@ test.describe('ヘッダーナビゲーション', () => {
         await expect(nav).toBeVisible();
 
         // ナビリンクが表示される
-        await expect(nav.locator('a', { hasText: '計算機' })).toBeVisible();
+        await expect(nav.locator('a', { hasText: 'コスト計算' })).toBeVisible();
         await expect(nav.locator('a', { hasText: 'ガイド' })).toBeVisible();
         await expect(nav.locator('a', { hasText: 'FAQ' })).toBeVisible();
 
@@ -47,7 +47,7 @@ test.describe('ヘッダーナビゲーション', () => {
       await page.goto('/guide/');
 
       const nav = page.locator('nav[aria-label="メインナビゲーション"]');
-      await nav.locator('a', { hasText: '計算機' }).click();
+      await nav.locator('a', { hasText: 'コスト計算' }).click();
 
       await expect(page).toHaveURL('/');
     });
@@ -76,7 +76,7 @@ test.describe('ヘッダーナビゲーション', () => {
       await page.goto('/');
 
       const nav = page.locator('nav[aria-label="メインナビゲーション"]');
-      const calculatorLink = nav.locator('a', { hasText: '計算機' });
+      const calculatorLink = nav.locator('a', { hasText: 'コスト計算' });
       const guideLink = nav.locator('a', { hasText: 'ガイド' });
       const faqLink = nav.locator('a', { hasText: 'FAQ' });
 
@@ -89,7 +89,7 @@ test.describe('ヘッダーナビゲーション', () => {
       await page.goto('/guide/');
 
       const nav = page.locator('nav[aria-label="メインナビゲーション"]');
-      const calculatorLink = nav.locator('a', { hasText: '計算機' });
+      const calculatorLink = nav.locator('a', { hasText: 'コスト計算' });
       const guideLink = nav.locator('a', { hasText: 'ガイド' });
       const faqLink = nav.locator('a', { hasText: 'FAQ' });
 
@@ -102,7 +102,7 @@ test.describe('ヘッダーナビゲーション', () => {
       await page.goto('/faq/');
 
       const nav = page.locator('nav[aria-label="メインナビゲーション"]');
-      const calculatorLink = nav.locator('a', { hasText: '計算機' });
+      const calculatorLink = nav.locator('a', { hasText: 'コスト計算' });
       const guideLink = nav.locator('a', { hasText: 'ガイド' });
       const faqLink = nav.locator('a', { hasText: 'FAQ' });
 
@@ -117,7 +117,7 @@ test.describe('ヘッダーナビゲーション', () => {
       const nav = page.locator('nav[aria-label="メインナビゲーション"]');
 
       // トップページ: 計算機がハイライト
-      await expect(nav.locator('a', { hasText: '計算機' })).toHaveAttribute('aria-current', 'page');
+      await expect(nav.locator('a', { hasText: 'コスト計算' })).toHaveAttribute('aria-current', 'page');
 
       // ガイドページに遷移
       await nav.locator('a', { hasText: 'ガイド' }).click();
@@ -125,7 +125,7 @@ test.describe('ヘッダーナビゲーション', () => {
 
       // ガイドがハイライトに変わる
       await expect(nav.locator('a', { hasText: 'ガイド' })).toHaveAttribute('aria-current', 'page');
-      await expect(nav.locator('a', { hasText: '計算機' })).not.toHaveAttribute('aria-current', 'page');
+      await expect(nav.locator('a', { hasText: 'コスト計算' })).not.toHaveAttribute('aria-current', 'page');
     });
   });
 
@@ -215,7 +215,7 @@ test.describe('ヘッダーナビゲーション', () => {
 
       // ナビリンクが表示される
       const nav = header.locator('nav[aria-label="メインナビゲーション"]');
-      await expect(nav.locator('a', { hasText: '計算機' })).toBeVisible();
+      await expect(nav.locator('a', { hasText: 'コスト計算' })).toBeVisible();
       await expect(nav.locator('a', { hasText: 'ガイド' })).toBeVisible();
       await expect(nav.locator('a', { hasText: 'FAQ' })).toBeVisible();
     });
@@ -234,7 +234,7 @@ test.describe('ヘッダーナビゲーション', () => {
       await expect(page).toHaveURL('/faq/');
 
       // トップに遷移
-      await nav.locator('a', { hasText: '計算機' }).click();
+      await nav.locator('a', { hasText: 'コスト計算' }).click();
       await expect(page).toHaveURL('/');
     });
 

@@ -34,8 +34,8 @@
 
 ```bash
 pnpm install && pnpm dev   # 開発開始
-pnpm test                  # ユニットテスト実行（Vitest）
-pnpm test:e2e              # E2Eテスト実行（Playwright）
+pnpm test                  # ユニットテスト実行（Vitest）←コミット前に必須
+pnpm build && pnpm test:e2e # E2Eテスト実行（Playwright）←プッシュ前に必須
 pnpm build                 # 本番ビルド
 pnpm storybook             # Storybook起動
 ```
@@ -45,13 +45,14 @@ pnpm storybook             # Storybook起動
 ### コンポーネント（src/components/）
 - **Header.astro** - サイト共通ヘッダー（ロゴ、ナビリンク、ThemeToggle統合、現在ページハイライト）
 - **ErrorBoundary.tsx** - エラーバウンダリ（Preact class component、フォールバックUI表示）
-- **Calculator.tsx** - メインコンポーネント（状態管理、編成→計算→結果の統括、ErrorBoundaryでラップ）
+- **Calculator.tsx** - メインコンポーネント（状態管理、通常/比較モード切替、編成→計算→結果の統括、ErrorBoundaryでラップ）
 - **FormationPanel.tsx** - 編成パネル（A機/B機のコスト・耐久選択）
   - CostSelector.tsx - コスト選択（1500/2000/2500/3000）
   - HealthSelector.tsx - 耐久値選択
   - HealthDropdownPopup.tsx - 耐久値ドロップダウン
   - MobileSuitSearch.tsx - 機体名検索
 - **SavedFormationsPanel.tsx** - 保存編成パネル（保存・読込・削除、確認モーダル）
+- **ComparisonResultPanel.tsx** - 編成比較結果パネル（最大3編成の横並び比較、比較指標テーブル）
 - **ResultPanel.tsx** - 結果パネル（EXフィルター + パターンリスト表示）
   - PatternList.tsx - パターン一覧（全パターンをPatternCardで描画）
     - PatternCard.tsx - 個別パターンカード（ランク・撃墜順・コスト推移テーブル・画像エクスポート）
@@ -62,8 +63,9 @@ pnpm storybook             # Storybook起動
 
 ### ロジック（src/lib/）
 - **calculator.ts** - コスト計算（パターン生成、コスト推移計算、総耐久計算）
-- **evaluators.ts** - パターン評価（全パターン評価、統計計算、コメント生成）
-- **types.ts** - 型定義（CostType, Formation, EvaluatedPattern, SavedFormation 等）
+- **evaluators.ts** - パターン評価（全パターン評価、統計計算、コメント生成、比較指標計算）
+- **types.ts** - 型定義（CostType, Formation, EvaluatedPattern, ComparisonMetrics, SavedFormation 等）
+- useFormationEvaluation.ts - 編成評価フック（編成→評価パターン・最短敗北耐久を算出）
 - useTheme.ts - テーマ管理フック
 - useCookieConsent.ts - Cookie同意フック（カスタムイベントでコンポーネント間同期）
 - cookieConsent.ts - Cookie同意状態管理（LocalStorage CRUD）
@@ -157,7 +159,8 @@ PatternList → PatternCard（各パターン表示）
 
 ## チェックリスト
 
-- [ ] テスト追加/更新 (`pnpm test`)
+- [ ] ユニットテスト追加/更新 (`pnpm test`)←コミット前
+- [ ] E2Eテスト確認 (`pnpm build && pnpm test:e2e`)←プッシュ前
 - [ ] コミット規約に従う
 - [ ] PR作成（`Closes #番号`でIssue紐づけ）
 
