@@ -43,6 +43,7 @@ pnpm storybook             # Storybook起動
 ## ファイル構造
 
 ### コンポーネント（src/components/）
+- **Header.astro** - サイト共通ヘッダー（ロゴ、ナビリンク、ThemeToggle統合、現在ページハイライト）
 - **Calculator.tsx** - メインコンポーネント（状態管理、編成→計算→結果の統括）
 - **FormationPanel.tsx** - 編成パネル（A機/B機のコスト・耐久選択）
   - CostSelector.tsx - コスト選択（1500/2000/2500/3000）
