@@ -2,8 +2,8 @@
  * 評価関数のテスト
  */
 
-import type { Formation } from './types';
-import { checkEXActivation, evaluateAllPatterns, getTopPatterns, getEffectivePatterns } from './evaluators';
+import type { Formation, EvaluatedPattern } from './types';
+import { checkEXActivation, evaluateAllPatterns, getTopPatterns, getEffectivePatterns, calculateComparisonMetrics } from './evaluators';
 import { calculateCostTransitions } from './calculator';
 
 describe('checkEXActivation', () => {
@@ -388,5 +388,98 @@ describe('getEffectivePatterns', () => {
     const result = getEffectivePatterns([], completeFormation);
 
     expect(result).toEqual([]);
+  });
+});
+
+describe('calculateComparisonMetrics', () => {
+  test('正常な編成で指標が計算される', () => {
+    const formation: Formation = {
+      unitA: { cost: 3000, health: 680 },
+      unitB: { cost: 2500, health: 620 },
+    };
+
+    const patterns = evaluateAllPatterns(formation);
+    const topPatterns = getTopPatterns(patterns, formation);
+    const metrics = calculateComparisonMetrics(topPatterns, 1360);
+
+    expect(metrics.totalPatternCount).toBe(topPatterns.length);
+    expect(metrics.minimumDefeatHealth).toBe(1360);
+    expect(metrics.totalHealthRange.min).toBeLessThanOrEqual(metrics.totalHealthRange.max);
+    expect(metrics.totalHealthRange.min).toBeGreaterThan(0);
+    expect(metrics.totalHealthRange.max).toBeGreaterThan(0);
+    expect(metrics.exAvailableCount).toBeGreaterThanOrEqual(0);
+    expect(metrics.exAvailableCount).toBeLessThanOrEqual(topPatterns.length);
+  });
+
+  test('EX発動可能パターン数が正しくカウントされる', () => {
+    const formation: Formation = {
+      unitA: { cost: 3000, health: 680 },
+      unitB: { cost: 2500, health: 620 },
+    };
+
+    const patterns = evaluateAllPatterns(formation);
+    const topPatterns = getTopPatterns(patterns, formation);
+    const metrics = calculateComparisonMetrics(topPatterns, 1360);
+
+    const manualCount = topPatterns.filter(p => p.canActivateEXOverLimit).length;
+    expect(metrics.exAvailableCount).toBe(manualCount);
+  });
+
+  test('総耐久値の範囲が正しく計算される', () => {
+    const formation: Formation = {
+      unitA: { cost: 3000, health: 680 },
+      unitB: { cost: 2500, health: 620 },
+    };
+
+    const patterns = evaluateAllPatterns(formation);
+    const topPatterns = getTopPatterns(patterns, formation);
+    const metrics = calculateComparisonMetrics(topPatterns, 1360);
+
+    const healths = topPatterns.map(p => p.totalHealth);
+    expect(metrics.totalHealthRange.min).toBe(Math.min(...healths));
+    expect(metrics.totalHealthRange.max).toBe(Math.max(...healths));
+  });
+
+  test('パターンが空の場合、ゼロ値の指標を返す', () => {
+    const metrics = calculateComparisonMetrics([], 0);
+
+    expect(metrics.totalHealthRange.min).toBe(0);
+    expect(metrics.totalHealthRange.max).toBe(0);
+    expect(metrics.minimumDefeatHealth).toBe(0);
+    expect(metrics.exAvailableCount).toBe(0);
+    expect(metrics.totalPatternCount).toBe(0);
+  });
+
+  test('同コスト編成で指標が正しく計算される', () => {
+    const formation: Formation = {
+      unitA: { cost: 2000, health: 580 },
+      unitB: { cost: 2000, health: 560 },
+    };
+
+    const patterns = evaluateAllPatterns(formation);
+    const topPatterns = getTopPatterns(patterns, formation);
+    const metrics = calculateComparisonMetrics(topPatterns, 1740);
+
+    expect(metrics.totalPatternCount).toBeGreaterThan(0);
+    // 同コスト編成はコストオーバーが発生しないためEX発動可能パターンが多い
+    expect(metrics.exAvailableCount).toBeGreaterThan(0);
+  });
+
+  test('パターンが1つだけの場合、min と max が同じになる', () => {
+    const singlePattern: EvaluatedPattern[] = [{
+      pattern: ['A'],
+      totalHealth: 2000,
+      overCostCount: 0,
+      canActivateEXOverLimit: true,
+      isEXActivationFailure: false,
+      transitions: [],
+    }];
+
+    const metrics = calculateComparisonMetrics(singlePattern, 1000);
+
+    expect(metrics.totalHealthRange.min).toBe(2000);
+    expect(metrics.totalHealthRange.max).toBe(2000);
+    expect(metrics.exAvailableCount).toBe(1);
+    expect(metrics.totalPatternCount).toBe(1);
   });
 });
