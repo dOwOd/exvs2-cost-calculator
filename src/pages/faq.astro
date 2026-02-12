@@ -25,7 +25,7 @@ import { faqs, faqCategories, getFaqsByCategory } from '../data/faqs';
 				"name": faq.question,
 				"acceptedAnswer": {
 					"@type": "Answer",
-					"text": faq.answer,
+					"text": Array.isArray(faq.answer) ? faq.answer.join(' ') : faq.answer,
 				},
 			})),
 		})} />
@@ -90,9 +90,22 @@ import { faqs, faqCategories, getFaqsByCategory } from '../data/faqs';
 								<div class="faq-content">
 									<div class="faq-inner">
 										<div class="px-5 pb-5">
-											<p class="text-slate-700 dark:text-slate-300 leading-relaxed">
-												{faq.answer}
-											</p>
+											{Array.isArray(faq.answer) ? (
+												<ul class="text-slate-700 dark:text-slate-300 leading-relaxed space-y-2 list-none">
+													{faq.answer.map((item) => (
+														<li>{item}</li>
+													))}
+												</ul>
+											) : (
+												<p class="text-slate-700 dark:text-slate-300 leading-relaxed">
+													{faq.answer}
+												</p>
+											)}
+											{faq.formula && (
+												<p class="mt-2 font-mono bg-slate-200 dark:bg-slate-700 px-3 py-2 rounded text-sm">
+													{faq.formula}
+												</p>
+											)}
 											{faq.link && (
 												<p class="mt-2">
 													<a
