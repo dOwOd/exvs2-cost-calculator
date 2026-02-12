@@ -247,7 +247,7 @@ test.describe('比較モード', () => {
 
     test('EXフィルターを適用するとパターンがフィルタリングされる', async ({ page }) => {
       // 3000+1500 編成（EX不発パターンが存在する）
-      await selectComparisonFormation(page, 0, 3000, 680, 1500, 450);
+      await selectComparisonFormation(page, 0, 3000, 680, 1500, 480);
 
       const column0 = page.getByTestId('comparison-pattern-column-0');
       await expect(column0.locator('[data-testid^="pattern-card-"]').first()).toBeVisible();
