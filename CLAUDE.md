@@ -34,8 +34,8 @@
 
 ```bash
 pnpm install && pnpm dev   # 開発開始
-pnpm test                  # ユニットテスト実行（Vitest）
-pnpm test:e2e              # E2Eテスト実行（Playwright）
+pnpm test                  # ユニットテスト実行（Vitest）←コミット前に必須
+pnpm build && pnpm test:e2e # E2Eテスト実行（Playwright）←プッシュ前に必須
 pnpm build                 # 本番ビルド
 pnpm storybook             # Storybook起動
 ```
@@ -159,7 +159,8 @@ PatternList → PatternCard（各パターン表示）
 
 ## チェックリスト
 
-- [ ] テスト追加/更新 (`pnpm test`)
+- [ ] ユニットテスト追加/更新 (`pnpm test`)←コミット前
+- [ ] E2Eテスト確認 (`pnpm build && pnpm test:e2e`)←プッシュ前
 - [ ] コミット規約に従う
 - [ ] PR作成（`Closes #番号`でIssue紐づけ）
 

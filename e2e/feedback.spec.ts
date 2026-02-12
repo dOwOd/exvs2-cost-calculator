@@ -13,7 +13,7 @@ test.describe('機体選択時のフィードバック表示', () => {
   test('初期状態でガイダンスが表示される', async ({ page }) => {
     // 初期状態でガイダンスメッセージが表示される
     await expect(page.getByTestId('formation-guidance')).toBeVisible();
-    await expect(page.getByTestId('formation-guidance')).toContainText('機体を選択');
+    await expect(page.getByTestId('formation-guidance')).toContainText('編成を入力すると計算結果が表示されます');
   });
 
   test('初期状態で両方の機体が未選択と表示される', async ({ page }) => {
