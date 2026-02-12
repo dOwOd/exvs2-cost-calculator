@@ -44,7 +44,8 @@ pnpm storybook             # Storybook起動
 
 ### コンポーネント（src/components/）
 - **Header.astro** - サイト共通ヘッダー（ロゴ、ナビリンク、ThemeToggle統合、現在ページハイライト）
-- **Calculator.tsx** - メインコンポーネント（状態管理、編成→計算→結果の統括）
+- **ErrorBoundary.tsx** - エラーバウンダリ（Preact class component、フォールバックUI表示）
+- **Calculator.tsx** - メインコンポーネント（状態管理、編成→計算→結果の統括、ErrorBoundaryでラップ）
 - **FormationPanel.tsx** - 編成パネル（A機/B機のコスト・耐久選択）
   - CostSelector.tsx - コスト選択（1500/2000/2500/3000）
   - HealthSelector.tsx - 耐久値選択
