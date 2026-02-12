@@ -27,7 +27,7 @@ import {ShareButtons} from '../components/ShareButtons';
 		<div class="space-y-8 text-slate-700 dark:text-slate-300 leading-relaxed">
 
 			<!-- チーム共有コスト -->
-			<section>
+			<section id="shared-cost">
 				<h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">チーム共有コストとは</h2>
 				<p>
 					EXVS2では、2機編成のチームが合計6000のコストを共有する。
@@ -40,7 +40,7 @@ import {ShareButtons} from '../components/ShareButtons';
 			</section>
 
 			<!-- コストタイプ -->
-			<section>
+			<section id="cost-types">
 				<h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">コストタイプと性能</h2>
 				<p>機体のコストは1500・2000・2500・3000の4段階に分かれている。コストが高いほど基本性能に優れるが、撃墜時にチームが失うコストも大きくなる。ここではコスト計算の観点から各コスト帯の特徴を整理する。</p>
 
@@ -86,7 +86,7 @@ import {ShareButtons} from '../components/ShareButtons';
 			</section>
 
 			<!-- コストオーバー -->
-			<section>
+			<section id="cost-over">
 				<h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">コストオーバーとは</h2>
 				<p>
 					撃墜された機体が再出撃する際、残コストがその機体のコスト未満だと「コストオーバー」状態になる。
@@ -132,7 +132,7 @@ import {ShareButtons} from '../components/ShareButtons';
 			</section>
 
 			<!-- EXオーバーリミット -->
-			<section>
+			<section id="ex-over-limit">
 				<h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">EXオーバーリミットの発動条件</h2>
 				<p>
 					EXオーバーリミットは、チームの残コストが編成内の最低コスト以下になった時に1度だけ発動可能になるシステムである。
@@ -157,10 +157,13 @@ import {ShareButtons} from '../components/ShareButtons';
 					僚機が撃墜されてから復活するまで約3秒かかる。
 					その間はEXオーバーリミットが発動しないため、両機が瀕死の状態で片方が撃墜されると、残りの機体もEXオーバーリミット発動前に撃墜されて敗北となる危険性がある。
 				</p>
+				<p class="mt-3">
+					<a href="/faq/" class="text-blue-600 dark:text-blue-400 hover:underline">→ FAQ: EXオーバーリミットの発動条件</a>
+				</p>
 			</section>
 
 			<!-- 覚醒システム -->
-			<section>
+			<section id="burst">
 				<h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">覚醒（EXバースト）システム</h2>
 				<p>
 					EXオーバーリミットとは別のシステムである。
@@ -177,10 +180,13 @@ import {ShareButtons} from '../components/ShareButtons';
 					耐久調整が崩れると覚醒回数が減り、大幅に不利になる。
 					覚醒タイプにはF覚醒（格闘強化）やS覚醒（射撃強化）などがあり、機体や戦術に合わせて選択する。
 				</p>
+				<p class="mt-3">
+					<a href="/faq/" class="text-blue-600 dark:text-blue-400 hover:underline">→ FAQ: EXバーストとは？</a>
+				</p>
 			</section>
 
 			<!-- セオリー -->
-			<section>
+			<section id="theory">
 				<h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">高コスト先撃墜セオリー</h2>
 				<p>
 					異なるコストの2機編成では、高コストが先に撃墜され、次に低コストが撃墜される順番がセオリーとされている。
@@ -203,7 +209,7 @@ import {ShareButtons} from '../components/ShareButtons';
 			</section>
 
 			<!-- 編成別コスト管理 -->
-			<section>
+			<section id="formations">
 				<h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">編成別のコスト管理</h2>
 				<p>撃墜される順序やタイミングが勝敗を大きく左右する。主な編成のセオリーを紹介する。</p>
 
@@ -289,7 +295,7 @@ import {ShareButtons} from '../components/ShareButtons';
 			</section>
 
 			<!-- 総耐久値と最短敗北耐久 -->
-			<section>
+			<section id="total-health">
 				<h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">総耐久値と最短敗北時の耐久値</h2>
 				<p>
 					総耐久値は、初期耐久A + 初期耐久B に再出撃時の耐久値の合計を加えた値である。
@@ -305,7 +311,7 @@ import {ShareButtons} from '../components/ShareButtons';
 			</section>
 
 			<!-- コスト計算機の活用 -->
-			<section>
+			<section id="usage">
 				<h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">コスト計算機の活用方法</h2>
 				<ol class="list-decimal list-inside space-y-2">
 					<li>A機・B機それぞれのコストと耐久値を選択する</li>
@@ -330,9 +336,18 @@ import {ShareButtons} from '../components/ShareButtons';
 			/>
 		</section>
 
-		<nav class="mt-12 mb-8 flex justify-end">
+		<div class="mt-12 text-center">
 			<a
-				href="/faq"
+				href="/"
+				class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+			>
+				コスト計算機で編成を分析する &rarr;
+			</a>
+		</div>
+
+		<nav class="mt-8 mb-8 flex justify-end">
+			<a
+				href="/faq/"
 				class="text-blue-600 dark:text-blue-400 hover:underline"
 			>
 				よくある質問（FAQ） &rarr;

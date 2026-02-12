@@ -7,18 +7,22 @@ const faqs = [
 		question: 'チーム共有コスト6000とは？',
 		answer: 'EXVS2では、2機編成のチームが合計6000のコストを共有する。A機とB機が別々のコストを持つのではなく、チーム全体で1つの残コストを管理する仕組みである。機体が撃墜されると、その機体のコスト分が残コストから差し引かれ、残コストが0以下になると敗北となる。',
 		link: { url: 'https://gundam-vs.jp/extreme/ac2ib/howto/', text: '公式サイト - 遊び方ルール' },
+		guideLink: { url: '/guide/#shared-cost', text: 'ガイド - チーム共有コストとは' },
 	},
 	{
 		question: '各コスト帯の特徴は？',
 		answer: '3000コストは最高性能だが、2回撃墜されるだけで敗北に直結するためコスト管理が最もシビアなコスト帯である。2500コストはバランスが良く、どのコストと組んでも安定する。2000コストは性能控えめだが総耐久値が高く、EXバーストゲージの管理がしやすい利点がある。1500コストは基本性能こそ低いが、特定の局面で高コスト機を上回る爆発力を持つ機体が多い。3000と組んだ場合にEXオーバーリミットが発動できない撃墜順が生まれやすく、上級者向けのコスト帯である。',
+		guideLink: { url: '/guide/#cost-types', text: 'ガイド - コストタイプと性能' },
 	},
 	{
 		question: 'コストオーバーとは？',
 		answer: '撃墜された機体が再出撃する際、残コストがその機体のコスト未満だと「コストオーバー」状態になり、初期耐久値より低い耐久で復帰する。高コストの機体ほどペナルティが深刻で、例えば同じ残コスト500でも3000コスト機は耐久約18%、2000コスト機は耐久25%で復帰するなど、高コストほど復帰耐久が大幅に低くなる。',
+		guideLink: { url: '/guide/#cost-over', text: 'ガイド - コストオーバーとは' },
 	},
 	{
 		question: 'EXオーバーリミットの発動条件は？',
 		answer: 'チームの残コストが編成内の最低コスト以下(残コスト <= min(A機コスト, B機コスト))になった時に1度だけ発動可能となる。つまり「自機と僚機のいずれが撃墜されても敗北する状況」で発動できる。',
+		guideLink: { url: '/guide/#ex-over-limit', text: 'ガイド - EXオーバーリミットの発動条件' },
 	},
 	{
 		question: 'EXオーバーリミットの効果は？',
@@ -32,6 +36,7 @@ const faqs = [
 		question: 'EXバーストとは？',
 		answer: 'EXバーストはEXオーバーリミットとは別のシステムである。ダメージを与える・受けることでバーストゲージが溜まり、発動すると一時的にパワーアップする。ゲージ100%で発動する「ハーフバースト」は効果時間が短い代わりに1試合で複数回使え、ゲージ200%で発動する「フルバースト」は強力だが使える回数が少なくなる。EXバースト中に撃墜されるとゲージが大きく無駄になるため、使いどころが重要である。',
 		link: { url: 'https://gundam-vs.jp/extreme/ac2ib/howto/rules/ex_burst/', text: '公式サイト - EXバースト解説' },
+		guideLink: { url: '/guide/#burst', text: 'ガイド - 覚醒（EXバースト）システム' },
 	},
 	{
 		question: '「覚醒」と「EXバースト」の表現の違いは？',
@@ -44,10 +49,12 @@ const faqs = [
 	{
 		question: 'なぜ高コスト先撃墜がセオリーなのか？',
 		answer: '低コストが先に撃墜されると、高コスト機がコストオーバーで低耐久復帰になる。高性能な機体が低耐久で慎重に動かざるを得なくなり、相手2機に集中攻撃される不利な展開になりやすいためである。ただし、EXVS2ではEXオーバーリミットの仕組みにより、高コスト先撃墜後に続けて撃墜されるとEXオーバーリミットが発動できずに敗北するリスクもあり、従来作品よりも高コスト先撃墜のリスクが増している。',
+		guideLink: { url: '/guide/#theory', text: 'ガイド - 高コスト先撃墜セオリー' },
 	},
 	{
 		question: '低コスト同士の編成（2000+2000や1500+1500）の特徴は？',
 		answer: '低コスト同士ではコストオーバーが発生せず、フル耐久で復帰できる。ただし、フル耐久でEXオーバーリミットが発動すると耐久回復の恩恵を受けにくいデメリットがある。そのため、EXオーバーリミット発動前にある程度耐久を減らしておく強気な立ち回りも選択肢になるが、両機が瀕死で片方が撃墜されるとEXオーバーリミット発動までの約3秒で残りの機体も撃墜される危険性がある。2000+2000では両前衛をベースに交互に撃墜される展開が原則である。',
+		guideLink: { url: '/guide/#formations', text: 'ガイド - 編成別のコスト管理' },
 	},
 	{
 		question: '1500コストは初心者向けか？',
@@ -56,6 +63,7 @@ const faqs = [
 	{
 		question: '編成ごとの基本的な方針は？',
 		answer: '3000+2500や3000+2000では基本的に3000が前衛、低コストが後衛を務める。2500+2500や2500+2000ではダブル前衛をベースに耐久調整しながら立ち回る。2000+2000でも両前衛が原則で、味方が先に撃墜された場合は残った側も守りに入らず積極的に前に出ることが重要である。2000+1500では1500が2回撃墜される展開が総耐久的に有利である。編成ごとの詳細は「コストの仕組みとセオリー解説」ページを参照されたい。',
+		guideLink: { url: '/guide/#formations', text: 'ガイド - 編成別のコスト管理' },
 	},
 	{
 		question: '総耐久値の計算方法は？',
@@ -122,9 +130,20 @@ const faqs = [
 								href={faq.link.url}
 								target="_blank"
 								rel="noopener noreferrer"
+								class="text-blue-600 dark:text-blue-400 hover:underline text-sm inline-flex items-center gap-1"
+							>
+								{faq.link.text}
+								<svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 inline-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>
+							</a>
+						</p>
+					)}
+					{faq.guideLink && (
+						<p class="mt-2">
+							<a
+								href={faq.guideLink.url}
 								class="text-blue-600 dark:text-blue-400 hover:underline text-sm"
 							>
-								{faq.link.text} &rarr;
+								{faq.guideLink.text} &rarr;
 							</a>
 						</p>
 					)}
@@ -142,9 +161,15 @@ const faqs = [
 			/>
 		</section>
 
-		<nav class="mt-12 mb-8 flex justify-end">
+		<nav class="mt-12 mb-8 flex justify-between">
 			<a
-				href="/guide"
+				href="/"
+				class="text-blue-600 dark:text-blue-400 hover:underline"
+			>
+				&larr; 編成を計算してみる
+			</a>
+			<a
+				href="/guide/"
 				class="text-blue-600 dark:text-blue-400 hover:underline"
 			>
 				コストの仕組みとセオリー解説 &rarr;
