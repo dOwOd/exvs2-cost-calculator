@@ -13,21 +13,25 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # ブラウザプロジェクト単位で並列実行（WebKit系の偏りを解消）
-        project: [chromium, firefox, webkit, mobile-chrome, mobile-safari, tablet]
         include:
-          - project: chromium
-            browser: chromium
-          - project: firefox
-            browser: firefox
-          - project: webkit
-            browser: webkit
-          - project: mobile-chrome
-            browser: chromium
-          - project: mobile-safari
-            browser: webkit
-          - project: tablet
-            browser: webkit
+          # 非WebKit系を統合（E2E各40-52秒と高速なため1ジョブにまとめる）
+          - name: non-webkit
+            projects: "chromium firefox mobile-chrome"
+            browsers: "chromium firefox"
+            cache-key: chromium-firefox
+          # WebKit系は個別（各2-4分と低速なため分離して並列化）
+          - name: webkit
+            projects: "webkit"
+            browsers: "webkit"
+            cache-key: webkit
+          - name: mobile-safari
+            projects: "mobile-safari"
+            browsers: "webkit"
+            cache-key: webkit
+          - name: tablet
+            projects: "tablet"
+            browsers: "webkit"
+            cache-key: webkit
 
     steps:
       - name: Checkout
@@ -45,20 +49,37 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ matrix.cache-key }}-${{ hashFiles('pnpm-lock.yaml') }}
+
       - name: Install Playwright browsers
-        run: pnpm exec playwright install --with-deps ${{ matrix.browser }}
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: pnpm exec playwright install --with-deps ${{ matrix.browsers }}
+
+      - name: Install Playwright system dependencies
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: pnpm exec playwright install-deps ${{ matrix.browsers }}
 
       - name: Build application
         run: pnpm build
 
       - name: Run E2E tests
-        run: pnpm test:e2e --project=${{ matrix.project }}
+        run: |
+          args=""
+          for project in ${{ matrix.projects }}; do
+            args="$args --project=$project"
+          done
+          pnpm test:e2e $args
 
       - name: Upload test results
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: e2e-test-results-${{ matrix.project }}
+          name: e2e-test-results-${{ matrix.name }}
           path: |
             test-results/
             playwright-report/

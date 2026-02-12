@@ -95,7 +95,7 @@ pnpm storybook             # Storybook起動
 
 ### CI/CD（.github/workflows/）
 - **ci.yml** - ユニットテスト（Vitest）・型チェック・ビルド検証（Node: `.node-version` 参照）
-- **e2e.yml** - E2Eテスト（Playwright、ブラウザプロジェクト単位で6並列、Node: `.node-version` 参照）
+- **e2e.yml** - E2Eテスト（Playwright、非WebKit統合+WebKit個別の4並列、ブラウザキャッシュ付き、Node: `.node-version` 参照）
 - **storybook.yml** - Storybookビルド（Node: `.node-version` 参照）
 
 > **注意**: Node.js バージョンは `.node-version` で一元管理。ワークフローでは `node-version-file: '.node-version'` を使用すること
