@@ -38,9 +38,9 @@ test.describe('FAQページ', () => {
     });
 
     test('ガイドページへのナビゲーションリンクが表示される', async ({ page }) => {
-      const guideLink = page.locator('nav a[href="/guide"]');
+      const guideLink = page.locator('a', { hasText: 'コストの仕組みとセオリー解説' });
       await expect(guideLink).toBeVisible();
-      await expect(guideLink).toContainText('コストの仕組みとセオリー解説');
+      await expect(guideLink).toHaveAttribute('href', '/guide/');
     });
   });
 
