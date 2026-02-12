@@ -76,6 +76,7 @@ pnpm storybook             # Storybook起動
 ### データ（src/data/）
 - **overCostHealthTable.ts** - コストオーバー時の復帰耐久値テーブル
 - mobileSuitsData.ts - 機体データ（名前・コスト・耐久値）
+- faqs.ts - FAQデータ（カテゴリ別グルーピング、型定義、ヘルパー関数）
 
 ### レイアウト（src/layouts/）
 - **BaseLayout.astro** - 共通レイアウト（head共通要素、OGP、テーマ初期化、named slot `head` で拡張可能）
