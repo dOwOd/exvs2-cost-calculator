@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { ShareButtons } from '../components/ShareButtons';
 import { faqs, faqCategories, getFaqsByCategory } from '../data/faqs';
 ---
 
@@ -138,6 +139,16 @@ import { faqs, faqCategories, getFaqsByCategory } from '../data/faqs';
 				</section>
 			);
 		})}
+
+		<section class="mt-12 border-t border-slate-200 dark:border-slate-700 pt-8">
+			<h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-3">このページを共有</h2>
+			<ShareButtons
+				client:visible
+				url="https://dowo.dev/faq/"
+				text="EXVS2のコスト管理に関するよくある質問"
+				hashtags={['EXVS2IB', 'イニブ']}
+			/>
+		</section>
 
 		<nav class="mt-12 mb-8 flex justify-between">
 			<a
