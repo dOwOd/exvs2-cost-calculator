@@ -37,7 +37,7 @@ export const ResultPanel = ({
   // ガイダンスメッセージを生成
   const getGuidanceMessage = () => {
     if (!formation.unitA && !formation.unitB) {
-      return '機体を選択して計算を開始しましょう';
+      return '編成を入力すると計算結果が表示されます';
     }
     if (!formation.unitA) {
       return '機体Aを選択すると計算結果が表示されます';
