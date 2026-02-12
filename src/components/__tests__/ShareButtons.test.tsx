@@ -60,7 +60,7 @@ describe('ShareButtons', () => {
 
   describe('Twitter/X シェア', () => {
     test('正しい intent URL が生成されること', () => {
-      render(<ShareButtons {...defaultProps} hashtags={['EXVS2', 'ガンダム']} />);
+      render(<ShareButtons {...defaultProps} hashtags={['EXVS2IB', 'イニブ']} />);
       fireEvent.click(screen.getByLabelText('Xでシェア'));
 
       expect(windowOpenSpy).toHaveBeenCalledTimes(1);
@@ -70,7 +70,7 @@ describe('ShareButtons', () => {
       expect(parsed.origin + parsed.pathname).toBe('https://twitter.com/intent/tweet');
       expect(parsed.searchParams.get('text')).toBe('テスト共有テキスト');
       expect(parsed.searchParams.get('url')).toBe('https://example.com/page');
-      expect(parsed.searchParams.get('hashtags')).toBe('EXVS2,ガンダム');
+      expect(parsed.searchParams.get('hashtags')).toBe('EXVS2IB,イニブ');
     });
 
     test('ハッシュタグなしの場合は hashtags パラメータが含まれないこと', () => {

@@ -164,7 +164,7 @@ export const PatternCard = ({
                   const costA = formation.unitA?.cost ?? 0;
                   const costB = formation.unitB?.cost ?? 0;
                   const shareText = `EXVS2 パターン#${rank} (${costA}+${costB}編成)の撃墜順パターンを確認！`;
-                  const params = new URLSearchParams({ text: shareText, url: window.location.href, hashtags: 'EXVS2,ガンダム' });
+                  const params = new URLSearchParams({ text: shareText, url: window.location.href, hashtags: 'EXVS2IB,イニブ' });
                   window.open(`https://twitter.com/intent/tweet?${params.toString()}`, '_blank', 'noopener,noreferrer,width=600,height=400');
                 }}
                 title="Xでシェア"
