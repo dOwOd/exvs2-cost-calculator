@@ -5,6 +5,7 @@
 import type {
   Formation,
   EvaluatedPattern,
+  ComparisonMetrics,
   BattleState,
   UnitId,
 } from './types';
@@ -140,6 +141,38 @@ export const getTopPatterns = (
 
   return unique;
 }
+
+/**
+ * 比較指標を計算
+ */
+export const calculateComparisonMetrics = (
+  evaluatedPatterns: EvaluatedPattern[],
+  minimumDefeatHealth: number
+): ComparisonMetrics => {
+  if (evaluatedPatterns.length === 0) {
+    return {
+      totalHealthRange: { min: 0, max: 0 },
+      minimumDefeatHealth: 0,
+      exAvailableCount: 0,
+      totalPatternCount: 0,
+    };
+  }
+
+  const healths = evaluatedPatterns.map((p) => p.totalHealth);
+  const exAvailableCount = evaluatedPatterns.filter(
+    (p) => p.canActivateEXOverLimit
+  ).length;
+
+  return {
+    totalHealthRange: {
+      min: Math.min(...healths),
+      max: Math.max(...healths),
+    },
+    minimumDefeatHealth,
+    exAvailableCount,
+    totalPatternCount: evaluatedPatterns.length,
+  };
+};
 
 /**
  * 編成が不完全な場合はパターンを空にするガード

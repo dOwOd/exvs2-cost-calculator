@@ -1,87 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import {ShareButtons} from '../components/ShareButtons';
-
-const faqs = [
-	{
-		question: 'チーム共有コスト6000とは？',
-		answer: 'EXVS2では、2機編成のチームが合計6000のコストを共有する。A機とB機が別々のコストを持つのではなく、チーム全体で1つの残コストを管理する仕組みである。機体が撃墜されると、その機体のコスト分が残コストから差し引かれ、残コストが0以下になると敗北となる。',
-		link: { url: 'https://gundam-vs.jp/extreme/ac2ib/howto/', text: '公式サイト - 遊び方ルール' },
-		guideLink: { url: '/guide/#shared-cost', text: 'ガイド - チーム共有コストとは' },
-	},
-	{
-		question: '各コスト帯の特徴は？',
-		answer: '3000コストは最高性能だが、2回撃墜されるだけで敗北に直結するためコスト管理が最もシビアなコスト帯である。2500コストはバランスが良く、どのコストと組んでも安定する。2000コストは性能控えめだが総耐久値が高く、EXバーストゲージの管理がしやすい利点がある。1500コストは基本性能こそ低いが、特定の局面で高コスト機を上回る爆発力を持つ機体が多い。3000と組んだ場合にEXオーバーリミットが発動できない撃墜順が生まれやすく、上級者向けのコスト帯である。',
-		guideLink: { url: '/guide/#cost-types', text: 'ガイド - コストタイプと性能' },
-	},
-	{
-		question: 'コストオーバーとは？',
-		answer: '撃墜された機体が再出撃する際、残コストがその機体のコスト未満だと「コストオーバー」状態になり、初期耐久値より低い耐久で復帰する。高コストの機体ほどペナルティが深刻で、例えば同じ残コスト500でも3000コスト機は耐久約18%、2000コスト機は耐久25%で復帰するなど、高コストほど復帰耐久が大幅に低くなる。',
-		guideLink: { url: '/guide/#cost-over', text: 'ガイド - コストオーバーとは' },
-	},
-	{
-		question: 'EXオーバーリミットの発動条件は？',
-		answer: 'チームの残コストが編成内の最低コスト以下(残コスト <= min(A機コスト, B機コスト))になった時に1度だけ発動可能となる。つまり「自機と僚機のいずれが撃墜されても敗北する状況」で発動できる。',
-		guideLink: { url: '/guide/#ex-over-limit', text: 'ガイド - EXオーバーリミットの発動条件' },
-	},
-	{
-		question: 'EXオーバーリミットの効果は？',
-		answer: '発動中は10秒間、攻撃力・機動力が上昇し、100ダメージ分のバリアを展開する。さらに、発動中に与えたダメージの30%を自身の耐久値として回復できる（回復上限はフル耐久まで）。',
-	},
-	{
-		question: 'EXオーバーリミットが発動できない編成パターンはあるか？',
-		answer: '異コスト編成では、低コスト側が一度も撃墜されずに高コスト側だけが撃墜され続けるとEXオーバーリミットが発動できないまま敗北する。例えば3000+2500で2500が無傷のまま3000が2連続撃墜された場合である。3000+1500の編成は特に厳しく、EXオーバーリミット発動不可となる撃墜順が複数存在する。2500+1500でも、お互い1回ずつ撃墜された後に2500が撃墜されるとEXオーバーリミットが発動できないなど、注意が必要なパターンが多い。逆に、同コスト編成（3000+3000、2500+2500、2000+2000、1500+1500）ではどの撃墜順でもEXオーバーリミットが発動可能である。',
-	},
-	{
-		question: 'EXバーストとは？',
-		answer: 'EXバーストはEXオーバーリミットとは別のシステムである。ダメージを与える・受けることでバーストゲージが溜まり、発動すると一時的にパワーアップする。ゲージ100%で発動する「ハーフバースト」は効果時間が短い代わりに1試合で複数回使え、ゲージ200%で発動する「フルバースト」は強力だが使える回数が少なくなる。EXバースト中に撃墜されるとゲージが大きく無駄になるため、使いどころが重要である。',
-		link: { url: 'https://gundam-vs.jp/extreme/ac2ib/howto/rules/ex_burst/', text: '公式サイト - EXバースト解説' },
-		guideLink: { url: '/guide/#burst', text: 'ガイド - 覚醒（EXバースト）システム' },
-	},
-	{
-		question: '「覚醒」と「EXバースト」の表現の違いは？',
-		answer: 'EXバーストが正式名称で、「覚醒」はプレイヤー間で広く使われている俗称である。同様に、ゲージ100%で発動するハーフバーストは「半覚」、ゲージ200%で発動するフルバーストは「全覚」と呼ばれることが多い。',
-	},
-	{
-		question: 'EXバーストとEXオーバーリミットの違いは？',
-		answer: 'EXバーストは各機体が個別に使用し、ゲージ蓄積で1試合に複数回発動できる。一方、EXオーバーリミットはチーム全体で1試合に1回のみ、残コストが最低コスト以下になった時に発動する。バーストタイプ(Fバースト・Sバーストなど)に応じた格闘や射撃の強化がEXバーストの特徴で、EXオーバーリミットは攻撃力・機動力上昇に加えてバリアと耐久回復という独自の効果を持つ。',
-	},
-	{
-		question: 'なぜ高コスト先撃墜がセオリーなのか？',
-		answer: '低コストが先に撃墜されると、高コスト機がコストオーバーで低耐久復帰になる。高性能な機体が低耐久で慎重に動かざるを得なくなり、相手2機に集中攻撃される不利な展開になりやすいためである。ただし、EXVS2ではEXオーバーリミットの仕組みにより、高コスト先撃墜後に続けて撃墜されるとEXオーバーリミットが発動できずに敗北するリスクもあり、従来作品よりも高コスト先撃墜のリスクが増している。',
-		guideLink: { url: '/guide/#theory', text: 'ガイド - 高コスト先撃墜セオリー' },
-	},
-	{
-		question: '低コスト同士の編成（2000+2000や1500+1500）の特徴は？',
-		answer: '低コスト同士ではコストオーバーが発生せず、フル耐久で復帰できる。ただし、フル耐久でEXオーバーリミットが発動すると耐久回復の恩恵を受けにくいデメリットがある。そのため、EXオーバーリミット発動前にある程度耐久を減らしておく強気な立ち回りも選択肢になるが、両機が瀕死で片方が撃墜されるとEXオーバーリミット発動までの約3秒で残りの機体も撃墜される危険性がある。2000+2000では両前衛をベースに交互に撃墜される展開が原則である。',
-		guideLink: { url: '/guide/#formations', text: 'ガイド - 編成別のコスト管理' },
-	},
-	{
-		question: '1500コストは初心者向けか？',
-		answer: '1500コストは初心者にはおすすめできない。耐久力とブースト性能が低く、EXバーストの使いどころが極めて難しいコスト帯である。また、3000と組んだ場合にEXオーバーリミットが発動できない撃墜順がほぼ必ず存在し、高い経験とテクニック、機体個別のやり込みが求められる。初心者には、バランスが良くどのコストと組んでも安定する2500コストをおすすめする。',
-	},
-	{
-		question: '編成ごとの基本的な方針は？',
-		answer: '3000+2500や3000+2000では基本的に3000が前衛、低コストが後衛を務める。2500+2500や2500+2000ではダブル前衛をベースに耐久調整しながら立ち回る。2000+2000でも両前衛が原則で、味方が先に撃墜された場合は残った側も守りに入らず積極的に前に出ることが重要である。2000+1500では1500が2回撃墜される展開が総耐久的に有利である。編成ごとの詳細は「コストの仕組みとセオリー解説」ページを参照されたい。',
-		guideLink: { url: '/guide/#formations', text: 'ガイド - 編成別のコスト管理' },
-	},
-	{
-		question: '総耐久値の計算方法は？',
-		answer: '総耐久値 = 初期耐久A + 初期耐久B + 再出撃時の耐久値の合計である。初期耐久値を含む点に注意が必要である。この値が高いほど、チーム全体の継戦能力が高くなる。',
-	},
-	{
-		question: '最短敗北時の耐久値とは？',
-		answer: '片方の機体だけが集中的に狙われ続けた場合の耐久値である。計算式はmin(ceil(6000/コストA) x 耐久A, ceil(6000/コストB) x 耐久B)で、相手が最も効率的に攻めてきた場合の最悪ケースを示している。',
-	},
-	{
-		question: 'EXオーバーリミットの発動まで3秒かかるとは？',
-		answer: '僚機が撃墜されてから復活するまで約3秒かかる。その間はEXオーバーリミットが発動しないため、両機が瀕死の状態で片方が撃墜されると、残りの機体もEXオーバーリミット発動前に撃墜されて敗北する危険性がある。特に低コスト同士の編成では、強気な立ち回りで耐久を減らしすぎた結果、このパターンに陥るリスクがある。',
-	},
-	{
-		question: 'このツールの活用方法は？',
-		answer: 'A機・B機のコストと耐久値を選択すると、全撃墜順パターンの総耐久値やEXオーバーリミット発動条件が自動計算される。事前に撃墜順ごとの展開を把握しておくことで、試合中の立ち回りや意思決定に役立てることができる。',
-	},
-];
+import { ShareButtons } from '../components/ShareButtons';
+import { faqs, faqCategories, getFaqsByCategory } from '../data/faqs';
 ---
 
 <BaseLayout
@@ -106,50 +26,119 @@ const faqs = [
 				"name": faq.question,
 				"acceptedAnswer": {
 					"@type": "Answer",
-					"text": faq.answer,
+					"text": Array.isArray(faq.answer) ? faq.answer.join(' ') : faq.answer,
 				},
 			})),
 		})} />
+		<style>
+			/* アコーディオン開閉アニメーション */
+			.faq-content {
+				display: grid;
+				grid-template-rows: 0fr;
+				transition: grid-template-rows 0.3s ease;
+			}
+			details[open] > .faq-content {
+				grid-template-rows: 1fr;
+			}
+			.faq-content > .faq-inner {
+				overflow: hidden;
+			}
+			/* summary のデフォルトマーカーを非表示 */
+			summary {
+				list-style: none;
+			}
+			summary::-webkit-details-marker {
+				display: none;
+			}
+			/* 矢印アイコンの回転 */
+			.faq-arrow {
+				transition: transform 0.3s ease;
+			}
+			details[open] > summary .faq-arrow {
+				transform: rotate(180deg);
+			}
+		</style>
 	</Fragment>
 
 	<div class="container mx-auto px-4 py-8 max-w-3xl">
 		<h1 class="text-2xl font-bold mb-8">よくある質問（FAQ）</h1>
 
-		<div class="space-y-6">
-			{faqs.map((faq) => (
-				<section class="bg-white dark:bg-slate-800 rounded-lg p-5 shadow-sm">
-					<h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">
-						{faq.question}
+		{faqCategories.map((category) => {
+			const categoryFaqs = getFaqsByCategory(category.id);
+			return (
+				<section class="mb-8">
+					<h2 class="text-xl font-semibold mb-4 text-slate-900 dark:text-slate-100">
+						{category.label}
 					</h2>
-					<p class="text-slate-700 dark:text-slate-300 leading-relaxed">
-						{faq.answer}
-					</p>
-					{faq.link && (
-						<p class="mt-2">
-							<a
-								href={faq.link.url}
-								target="_blank"
-								rel="noopener noreferrer"
-								class="text-blue-600 dark:text-blue-400 hover:underline text-sm inline-flex items-center gap-1"
-							>
-								{faq.link.text}
-								<svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 inline-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>
-							</a>
-						</p>
-					)}
-					{faq.guideLink && (
-						<p class="mt-2">
-							<a
-								href={faq.guideLink.url}
-								class="text-blue-600 dark:text-blue-400 hover:underline text-sm"
-							>
-								{faq.guideLink.text} &rarr;
-							</a>
-						</p>
-					)}
+					<div class="space-y-3">
+						{categoryFaqs.map((faq) => (
+							<details class="bg-white dark:bg-slate-800 rounded-lg shadow-sm group">
+								<summary class="flex items-center justify-between cursor-pointer p-5 text-lg font-semibold text-slate-900 dark:text-slate-100 select-none">
+									<span class="pr-4">{faq.question}</span>
+									<svg
+										class="faq-arrow w-5 h-5 shrink-0 text-slate-500 dark:text-slate-400"
+										xmlns="http://www.w3.org/2000/svg"
+										viewBox="0 0 20 20"
+										fill="currentColor"
+									>
+										<path
+											fill-rule="evenodd"
+											d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+											clip-rule="evenodd"
+										/>
+									</svg>
+								</summary>
+								<div class="faq-content">
+									<div class="faq-inner">
+										<div class="px-5 pb-5">
+											{Array.isArray(faq.answer) ? (
+												<ul class="text-slate-700 dark:text-slate-300 leading-relaxed space-y-2 list-none">
+													{faq.answer.map((item) => (
+														<li>{item}</li>
+													))}
+												</ul>
+											) : (
+												<p class="text-slate-700 dark:text-slate-300 leading-relaxed">
+													{faq.answer}
+												</p>
+											)}
+											{faq.formula && (
+												<p class="mt-2 font-mono bg-slate-200 dark:bg-slate-700 px-3 py-2 rounded text-sm">
+													{faq.formula}
+												</p>
+											)}
+											{faq.link && (
+												<p class="mt-2">
+													<a
+														href={faq.link.url}
+														target="_blank"
+														rel="noopener noreferrer"
+														class="text-blue-600 dark:text-blue-400 hover:underline text-sm inline-flex items-center gap-1"
+													>
+														{faq.link.text}
+														<svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 inline-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>
+													</a>
+												</p>
+											)}
+											{faq.guideLink && (
+												<p class="mt-2">
+													<a
+														href={faq.guideLink.url}
+														class="text-blue-600 dark:text-blue-400 hover:underline text-sm"
+													>
+														{faq.guideLink.text} &rarr;
+													</a>
+												</p>
+											)}
+										</div>
+									</div>
+								</div>
+							</details>
+						))}
+					</div>
 				</section>
-			))}
-		</div>
+			);
+		})}
 
 		<section class="mt-12 border-t border-slate-200 dark:border-slate-700 pt-8">
 			<h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-3">このページを共有</h2>

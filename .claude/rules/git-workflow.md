@@ -20,8 +20,17 @@ Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
 pnpm test
 ```
 
-- すべてのテストがパスすることを確認してからコミット
+- すべてのユニットテストがパスすることを確認してからコミット
 - 1つの論理的変更につき1コミット
+
+## プッシュ前の確認
+
+```bash
+pnpm build && pnpm test:e2e
+```
+
+- プッシュ前にローカルでE2Eテストを実行し、パスすることを確認する
+- GitHub Actionsの無料枠を節約するため、CIでの失敗を未然に防ぐ
 
 ## 安全プロトコル
 

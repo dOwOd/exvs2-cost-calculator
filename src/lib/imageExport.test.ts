@@ -117,6 +117,7 @@ describe('generateFilename', () => {
 
 describe('generatePatternCardImage', () => {
   const mockBlob = new Blob(['test'], { type: 'image/png' });
+  let mockClassList: { contains: ReturnType<typeof vi.fn>; add: ReturnType<typeof vi.fn>; remove: ReturnType<typeof vi.fn> };
 
   beforeEach(() => {
     mockToPng.mockReset();
@@ -126,6 +127,20 @@ describe('generatePatternCardImage', () => {
         blob: () => Promise.resolve(mockBlob),
       }),
     ) as unknown as typeof fetch;
+
+    // document.documentElementをモック（isDarkModeで使用）
+    mockClassList = { contains: vi.fn().mockReturnValue(false), add: vi.fn(), remove: vi.fn() };
+    if (typeof globalThis.document === 'undefined') {
+      Object.defineProperty(globalThis, 'document', {
+        value: { documentElement: { classList: mockClassList } },
+        configurable: true,
+      });
+    } else {
+      Object.defineProperty(document, 'documentElement', {
+        value: { classList: mockClassList },
+        configurable: true,
+      });
+    }
   });
 
   test('toPngを呼び出し、exportingクラスを管理する', async () => {
@@ -149,6 +164,44 @@ describe('generatePatternCardImage', () => {
     }));
     expect(mockElement.classList.remove).toHaveBeenCalledWith('exporting');
     expect(result).toBe(mockBlob);
+  });
+
+  test('ライトモード時にbackgroundColorとしてslate-100を渡す', async () => {
+    const mockDataUrl = 'data:image/png;base64,AAAA';
+    mockToPng.mockResolvedValue(mockDataUrl);
+
+    // ライトモード: darkクラスなし
+    mockClassList.contains.mockReturnValue(false);
+
+    const mockElement = {
+      classList: { add: vi.fn(), remove: vi.fn() },
+      dataset: {},
+    } as unknown as HTMLElement;
+
+    await generatePatternCardImage(mockElement);
+
+    expect(mockToPng).toHaveBeenCalledWith(mockElement, expect.objectContaining({
+      backgroundColor: '#f1f5f9',
+    }));
+  });
+
+  test('ダークモード時にbackgroundColorとしてslate-900を渡す', async () => {
+    const mockDataUrl = 'data:image/png;base64,AAAA';
+    mockToPng.mockResolvedValue(mockDataUrl);
+
+    // ダークモード: darkクラスあり
+    mockClassList.contains.mockReturnValue(true);
+
+    const mockElement = {
+      classList: { add: vi.fn(), remove: vi.fn() },
+      dataset: {},
+    } as unknown as HTMLElement;
+
+    await generatePatternCardImage(mockElement);
+
+    expect(mockToPng).toHaveBeenCalledWith(mockElement, expect.objectContaining({
+      backgroundColor: '#0f172a',
+    }));
   });
 
   test('filter関数がdata-export-exclude要素を除外する', async () => {
