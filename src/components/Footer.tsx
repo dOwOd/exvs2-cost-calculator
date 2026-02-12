@@ -6,7 +6,7 @@ import { GitHubIcon } from './icons/GitHubIcon';
 import { useCookieConsent } from '../lib/useCookieConsent';
 
 const siteLinks = [
-  { href: '/', label: '計算機' },
+  { href: '/', label: 'コスト計算' },
   { href: '/guide/', label: 'ガイド' },
   { href: '/faq/', label: 'FAQ' },
   { href: '/privacy/', label: 'プライバシーポリシー' },
