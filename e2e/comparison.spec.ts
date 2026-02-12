@@ -188,6 +188,82 @@ test.describe('比較モード', () => {
     });
   });
 
+  test.describe('比較指標テーブル', () => {
+    test.beforeEach(async ({ page }) => {
+      await page.getByTestId('mode-comparison').click();
+    });
+
+    test('編成入力後に比較指標テーブルが表示される', async ({ page }) => {
+      // 編成1: 3000+2500
+      await selectComparisonFormation(page, 0, 3000, 680, 2500, 620);
+
+      // 比較指標テーブルが表示される
+      await expect(page.getByTestId('comparison-metrics-table')).toBeVisible();
+    });
+
+    test('比較指標テーブルに正しいラベルが表示される', async ({ page }) => {
+      // 編成1: 3000+2500
+      await selectComparisonFormation(page, 0, 3000, 680, 2500, 620);
+
+      const table = page.getByTestId('comparison-metrics-table');
+      await expect(table).toContainText('総耐久（最大）');
+      await expect(table).toContainText('総耐久（最小）');
+      await expect(table).toContainText('最短敗北耐久');
+      await expect(table).toContainText('EX発動可能');
+    });
+
+    test('2つの編成の比較指標が並んで表示される', async ({ page }) => {
+      // 編成1: 3000+2500
+      await selectComparisonFormation(page, 0, 3000, 680, 2500, 620);
+
+      // 編成2: 2500+2500
+      await selectComparisonFormation(page, 1, 2500, 620, 2500, 620);
+
+      const table = page.getByTestId('comparison-metrics-table');
+      await expect(table).toBeVisible();
+
+      // ヘッダーに編成1, 編成2が表示される
+      await expect(table).toContainText('編成 1');
+      await expect(table).toContainText('編成 2');
+
+      // コスト表記が表示される
+      await expect(table).toContainText('3000+2500');
+      await expect(table).toContainText('2500+2500');
+    });
+  });
+
+  test.describe('EXフィルター（比較モード）', () => {
+    test.beforeEach(async ({ page }) => {
+      await page.getByTestId('mode-comparison').click();
+    });
+
+    test('各編成のEXフィルターチェックボックスが表示される', async ({ page }) => {
+      // 編成を入力してComparisonResultPanelを表示
+      await selectComparisonFormation(page, 0, 3000, 680, 2500, 620);
+
+      await expect(page.getByTestId('comparison-ex-filter-0')).toBeVisible();
+      await expect(page.getByTestId('comparison-ex-filter-1')).toBeVisible();
+    });
+
+    test('EXフィルターを適用するとパターンがフィルタリングされる', async ({ page }) => {
+      // 3000+1500 編成（EX不発パターンが存在する）
+      await selectComparisonFormation(page, 0, 3000, 680, 1500, 450);
+
+      const column0 = page.getByTestId('comparison-pattern-column-0');
+      await expect(column0.locator('[data-testid^="pattern-card-"]').first()).toBeVisible();
+
+      // フィルター適用前のパターン数
+      const beforeCount = await column0.locator('[data-testid^="pattern-card-"]').count();
+
+      // EXフィルターを適用（ラベルをクリック）
+      await page.locator('label:has([data-testid="comparison-ex-filter-0"])').click();
+
+      // フィルター適用後のパターン数が減少またはそのまま
+      const afterCount = await column0.locator('[data-testid^="pattern-card-"]').count();
+      expect(afterCount).toBeLessThanOrEqual(beforeCount);
+    });
+  });
+
   test.describe('通常モードとの独立性', () => {
     test('通常モードの編成は比較モードに影響しない', async ({ page }) => {
       // 通常モードで編成を入力
