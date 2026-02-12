@@ -54,7 +54,8 @@ pnpm storybook             # Storybook起動
 - **SavedFormationsPanel.tsx** - 保存編成パネル（保存・読込・削除、確認モーダル）
 - **ResultPanel.tsx** - 結果パネル（EXフィルター + パターンリスト表示）
   - PatternList.tsx - パターン一覧（全パターンをPatternCardで描画）
-    - PatternCard.tsx - 個別パターンカード（ランク・撃墜順・コスト推移テーブル・画像エクスポート）
+    - PatternCard.tsx - 個別パターンカード（ランク・撃墜順・コスト推移テーブル・画像エクスポート・SNSシェア）
+- **ShareButtons.tsx** - SNSシェアボタン（Twitter/X・LINE・Web Share API）
 - CookieConsentBanner.tsx - Cookie同意バナー（広告Cookie同意/拒否）
 - ThemeToggle.tsx - ダーク/ライトモード切替
 - Tooltip.tsx - ツールチップ
