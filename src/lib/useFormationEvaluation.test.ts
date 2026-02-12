@@ -52,7 +52,7 @@ describe('useFormationEvaluation', () => {
     };
     const formation2: Formation = {
       unitA: { cost: 2000, health: 580 },
-      unitB: { cost: 1500, health: 450 },
+      unitB: { cost: 1500, health: 440 },
     };
 
     const { result, rerender } = renderHook(
@@ -89,7 +89,7 @@ describe('useFormationEvaluation', () => {
   test('同コスト編成でも正しく評価される', () => {
     const sameCostFormation: Formation = {
       unitA: { cost: 2000, health: 580 },
-      unitB: { cost: 2000, health: 560 },
+      unitB: { cost: 2000, health: 580 },
     };
 
     const { result } = renderHook(() => useFormationEvaluation(sameCostFormation));
@@ -107,7 +107,7 @@ describe('useFormationEvaluation - 複数インスタンスの独立性', () => 
     };
     const formation2: Formation = {
       unitA: { cost: 2000, health: 580 },
-      unitB: { cost: 1500, health: 450 },
+      unitB: { cost: 1500, health: 440 },
     };
 
     const { result: result1 } = renderHook(() => useFormationEvaluation(formation1));
@@ -151,7 +151,7 @@ describe('useFormationEvaluation - 複数インスタンスの独立性', () => 
     // 最短敗北耐久が全て異なる編成を選ぶ:
     // 3000+3000(680): min(2*680, 2*680) = 1360
     // 2500+2500(620): min(3*620, 3*620) = 1860
-    // 2000+1500(580/450): min(3*580, 4*450) = min(1740, 1800) = 1740
+    // 2000+1500(580/440): min(3*580, 4*440) = min(1740, 1760) = 1740
     const formation1: Formation = {
       unitA: { cost: 3000, health: 680 },
       unitB: { cost: 3000, health: 680 },
@@ -162,7 +162,7 @@ describe('useFormationEvaluation - 複数インスタンスの独立性', () => 
     };
     const formation3: Formation = {
       unitA: { cost: 2000, health: 580 },
-      unitB: { cost: 1500, health: 450 },
+      unitB: { cost: 1500, health: 440 },
     };
 
     const { result: result1 } = renderHook(() => useFormationEvaluation(formation1));
@@ -191,7 +191,7 @@ describe('useFormationEvaluation - 複数インスタンスの独立性', () => 
     };
     const formation2: Formation = {
       unitA: { cost: 2000, health: 580 },
-      unitB: { cost: 2000, health: 560 },
+      unitB: { cost: 2000, health: 580 },
     };
     const updatedFormation1: Formation = {
       unitA: { cost: 3000, health: 800 },

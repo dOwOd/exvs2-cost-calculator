@@ -453,7 +453,7 @@ describe('calculateComparisonMetrics', () => {
   test('同コスト編成で指標が正しく計算される', () => {
     const formation: Formation = {
       unitA: { cost: 2000, health: 580 },
-      unitB: { cost: 2000, health: 560 },
+      unitB: { cost: 2000, health: 580 },
     };
 
     const patterns = evaluateAllPatterns(formation);
