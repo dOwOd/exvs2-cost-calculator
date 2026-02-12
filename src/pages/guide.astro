@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import {ShareButtons} from '../components/ShareButtons';
 ---
 
 <BaseLayout
@@ -318,6 +319,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 				</p>
 			</section>
 		</div>
+
+		<section class="mt-12 border-t border-slate-200 dark:border-slate-700 pt-8">
+			<h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-3">このページを共有</h2>
+			<ShareButtons
+				client:visible
+				url="https://dowo.dev/guide/"
+				text="EXVS2のコスト管理とセオリーについて解説"
+				hashtags={['EXVS2', 'ガンダム']}
+			/>
+		</section>
 
 		<nav class="mt-12 mb-8 flex justify-end">
 			<a

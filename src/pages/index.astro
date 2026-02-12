@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import {Calculator} from '../components/Calculator';
 import {Footer} from '../components/Footer';
 import {CookieConsentBanner} from '../components/CookieConsentBanner';
+import {ShareButtons} from '../components/ShareButtons';
 ---
 
 <BaseLayout
@@ -89,6 +90,18 @@ import {CookieConsentBanner} from '../components/CookieConsentBanner';
 					撃墜順によって発動タイミングが変わるため、編成に応じた最適なパターンを事前に把握することが重要である。
 				</p>
 			</div>
+		</div>
+	</section>
+
+	<section class="container mx-auto px-3 sm:px-4 md:px-6 pb-8">
+		<div class="border-t border-slate-200 dark:border-slate-700 pt-8">
+			<h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-3">このページを共有</h2>
+			<ShareButtons
+				client:visible
+				url="https://dowo.dev/"
+				text="EXVS2のコスト管理・撃墜順パターンを計算できるツール"
+				hashtags={['EXVS2', 'ガンダム']}
+			/>
 		</div>
 	</section>
 
