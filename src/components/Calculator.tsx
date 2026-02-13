@@ -18,28 +18,15 @@ const EMPTY_FORMATION: Formation = { unitA: null, unitB: null };
 const MIN_COMPARISON_FORMATIONS = 2;
 const MAX_COMPARISON_FORMATIONS = 3;
 
-/** URLパラメータから初期状態を読み取る */
-const getInitialStateFromUrl = (): {
-  formation: Formation;
-  exOnly: boolean;
-  firstKillFilter: string;
-} => {
-  if (typeof window === 'undefined') {
-    return { formation: EMPTY_FORMATION, exOnly: false, firstKillFilter: '' };
-  }
-  const params = new URLSearchParams(window.location.search);
-  return decodeFormationFromParams(params);
-};
-
 export const Calculator = () => {
-  // --- URLパラメータから初期値を読み取り ---
-  const [initialUrlState] = useState(getInitialStateFromUrl);
-
   // --- モード管理 ---
   const [mode, setMode] = useState<CalculatorMode>('normal');
 
   // --- 通常モード用 ---
-  const [formation, setFormation] = useState<Formation>(initialUrlState.formation);
+  const [formation, setFormation] = useState<Formation>(EMPTY_FORMATION);
+
+  // --- URLフィルター状態（useEffectで復元） ---
+  const [urlFilterState, setUrlFilterState] = useState({ exOnly: false, firstKillFilter: '' });
 
   // --- 比較モード用（固定3スロット） ---
   const [compFormations, setCompFormations] = useState<[Formation, Formation, Formation]>([
@@ -49,7 +36,19 @@ export const Calculator = () => {
   ]);
   const [compCount, setCompCount] = useState(MIN_COMPARISON_FORMATIONS);
 
-  // --- URL同期（通常モードのみ） ---
+  // --- マウント時にURLパラメータから編成を復元 ---
+  const [urlRestored, setUrlRestored] = useState(false);
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.toString()) {
+      const decoded = decodeFormationFromParams(params);
+      setFormation(decoded.formation);
+      setUrlFilterState({ exOnly: decoded.exOnly, firstKillFilter: decoded.firstKillFilter });
+    }
+    setUrlRestored(true);
+  }, []);
+
+  // --- URL同期（通常モードのみ、URL復元完了後） ---
   const updateUrl = useCallback((f: Formation) => {
     if (typeof window === 'undefined') return;
     const params = encodeFormationToParams(f);
@@ -59,10 +58,10 @@ export const Calculator = () => {
   }, []);
 
   useEffect(() => {
-    if (mode === 'normal') {
+    if (urlRestored && mode === 'normal') {
       updateUrl(formation);
     }
-  }, [formation, mode, updateUrl]);
+  }, [formation, mode, updateUrl, urlRestored]);
 
   // --- 評価: 通常モード ---
   const normalEval = useFormationEvaluation(formation);
@@ -185,8 +184,8 @@ export const Calculator = () => {
                   patterns={normalEval.evaluatedPatterns}
                   formation={formation}
                   minimumDefeatHealth={normalEval.minimumDefeatHealth}
-                  initialExOnly={initialUrlState.exOnly}
-                  initialFirstKillFilter={initialUrlState.firstKillFilter}
+                  initialExOnly={urlFilterState.exOnly}
+                  initialFirstKillFilter={urlFilterState.firstKillFilter}
                 />
               </main>
             </div>

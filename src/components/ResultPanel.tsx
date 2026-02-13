@@ -2,7 +2,7 @@
  * 結果パネル（フィルター + パターンリスト）
  */
 
-import { useState, useCallback } from 'preact/hooks';
+import { useState, useEffect, useCallback } from 'preact/hooks';
 import type { EvaluatedPattern, Formation } from '../lib/types';
 import { PatternList } from './PatternList';
 import { getTopPatterns, getEffectivePatterns } from '../lib/evaluators';
@@ -56,6 +56,18 @@ export const ResultPanel = ({
       : 'all',
   );
   const [copyFeedback, setCopyFeedback] = useState(false);
+
+  // URL復元によるフィルターprops変更に追従
+  useEffect(() => {
+    setShowOnlyEXAvailable(initialExOnly);
+  }, [initialExOnly]);
+  useEffect(() => {
+    setFirstKillFilter(
+      initialFirstKillFilter === 'A' || initialFirstKillFilter === 'B'
+        ? initialFirstKillFilter
+        : 'all',
+    );
+  }, [initialFirstKillFilter]);
 
   // 両方選択済みかどうか
   const isFormationComplete = formation.unitA && formation.unitB;
