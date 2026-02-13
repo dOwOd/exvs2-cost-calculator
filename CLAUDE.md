@@ -89,6 +89,7 @@ git worktree remove ../exvs2-worktree  # 後片付け
 - recentHistory.ts - 最近の編成履歴管理
 - favoriteSuits.ts - お気に入り機体管理（LocalStorage CRUD、最大20件、カスタムイベント同期）
 - savedFormations.ts - 保存編成管理（LocalStorage CRUD、最大10件）
+- urlSharing.ts - URL共有（編成・フィルター状態のURLパラメータ encode/decode）
 - imageExport.ts - 画像エクスポート（html-to-image によるPNG生成、Web Share共有）
 
 ### データ（src/data/）
