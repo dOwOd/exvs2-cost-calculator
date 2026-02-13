@@ -89,7 +89,7 @@ export const ResultPanel = ({ patterns, formation, minimumDefeatHealth }: Result
 
         {/* フィルター（両方選択済みの場合のみ表示） */}
         {isFormationComplete && (
-          <div class="space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <label class="flex items-center gap-3 cursor-pointer group">
               <div class="relative">
                 <input
@@ -135,7 +135,7 @@ export const ResultPanel = ({ patterns, formation, minimumDefeatHealth }: Result
             {/* 先落ちフィルター（異なるコスト編成時のみ表示） */}
             {isDifferentCost && (
               <div data-testid="first-kill-filter">
-                <div class="text-xs text-slate-500 dark:text-slate-400 mb-1.5">
+                <div class="text-xs text-slate-500 dark:text-slate-400 mb-1.5 sm:hidden">
                   先撃墜フィルター
                 </div>
                 <div class="inline-flex rounded-lg bg-slate-200 dark:bg-slate-800 p-0.5">
