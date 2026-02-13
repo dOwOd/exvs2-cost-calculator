@@ -7,6 +7,8 @@ import type { EvaluatedPattern, Formation } from '../lib/types';
 import { PatternList } from './PatternList';
 import { getTopPatterns, getEffectivePatterns } from '../lib/evaluators';
 
+type FirstKillFilter = 'all' | 'A' | 'B';
+
 type ResultPanelType = {
   patterns: EvaluatedPattern[];
   formation: Formation;
@@ -15,9 +17,13 @@ type ResultPanelType = {
 
 export const ResultPanel = ({ patterns, formation, minimumDefeatHealth }: ResultPanelType) => {
   const [showOnlyEXAvailable, setShowOnlyEXAvailable] = useState(false);
+  const [firstKillFilter, setFirstKillFilter] = useState<FirstKillFilter>('all');
 
   // 両方選択済みかどうか
   const isFormationComplete = formation.unitA && formation.unitB;
+
+  // 異なるコストの編成かどうか（先落ちフィルター表示条件）
+  const isDifferentCost = isFormationComplete && formation.unitA!.cost !== formation.unitB!.cost;
 
   // 編成が不完全な場合はパターンを空にするガード
   const effectivePatterns = getEffectivePatterns(patterns, formation);
@@ -25,10 +31,12 @@ export const ResultPanel = ({ patterns, formation, minimumDefeatHealth }: Result
   // 総耐久最大でソート（同じ総耐久値内で高コスト先落ち優先）
   const sortedPatterns = getTopPatterns(effectivePatterns, formation);
 
-  // フィルタリング
-  const filteredPatterns = showOnlyEXAvailable
-    ? sortedPatterns.filter((p) => !p.isEXActivationFailure)
-    : sortedPatterns;
+  // フィルタリング（EXフィルター + 先落ちフィルター）
+  const filteredPatterns = sortedPatterns.filter((p) => {
+    if (showOnlyEXAvailable && p.isEXActivationFailure) return false;
+    if (firstKillFilter !== 'all' && p.transitions[0]?.killedUnit !== firstKillFilter) return false;
+    return true;
+  });
 
   // ガイダンスメッセージを生成
   const getGuidanceMessage = () => {
@@ -123,6 +131,38 @@ export const ResultPanel = ({ patterns, formation, minimumDefeatHealth }: Result
                 EXオーバーリミット発動可能のみ表示
               </span>
             </label>
+
+            {/* 先落ちフィルター（異なるコスト編成時のみ表示） */}
+            {isDifferentCost && (
+              <div data-testid="first-kill-filter">
+                <div class="text-xs text-slate-500 dark:text-slate-400 mb-1.5">
+                  先撃墜フィルター
+                </div>
+                <div class="inline-flex rounded-lg bg-slate-200 dark:bg-slate-800 p-0.5">
+                  {(
+                    [
+                      ['all', 'すべて'],
+                      ['A', 'A先撃墜'],
+                      ['B', 'B先撃墜'],
+                    ] as const
+                  ).map(([value, label]) => (
+                    <button
+                      key={value}
+                      type="button"
+                      data-testid={`first-kill-filter-${value.toLowerCase()}`}
+                      onClick={() => setFirstKillFilter(value as FirstKillFilter)}
+                      class={`px-3 py-1 text-sm font-medium rounded-md transition-all duration-200 ${
+                        firstKillFilter === value
+                          ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 shadow-sm'
+                          : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
