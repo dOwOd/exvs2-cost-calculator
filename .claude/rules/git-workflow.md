@@ -73,3 +73,23 @@ git checkout -b fix/issue-番号-説明
 2. **Issue紐づけ必須**: 本文に `Closes #番号` を含める（マージ時にIssue自動クローズ）
 3. **タイトル形式**: `Type: 概要`（コミットメッセージ形式）
 4. **プッシュとPR作成**: ユーザー承認後にClaude Codeが実行
+5. **ドラフトPRで作成**: `gh pr create --draft` でドラフトとして作成（CI節約のため）
+
+## ドラフトPR運用フロー
+
+CI/CD利用時間を節約するため、PRはドラフトで作成し、準備完了後にReady for Reviewに変更する。
+
+### 手順
+
+1. ブランチ作成・開発
+2. **ドラフトPRを作成**: `gh pr create --draft`
+3. 開発・修正を繰り返しプッシュ（ドラフト中はCI実行なし）
+4. ローカルで `pnpm test` / `pnpm build && pnpm test:e2e` を確認
+5. **Ready for Reviewに変更**: `gh pr ready` → CI実行開始
+6. CI通過後にレビュー・マージ
+
+### 注意
+
+- ドラフトPRではCI/E2E/Storybookが一切実行されない
+- Ready for Review後の追加プッシュではCIが実行される（concurrencyにより前のrunは自動キャンセル）
+- PRでのE2Eテストはnon-webkit（chromium/firefox/mobile-chrome）のみ実行。WebKit系はmainマージ時にフルスイート実行

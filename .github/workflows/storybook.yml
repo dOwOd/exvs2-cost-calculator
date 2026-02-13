@@ -2,16 +2,22 @@ name: Storybook
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
     branches:
       - main
-      - develop
-  push:
-    branches:
-      - main
-      - develop
+    paths-ignore:
+      - 'docs/**'
+      - '.claude/**'
+      - '*.md'
+      - 'scripts/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build-storybook:
+    if: github.event.pull_request.draft != true
     runs-on: ubuntu-latest
 
     steps:

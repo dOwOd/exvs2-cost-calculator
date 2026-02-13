@@ -188,7 +188,8 @@ PatternList → PatternCard（各パターン表示）
 
 ### 現状
 
-- **CI**: ユニットテスト（Vitest）、型チェック（tsc）、ビルド検証、E2Eテスト（Playwright）、Storybookビルド
+- **CI**: ユニットテスト（Vitest）、型チェック（tsc）、ビルド検証、E2Eテスト（Playwright、PRはnon-webkitのみ）、Storybookビルド（PRのみ）
+- **最適化**: ドラフトPRスキップ、concurrency（連続プッシュ時の自動キャンセル）、paths-ignore
 - **未導入**: lint、依存関係自動更新、Lighthouse
 
 ## ドキュメント更新確認
