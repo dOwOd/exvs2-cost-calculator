@@ -12,6 +12,6 @@ export default defineConfig({
   integrations: [preact(), sitemap()],
 
   vite: {
-    plugins: [tailwindcss()]
-  }
+    plugins: [tailwindcss()],
+  },
 });

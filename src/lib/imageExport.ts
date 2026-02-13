@@ -15,9 +15,7 @@ export const isDarkMode = (): boolean => {
  * DOM要素からPNG画像のBlobを生成する
  * html-to-imageを動的importしてバンドルサイズを削減
  */
-export const generatePatternCardImage = async (
-  element: HTMLElement,
-): Promise<Blob> => {
+export const generatePatternCardImage = async (element: HTMLElement): Promise<Blob> => {
   const { toPng } = await import('html-to-image');
 
   const backgroundColor = isDarkMode() ? '#0f172a' : '#f1f5f9';
@@ -53,11 +51,7 @@ export const generatePatternCardImage = async (
  * Web Share APIでファイルを共有する
  * 非対応時はエラーをthrow
  */
-export const shareImage = async (
-  blob: Blob,
-  filename: string,
-  title: string,
-): Promise<void> => {
+export const shareImage = async (blob: Blob, filename: string, title: string): Promise<void> => {
   if (!canShareFiles()) {
     throw new Error('Web Share API with file sharing is not supported');
   }
@@ -88,10 +82,7 @@ export const canShareFiles = (): boolean => {
 /**
  * エクスポート用ファイル名を生成する
  */
-export const generateFilename = (
-  rank: number,
-  formation: Formation,
-): string => {
+export const generateFilename = (rank: number, formation: Formation): string => {
   const costA = formation.unitA?.cost ?? 0;
   const costB = formation.unitB?.cost ?? 0;
   return `exvs2-pattern-${rank}-${costA}+${costB}.png`;

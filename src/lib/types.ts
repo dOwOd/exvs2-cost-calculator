@@ -20,7 +20,7 @@ export const COST_VALUES = [1500, 2000, 2500, 3000] as const;
 
 /** CostType の型ガード関数 */
 export const isCostType = (value: number): value is CostType => {
-  return COST_VALUES.some(v => v === value);
+  return COST_VALUES.some((v) => v === value);
 };
 
 /** 機体ID */
@@ -31,13 +31,13 @@ export type UnitConfig = {
   cost: CostType;
   health: HealthType;
   hasPartialRevival?: boolean;
-}
+};
 
 /** 編成（機体A, B） */
 export type Formation = {
   unitA: UnitConfig | null;
   unitB: UnitConfig | null;
-}
+};
 
 /** バトル状態（コスト推移の1ステップ） */
 export type BattleState = {
@@ -55,7 +55,7 @@ export type BattleState = {
   isDefeat: boolean;
   /** 復活ありで復帰したか */
   isPartialRevival: boolean;
-}
+};
 
 /** 保存された編成 */
 export type SavedFormation = {
@@ -63,7 +63,7 @@ export type SavedFormation = {
   name: string;
   formation: Formation;
   savedAt: number;
-}
+};
 
 /** 比較指標 */
 export type ComparisonMetrics = {
@@ -91,4 +91,4 @@ export type EvaluatedPattern = {
   isEXActivationFailure: boolean;
   /** コスト推移 */
   transitions: BattleState[];
-}
+};

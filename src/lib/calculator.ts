@@ -28,7 +28,7 @@ export const generatePatterns = (maxKills = 4): UnitId[][] => {
   }
 
   return patterns;
-}
+};
 
 /** 復活あり時の耐久値 */
 const PARTIAL_REVIVAL_HEALTH = 100;
@@ -41,7 +41,7 @@ const PARTIAL_REVIVAL_HEALTH = 100;
  */
 export const calculateCostTransitions = (
   pattern: UnitId[],
-  formation: Formation
+  formation: Formation,
 ): BattleState[] => {
   if (!formation.unitA || !formation.unitB) {
     return [];
@@ -65,9 +65,7 @@ export const calculateCostTransitions = (
     const wouldDefeat = remainingCost <= 0;
 
     // 復活ありチェック
-    const canRevive = wouldDefeat
-      && killedUnitConfig.hasPartialRevival
-      && !revivalUsed[killedUnit];
+    const canRevive = wouldDefeat && killedUnitConfig.hasPartialRevival && !revivalUsed[killedUnit];
 
     if (canRevive) {
       // 復活あり発動
@@ -105,7 +103,7 @@ export const calculateCostTransitions = (
     const respawnHealth = getRespawnHealth(
       killedUnitConfig.cost,
       killedUnitConfig.health,
-      remainingCost
+      remainingCost,
     );
 
     transitions.push({
@@ -120,7 +118,7 @@ export const calculateCostTransitions = (
   }
 
   return transitions;
-}
+};
 
 /**
  * 総耐久値を計算（リスポーン耐久変動を考慮）
@@ -128,10 +126,7 @@ export const calculateCostTransitions = (
  * @param transitions コスト推移
  * @returns 総耐久値（初期耐久 + リスポーン耐久の合計）
  */
-export const calculateTotalHealth = (
-  formation: Formation,
-  transitions: BattleState[]
-): number => {
+export const calculateTotalHealth = (formation: Formation, transitions: BattleState[]): number => {
   if (!formation.unitA || !formation.unitB || transitions.length === 0) {
     return 0;
   }
@@ -151,14 +146,14 @@ export const calculateTotalHealth = (
   }
 
   return total;
-}
+};
 
 /**
  * コストオーバー回数をカウント
  */
 export const countOverCosts = (transitions: BattleState[]): number => {
   return transitions.filter((t) => t.isOverCost).length;
-}
+};
 
 /**
  * 最短での敗北時の耐久値を計算
@@ -173,12 +168,16 @@ export const calculateMinimumDefeatHealth = (formation: Formation): number => {
 
   // Aだけが狙われ続けた場合
   const killsA = Math.ceil(INITIAL_COST / formation.unitA.cost);
-  const damageA = killsA * formation.unitA.health + (formation.unitA.hasPartialRevival ? PARTIAL_REVIVAL_HEALTH : 0);
+  const damageA =
+    killsA * formation.unitA.health +
+    (formation.unitA.hasPartialRevival ? PARTIAL_REVIVAL_HEALTH : 0);
 
   // Bだけが狙われ続けた場合
   const killsB = Math.ceil(INITIAL_COST / formation.unitB.cost);
-  const damageB = killsB * formation.unitB.health + (formation.unitB.hasPartialRevival ? PARTIAL_REVIVAL_HEALTH : 0);
+  const damageB =
+    killsB * formation.unitB.health +
+    (formation.unitB.hasPartialRevival ? PARTIAL_REVIVAL_HEALTH : 0);
 
   // 最短（最小ダメージで敗北）
   return Math.min(damageA, damageB);
-}
+};

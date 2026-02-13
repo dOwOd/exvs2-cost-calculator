@@ -55,10 +55,9 @@ describe('useFormationEvaluation', () => {
       unitB: { cost: 1500, health: 440 },
     };
 
-    const { result, rerender } = renderHook(
-      ({ formation }) => useFormationEvaluation(formation),
-      { initialProps: { formation: formation1 } }
-    );
+    const { result, rerender } = renderHook(({ formation }) => useFormationEvaluation(formation), {
+      initialProps: { formation: formation1 },
+    });
 
     const firstPatterns = result.current.evaluatedPatterns;
     const firstMinHealth = result.current.minimumDefeatHealth;
@@ -118,13 +117,11 @@ describe('useFormationEvaluation - 複数インスタンスの独立性', () => 
     expect(result2.current.evaluatedPatterns.length).toBeGreaterThan(0);
 
     // 異なる編成なので最短敗北耐久値が異なる
-    expect(result1.current.minimumDefeatHealth).not.toBe(
-      result2.current.minimumDefeatHealth
-    );
+    expect(result1.current.minimumDefeatHealth).not.toBe(result2.current.minimumDefeatHealth);
 
     // 総耐久値のリストが異なる（パターン数は同じでも内容が異なる）
-    const totalHealths1 = result1.current.evaluatedPatterns.map(p => p.totalHealth).sort();
-    const totalHealths2 = result2.current.evaluatedPatterns.map(p => p.totalHealth).sort();
+    const totalHealths1 = result1.current.evaluatedPatterns.map((p) => p.totalHealth).sort();
+    const totalHealths2 = result2.current.evaluatedPatterns.map((p) => p.totalHealth).sort();
     expect(totalHealths1).not.toEqual(totalHealths2);
   });
 
@@ -200,7 +197,7 @@ describe('useFormationEvaluation - 複数インスタンスの独立性', () => 
 
     const { result: result1, rerender: rerender1 } = renderHook(
       ({ formation }) => useFormationEvaluation(formation),
-      { initialProps: { formation: formation1 } }
+      { initialProps: { formation: formation1 } },
     );
     const { result: result2 } = renderHook(() => useFormationEvaluation(formation2));
 
@@ -212,9 +209,7 @@ describe('useFormationEvaluation - 複数インスタンスの独立性', () => 
     rerender1({ formation: updatedFormation1 });
 
     // result1 は更新されている
-    expect(result1.current.minimumDefeatHealth).not.toBe(
-      result2.current.minimumDefeatHealth
-    );
+    expect(result1.current.minimumDefeatHealth).not.toBe(result2.current.minimumDefeatHealth);
 
     // result2 は変化していない
     expect(result2.current.evaluatedPatterns).toBe(result2InitialPatterns);

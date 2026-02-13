@@ -1,11 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  faqs,
-  faqCategories,
-  getFaqsByCategory,
-  type FaqItem,
-  type FaqCategory,
-} from './faqs';
+import { faqs, faqCategories, getFaqsByCategory, type FaqItem, type FaqCategory } from './faqs';
 
 describe('faqs', () => {
   describe('FaqCategory', () => {

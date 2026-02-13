@@ -3,7 +3,13 @@
  */
 
 import type { Formation, EvaluatedPattern } from './types';
-import { checkEXActivation, evaluateAllPatterns, getTopPatterns, getEffectivePatterns, calculateComparisonMetrics } from './evaluators';
+import {
+  checkEXActivation,
+  evaluateAllPatterns,
+  getTopPatterns,
+  getEffectivePatterns,
+  calculateComparisonMetrics,
+} from './evaluators';
 import { calculateCostTransitions } from './calculator';
 
 describe('checkEXActivation', () => {
@@ -213,7 +219,7 @@ describe('getTopPatterns - 高コスト先落ちソート', () => {
     const sorted = getTopPatterns(patterns, formation);
 
     // 高コスト先落ち(A)パターンと低コスト先落ち(B)パターンが両方存在する
-    const firstKills = sorted.map(p => p.transitions[0].killedUnit);
+    const firstKills = sorted.map((p) => p.transitions[0].killedUnit);
     expect(firstKills).toContain('A');
     expect(firstKills).toContain('B');
 
@@ -233,7 +239,7 @@ describe('getTopPatterns - 高コスト先落ちソート', () => {
     const sorted = getTopPatterns(patterns, formation);
 
     // 高コスト先落ち(B)パターンと低コスト先落ち(A)パターンが両方存在する
-    const firstKills = sorted.map(p => p.transitions[0].killedUnit);
+    const firstKills = sorted.map((p) => p.transitions[0].killedUnit);
     expect(firstKills).toContain('B');
     expect(firstKills).toContain('A');
 
@@ -253,16 +259,20 @@ describe('getTopPatterns - 高コスト先落ちソート', () => {
     const sorted = getTopPatterns(patterns, formation);
 
     // 高コスト先落ち(A)パターンのグループ
-    const highCostFirstPatterns = sorted.filter(p => p.transitions[0].killedUnit === 'A');
+    const highCostFirstPatterns = sorted.filter((p) => p.transitions[0].killedUnit === 'A');
     // 低コスト先落ち(B)パターンのグループ
-    const lowCostFirstPatterns = sorted.filter(p => p.transitions[0].killedUnit === 'B');
+    const lowCostFirstPatterns = sorted.filter((p) => p.transitions[0].killedUnit === 'B');
 
     // 各グループ内で総耐久降順であることを確認
     for (let i = 0; i < highCostFirstPatterns.length - 1; i++) {
-      expect(highCostFirstPatterns[i].totalHealth).toBeGreaterThanOrEqual(highCostFirstPatterns[i + 1].totalHealth);
+      expect(highCostFirstPatterns[i].totalHealth).toBeGreaterThanOrEqual(
+        highCostFirstPatterns[i + 1].totalHealth,
+      );
     }
     for (let i = 0; i < lowCostFirstPatterns.length - 1; i++) {
-      expect(lowCostFirstPatterns[i].totalHealth).toBeGreaterThanOrEqual(lowCostFirstPatterns[i + 1].totalHealth);
+      expect(lowCostFirstPatterns[i].totalHealth).toBeGreaterThanOrEqual(
+        lowCostFirstPatterns[i + 1].totalHealth,
+      );
     }
   });
 
@@ -277,8 +287,8 @@ describe('getTopPatterns - 高コスト先落ちソート', () => {
     const withoutFormation = getTopPatterns(patterns);
 
     // 同コストなのでformationの有無でソート結果が変わらない
-    expect(withFormation.map(p => p.totalHealth)).toEqual(
-      withoutFormation.map(p => p.totalHealth)
+    expect(withFormation.map((p) => p.totalHealth)).toEqual(
+      withoutFormation.map((p) => p.totalHealth),
     );
   });
 });
@@ -329,9 +339,7 @@ describe('evaluateAllPatterns - 復活あり', () => {
     expect(top.length).toBeGreaterThan(0);
 
     // 復活ありパターンが含まれることを確認
-    const hasRevivalPattern = top.some(
-      (p) => p.transitions.some((t) => t.isPartialRevival)
-    );
+    const hasRevivalPattern = top.some((p) => p.transitions.some((t) => t.isPartialRevival));
     expect(hasRevivalPattern).toBe(true);
   });
 });
@@ -421,7 +429,7 @@ describe('calculateComparisonMetrics', () => {
     const topPatterns = getTopPatterns(patterns, formation);
     const metrics = calculateComparisonMetrics(topPatterns, 1360);
 
-    const manualCount = topPatterns.filter(p => p.canActivateEXOverLimit).length;
+    const manualCount = topPatterns.filter((p) => p.canActivateEXOverLimit).length;
     expect(metrics.exAvailableCount).toBe(manualCount);
   });
 
@@ -435,7 +443,7 @@ describe('calculateComparisonMetrics', () => {
     const topPatterns = getTopPatterns(patterns, formation);
     const metrics = calculateComparisonMetrics(topPatterns, 1360);
 
-    const healths = topPatterns.map(p => p.totalHealth);
+    const healths = topPatterns.map((p) => p.totalHealth);
     expect(metrics.totalHealthRange.min).toBe(Math.min(...healths));
     expect(metrics.totalHealthRange.max).toBe(Math.max(...healths));
   });
@@ -466,14 +474,16 @@ describe('calculateComparisonMetrics', () => {
   });
 
   test('パターンが1つだけの場合、min と max が同じになる', () => {
-    const singlePattern: EvaluatedPattern[] = [{
-      pattern: ['A'],
-      totalHealth: 2000,
-      overCostCount: 0,
-      canActivateEXOverLimit: true,
-      isEXActivationFailure: false,
-      transitions: [],
-    }];
+    const singlePattern: EvaluatedPattern[] = [
+      {
+        pattern: ['A'],
+        totalHealth: 2000,
+        overCostCount: 0,
+        canActivateEXOverLimit: true,
+        isEXActivationFailure: false,
+        transitions: [],
+      },
+    ];
 
     const metrics = calculateComparisonMetrics(singlePattern, 1000);
 

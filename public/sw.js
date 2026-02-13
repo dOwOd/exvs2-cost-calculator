@@ -12,7 +12,7 @@ const STATIC_ASSETS = [
   '/icons/icon-192x192.png',
   '/icons/icon-512x512.png',
   '/icons/icon-180x180.png',
-  '/icons/maskable-icon-512x512.png'
+  '/icons/maskable-icon-512x512.png',
 ];
 
 // インストール時: 静的アセットをキャッシュ
@@ -20,7 +20,7 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(STATIC_ASSETS);
-    })
+    }),
   );
   // 新しいService Workerをすぐにアクティブ化
   self.skipWaiting();
@@ -31,11 +31,9 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
-        cacheNames
-          .filter((name) => name !== CACHE_NAME)
-          .map((name) => caches.delete(name))
+        cacheNames.filter((name) => name !== CACHE_NAME).map((name) => caches.delete(name)),
       );
-    })
+    }),
   );
   // すべてのクライアントを制御
   self.clients.claim();
@@ -118,6 +116,16 @@ const isStaticAsset = (pathname) => {
     return true;
   }
   // その他の静的ファイル
-  const staticExtensions = ['.js', '.css', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.woff', '.woff2'];
+  const staticExtensions = [
+    '.js',
+    '.css',
+    '.png',
+    '.jpg',
+    '.jpeg',
+    '.gif',
+    '.svg',
+    '.woff',
+    '.woff2',
+  ];
   return staticExtensions.some((ext) => pathname.endsWith(ext));
 };

@@ -12,7 +12,7 @@ type HealthSelectorType = {
   selectedHealth: HealthType | null;
   onSelect: (health: HealthType) => void;
   testIdPrefix?: string;
-}
+};
 
 export const HealthSelector = ({
   cost,
@@ -104,9 +104,7 @@ export const HealthSelector = ({
     switch (event.key) {
       case 'ArrowDown':
         event.preventDefault();
-        setFocusedIndex((prev) =>
-          prev < healthOptions.length - 1 ? prev + 1 : prev
-        );
+        setFocusedIndex((prev) => (prev < healthOptions.length - 1 ? prev + 1 : prev));
         break;
       case 'ArrowUp':
         event.preventDefault();
@@ -133,7 +131,9 @@ export const HealthSelector = ({
       <button
         ref={buttonRef}
         type="button"
-        data-testid={testIdPrefix ? `health-selector-button-${testIdPrefix}` : 'health-selector-button'}
+        data-testid={
+          testIdPrefix ? `health-selector-button-${testIdPrefix}` : 'health-selector-button'
+        }
         onClick={handleToggle}
         onKeyDown={handleKeyDown}
         aria-expanded={isOpen}
@@ -154,7 +154,9 @@ export const HealthSelector = ({
       {isOpen && (
         <ul
           role="listbox"
-          data-testid={testIdPrefix ? `health-selector-listbox-${testIdPrefix}` : 'health-selector-listbox'}
+          data-testid={
+            testIdPrefix ? `health-selector-listbox-${testIdPrefix}` : 'health-selector-listbox'
+          }
           class={`absolute z-40 w-full bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded shadow-lg max-h-60 overflow-auto ${
             dropdownDirection === 'up' ? 'bottom-full mb-1' : 'top-full mt-1'
           }`}
@@ -163,7 +165,9 @@ export const HealthSelector = ({
             <li
               key={health}
               role="option"
-              data-testid={testIdPrefix ? `health-option-${testIdPrefix}-${health}` : `health-option-${health}`}
+              data-testid={
+                testIdPrefix ? `health-option-${testIdPrefix}-${health}` : `health-option-${health}`
+              }
               aria-selected={health === selectedHealth}
               onClick={() => handleSelect(health)}
               onMouseEnter={(e) => handleMouseEnter(health, e as unknown as MouseEvent)}
@@ -172,8 +176,8 @@ export const HealthSelector = ({
                 health === selectedHealth
                   ? 'bg-blue-600 text-white'
                   : index === focusedIndex
-                  ? 'bg-slate-200 dark:bg-slate-600 text-slate-800 dark:text-slate-200'
-                  : 'text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-600'
+                    ? 'bg-slate-200 dark:bg-slate-600 text-slate-800 dark:text-slate-200'
+                    : 'text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-600'
               }`}
             >
               {health}
@@ -184,12 +188,8 @@ export const HealthSelector = ({
 
       {/* ポップアップ */}
       {isOpen && hoveredHealth !== null && (
-        <HealthDropdownPopup
-          cost={cost}
-          health={hoveredHealth}
-          position={popupPosition}
-        />
+        <HealthDropdownPopup cost={cost} health={hoveredHealth} position={popupPosition} />
       )}
     </div>
   );
-}
+};

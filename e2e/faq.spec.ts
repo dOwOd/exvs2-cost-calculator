@@ -7,8 +7,7 @@
 import { test, expect } from '@playwright/test';
 
 /** FAQページのメインコンテンツ領域を取得（Firefox デバッグUIとの衝突を回避） */
-const getFaqContent = (page: import('@playwright/test').Page) =>
-  page.locator('.container.mx-auto');
+const getFaqContent = (page: import('@playwright/test').Page) => page.locator('.container.mx-auto');
 
 test.describe('FAQページ', () => {
   test.beforeEach(async ({ page }) => {
@@ -103,7 +102,9 @@ test.describe('FAQページ', () => {
       await firstDetails.locator('summary').click();
 
       // 回答テキストが含まれていることを確認
-      await expect(firstDetails.locator('p').first()).toContainText('EXVS2では、2機編成のチームが合計6000のコストを共有する');
+      await expect(firstDetails.locator('p').first()).toContainText(
+        'EXVS2では、2機編成のチームが合計6000のコストを共有する',
+      );
     });
 
     test('質問テキストがsummary内に表示される', async ({ page }) => {
@@ -134,7 +135,10 @@ test.describe('FAQページ', () => {
       const link = exBurstDetails.locator('a[target="_blank"]');
       await expect(link).toBeVisible();
       await expect(link).toContainText('公式サイト - EXバースト解説');
-      await expect(link).toHaveAttribute('href', 'https://gundam-vs.jp/extreme/ac2ib/howto/rules/ex_burst/');
+      await expect(link).toHaveAttribute(
+        'href',
+        'https://gundam-vs.jp/extreme/ac2ib/howto/rules/ex_burst/',
+      );
     });
 
     test('外部リンクのないFAQ項目にはリンクが存在しない', async ({ page }) => {
@@ -189,7 +193,9 @@ test.describe('FAQページ', () => {
             expect(firstFaq['@type']).toBe('Question');
             expect(firstFaq.name).toBe('チーム共有コスト6000とは？');
             expect(firstFaq.acceptedAnswer['@type']).toBe('Answer');
-            expect(firstFaq.acceptedAnswer.text).toContain('チーム全体で1つの残コストを管理する仕組み');
+            expect(firstFaq.acceptedAnswer.text).toContain(
+              'チーム全体で1つの残コストを管理する仕組み',
+            );
           }
         }
       }

@@ -20,7 +20,7 @@ type PatternCardType = {
   showScrollHint?: boolean;
   isExpanded: boolean;
   onToggle: () => void;
-}
+};
 
 export const PatternCard = ({
   pattern,
@@ -45,13 +45,12 @@ export const PatternCard = ({
 
   // EX発動可能判定用のminCost計算
   const minCost =
-    formation.unitA && formation.unitB
-      ? Math.min(formation.unitA.cost, formation.unitB.cost)
-      : 0;
+    formation.unitA && formation.unitB ? Math.min(formation.unitA.cost, formation.unitB.cost) : 0;
 
-  const healthDiff = maxTotalHealth > 0 && pattern.totalHealth < maxTotalHealth
-    ? maxTotalHealth - pattern.totalHealth
-    : 0;
+  const healthDiff =
+    maxTotalHealth > 0 && pattern.totalHealth < maxTotalHealth
+      ? maxTotalHealth - pattern.totalHealth
+      : 0;
 
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -85,12 +84,17 @@ export const PatternCard = ({
     <div
       ref={cardRef}
       data-testid={`pattern-card-${rank}`}
-      class={`bg-slate-50 dark:bg-slate-800 p-3 sm:p-4 rounded-lg border-l-4 shadow-sm dark:shadow-none ${pattern.isEXActivationFailure ? 'border-red-500' : 'border-blue-500'
-        }`}
+      class={`bg-slate-50 dark:bg-slate-800 p-3 sm:p-4 rounded-lg border-l-4 shadow-sm dark:shadow-none ${
+        pattern.isEXActivationFailure ? 'border-red-500' : 'border-blue-500'
+      }`}
     >
       {/* 画像エクスポート用: 編成情報ヘッダー（通常時非表示） */}
-      <div data-export-only class="mb-2 px-1 py-1.5 bg-slate-200 dark:bg-slate-700 rounded text-sm text-slate-700 dark:text-slate-300">
-        編成: A コスト{formation.unitA?.cost ?? '-'}/耐久{formation.unitA?.health ?? '-'} | B コスト{formation.unitB?.cost ?? '-'}/耐久{formation.unitB?.health ?? '-'}
+      <div
+        data-export-only
+        class="mb-2 px-1 py-1.5 bg-slate-200 dark:bg-slate-700 rounded text-sm text-slate-700 dark:text-slate-300"
+      >
+        編成: A コスト{formation.unitA?.cost ?? '-'}/耐久{formation.unitA?.health ?? '-'} | B コスト
+        {formation.unitB?.cost ?? '-'}/耐久{formation.unitB?.health ?? '-'}
       </div>
 
       {/* ランクとパターン（クリック可能ヘッダー） */}
@@ -114,30 +118,45 @@ export const PatternCard = ({
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
-          <span data-testid={`pattern-rank-${rank}`} class="text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-400">#{rank}</span>
-          <div data-testid={`pattern-string-${rank}`} class="text-lg sm:text-2xl font-mono flex items-center gap-1 sm:gap-2">
+          <span
+            data-testid={`pattern-rank-${rank}`}
+            class="text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-400"
+          >
+            #{rank}
+          </span>
+          <div
+            data-testid={`pattern-string-${rank}`}
+            class="text-lg sm:text-2xl font-mono flex items-center gap-1 sm:gap-2"
+          >
             {actualPattern.map((unit, index) => (
               <>
                 <span
-                  class={unit === 'A' ? 'text-blue-600 dark:text-blue-400' : 'text-green-600 dark:text-green-400'}
+                  class={
+                    unit === 'A'
+                      ? 'text-blue-600 dark:text-blue-400'
+                      : 'text-green-600 dark:text-green-400'
+                  }
                   key={`${index}-unit`}
                 >
                   {unit}
                 </span>
                 {index < actualPattern.length - 1 && (
-                  <span class="text-slate-400 dark:text-slate-500" key={`${index}-arrow`}>→</span>
+                  <span class="text-slate-400 dark:text-slate-500" key={`${index}-arrow`}>
+                    →
+                  </span>
                 )}
               </>
             ))}
           </div>
           {/* 折りたたみ時の総耐久サマリー */}
           {!isExpanded && (
-            <span data-testid={`pattern-summary-health-${rank}`} class="text-sm sm:text-base text-slate-500 dark:text-slate-400 ml-2">
+            <span
+              data-testid={`pattern-summary-health-${rank}`}
+              class="text-sm sm:text-base text-slate-500 dark:text-slate-400 ml-2"
+            >
               総耐久 {pattern.totalHealth}
               {healthDiff > 0 && (
-                <span class="text-red-500 dark:text-red-400 ml-1">
-                  (最大比 -{healthDiff})
-                </span>
+                <span class="text-red-500 dark:text-red-400 ml-1">(最大比 -{healthDiff})</span>
               )}
             </span>
           )}
@@ -164,8 +183,16 @@ export const PatternCard = ({
                   const costA = formation.unitA?.cost ?? 0;
                   const costB = formation.unitB?.cost ?? 0;
                   const shareText = `EXVS2 パターン#${rank} (${costA}+${costB}編成)の撃墜順パターンを確認！`;
-                  const params = new URLSearchParams({ text: shareText, url: window.location.href, hashtags: 'EXVS2IB,イニブ' });
-                  window.open(`https://twitter.com/intent/tweet?${params.toString()}`, '_blank', 'noopener,noreferrer,width=600,height=400');
+                  const params = new URLSearchParams({
+                    text: shareText,
+                    url: window.location.href,
+                    hashtags: 'EXVS2IB,イニブ',
+                  });
+                  window.open(
+                    `https://twitter.com/intent/tweet?${params.toString()}`,
+                    '_blank',
+                    'noopener,noreferrer,width=600,height=400',
+                  );
                 }}
                 title="Xでシェア"
                 class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
@@ -182,7 +209,11 @@ export const PatternCard = ({
                   const costA = formation.unitA?.cost ?? 0;
                   const costB = formation.unitB?.cost ?? 0;
                   const shareText = `EXVS2 パターン#${rank} (${costA}+${costB}編成)の撃墜順パターンを確認！ ${window.location.href}`;
-                  window.open(`https://line.me/R/share?text=${encodeURIComponent(shareText)}`, '_blank', 'noopener,noreferrer,width=600,height=400');
+                  window.open(
+                    `https://line.me/R/share?text=${encodeURIComponent(shareText)}`,
+                    '_blank',
+                    'noopener,noreferrer,width=600,height=400',
+                  );
                 }}
                 title="LINEでシェア"
                 class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
@@ -202,12 +233,33 @@ export const PatternCard = ({
                 >
                   {isExporting ? (
                     <svg class="w-4 h-4 sm:w-5 sm:h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      <circle
+                        class="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        class="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                      />
                     </svg>
                   ) : (
-                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                    <svg
+                      class="w-4 h-4 sm:w-5 sm:h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+                      />
                     </svg>
                   )}
                 </button>
@@ -222,7 +274,10 @@ export const PatternCard = ({
           {/* 評価指標 */}
           <div class="mt-3 mb-3">
             <div class="bg-slate-100 dark:bg-slate-700 p-2 sm:p-3 rounded">
-              <div data-testid={`pattern-total-health-${rank}`} class="flex flex-wrap items-baseline justify-center gap-1 sm:gap-2">
+              <div
+                data-testid={`pattern-total-health-${rank}`}
+                class="flex flex-wrap items-baseline justify-center gap-1 sm:gap-2"
+              >
                 <span class="text-sm sm:text-base text-slate-600 dark:text-slate-400 flex items-center">
                   総耐久
                   <InfoIcon tooltip="リスポーン時の耐久変動を考慮した真の総耐久値。高いほど長く戦える。" />
@@ -243,7 +298,10 @@ export const PatternCard = ({
           <div class="relative">
             {/* スクロールヒント（最初のカードのみ、スクロール前のみ表示、画像から除外） */}
             {showScrollHint && !hasScrolled && (
-              <div data-export-exclude class="lg:hidden flex items-center justify-end gap-1 text-xs text-slate-500 dark:text-slate-400 mb-1">
+              <div
+                data-export-exclude
+                class="lg:hidden flex items-center justify-end gap-1 text-xs text-slate-500 dark:text-slate-400 mb-1"
+              >
                 <span>スワイプで全体表示</span>
               </div>
             )}
@@ -255,8 +313,12 @@ export const PatternCard = ({
               <table class="w-full text-sm sm:text-lg min-w-[500px]">
                 <thead>
                   <tr class="border-b border-slate-300 dark:border-slate-600">
-                    <th class="text-left py-2 px-1 sm:px-2 text-slate-600 dark:text-slate-400 whitespace-nowrap">撃墜順</th>
-                    <th class="text-left py-2 px-1 sm:px-2 text-slate-600 dark:text-slate-400">対象</th>
+                    <th class="text-left py-2 px-1 sm:px-2 text-slate-600 dark:text-slate-400 whitespace-nowrap">
+                      撃墜順
+                    </th>
+                    <th class="text-left py-2 px-1 sm:px-2 text-slate-600 dark:text-slate-400">
+                      対象
+                    </th>
                     <th class="text-right py-2 px-1 sm:px-2 text-slate-600 dark:text-slate-400">
                       <span class="flex items-center justify-end whitespace-nowrap">
                         <span class="lg:hidden">残コスト</span>
@@ -268,13 +330,19 @@ export const PatternCard = ({
                       <span class="flex items-center justify-end whitespace-nowrap">
                         <span class="lg:hidden">耐久</span>
                         <span class="hidden lg:inline">リスポーン耐久</span>
-                        <InfoIcon tooltip="撃墜後のリスポーン時の耐久値。コストオーバー時はフル耐久からの減少量と減少割合を併記。" align="right" />
+                        <InfoIcon
+                          tooltip="撃墜後のリスポーン時の耐久値。コストオーバー時はフル耐久からの減少量と減少割合を併記。"
+                          align="right"
+                        />
                       </span>
                     </th>
                     <th class="text-center py-2 px-1 sm:px-2 text-slate-600 dark:text-slate-400">
                       <span class="flex items-center justify-center">
                         状態
-                        <InfoIcon tooltip="✓=通常 ⚠️=コストオーバー 🔄=復活あり 💀=敗北" align="right" />
+                        <InfoIcon
+                          tooltip="✓=通常 ⚠️=コストオーバー 🔄=復活あり 💀=敗北"
+                          align="right"
+                        />
                       </span>
                     </th>
                   </tr>
@@ -283,20 +351,26 @@ export const PatternCard = ({
                   {pattern.transitions.map((trans) => (
                     <tr
                       key={trans.killCount}
-                      class={`border-b border-slate-200 dark:border-slate-700 ${trans.isDefeat
-                        ? 'bg-red-100 dark:bg-red-900/40'
-                        : trans.isPartialRevival
-                          ? 'bg-purple-50 dark:bg-purple-900/20'
-                          : trans.isOverCost
-                            ? 'bg-yellow-50 dark:bg-yellow-900/20'
-                            : ''
-                        }`}
+                      class={`border-b border-slate-200 dark:border-slate-700 ${
+                        trans.isDefeat
+                          ? 'bg-red-100 dark:bg-red-900/40'
+                          : trans.isPartialRevival
+                            ? 'bg-purple-50 dark:bg-purple-900/20'
+                            : trans.isOverCost
+                              ? 'bg-yellow-50 dark:bg-yellow-900/20'
+                              : ''
+                      }`}
                     >
-                      <td class="py-2 px-1 sm:px-2 text-slate-700 dark:text-slate-300">{trans.killCount}</td>
+                      <td class="py-2 px-1 sm:px-2 text-slate-700 dark:text-slate-300">
+                        {trans.killCount}
+                      </td>
                       <td class="py-2 px-1 sm:px-2">
                         <span
-                          class={`font-semibold ${trans.killedUnit === 'A' ? 'text-blue-600 dark:text-blue-400' : 'text-green-600 dark:text-green-400'
-                            }`}
+                          class={`font-semibold ${
+                            trans.killedUnit === 'A'
+                              ? 'text-blue-600 dark:text-blue-400'
+                              : 'text-green-600 dark:text-green-400'
+                          }`}
                         >
                           {trans.killedUnit}
                         </span>
@@ -308,14 +382,15 @@ export const PatternCard = ({
                           </div>
                           <div class="bg-slate-200 dark:bg-slate-700 rounded-full h-2 sm:h-3 overflow-hidden">
                             <div
-                              class={`h-full transition-all ${trans.remainingCost <= minCost && trans.remainingCost > 0
-                                ? 'bg-red-500'
-                                : trans.remainingCost <= 3000 && trans.remainingCost > 0
-                                  ? 'bg-orange-500'
-                                  : trans.isOverCost
-                                    ? 'bg-yellow-500'
-                                    : 'bg-blue-500'
-                                }`}
+                              class={`h-full transition-all ${
+                                trans.remainingCost <= minCost && trans.remainingCost > 0
+                                  ? 'bg-red-500'
+                                  : trans.remainingCost <= 3000 && trans.remainingCost > 0
+                                    ? 'bg-orange-500'
+                                    : trans.isOverCost
+                                      ? 'bg-yellow-500'
+                                      : 'bg-blue-500'
+                              }`}
                               style={`width: ${Math.max(0, (trans.remainingCost / 6000) * 100)}%`}
                             />
                           </div>
@@ -327,26 +402,36 @@ export const PatternCard = ({
                         ) : (
                           <div class="flex flex-col items-end">
                             <span class="font-mono">{trans.respawnHealth}</span>
-                            {trans.isOverCost && (() => {
-                              const fullHealth = trans.killedUnit === 'A' ? (formation.unitA?.health ?? 0) : (formation.unitB?.health ?? 0);
-                              const reduction = fullHealth - trans.respawnHealth;
-                              const reductionPercent = Math.floor((reduction / fullHealth) * 100);
-                              return (
-                                <span class="text-xs sm:text-sm text-red-500 dark:text-red-400">
-                                  (-{reduction} / -{reductionPercent}%)
-                                </span>
-                              );
-                            })()}
+                            {trans.isOverCost &&
+                              (() => {
+                                const fullHealth =
+                                  trans.killedUnit === 'A'
+                                    ? (formation.unitA?.health ?? 0)
+                                    : (formation.unitB?.health ?? 0);
+                                const reduction = fullHealth - trans.respawnHealth;
+                                const reductionPercent = Math.floor((reduction / fullHealth) * 100);
+                                return (
+                                  <span class="text-xs sm:text-sm text-red-500 dark:text-red-400">
+                                    (-{reduction} / -{reductionPercent}%)
+                                  </span>
+                                );
+                              })()}
                           </div>
                         )}
                       </td>
                       <td class="py-2 px-1 sm:px-2 text-center whitespace-nowrap">
                         {trans.isDefeat ? (
-                          <span class="text-red-600 dark:text-red-400 font-semibold">💀 <span class="hidden sm:inline">敗北</span></span>
+                          <span class="text-red-600 dark:text-red-400 font-semibold">
+                            💀 <span class="hidden sm:inline">敗北</span>
+                          </span>
                         ) : trans.isPartialRevival ? (
-                          <span class="text-purple-600 dark:text-purple-400 font-semibold">🔄 <span class="hidden sm:inline">復活あり</span></span>
+                          <span class="text-purple-600 dark:text-purple-400 font-semibold">
+                            🔄 <span class="hidden sm:inline">復活あり</span>
+                          </span>
                         ) : trans.isOverCost ? (
-                          <span class="text-yellow-600 dark:text-yellow-400 font-semibold">⚠️ <span class="hidden sm:inline">コストオーバー</span></span>
+                          <span class="text-yellow-600 dark:text-yellow-400 font-semibold">
+                            ⚠️ <span class="hidden sm:inline">コストオーバー</span>
+                          </span>
                         ) : (
                           <span class="text-green-600 dark:text-green-400">✓</span>
                         )}
@@ -361,4 +446,4 @@ export const PatternCard = ({
       )}
     </div>
   );
-}
+};

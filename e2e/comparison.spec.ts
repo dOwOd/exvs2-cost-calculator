@@ -15,7 +15,7 @@ const selectComparisonFormation = async (
   costA: number,
   healthA: number,
   costB: number,
-  healthB: number
+  healthB: number,
 ) => {
   const container = page.getByTestId(`comparison-formation-${slotIndex}`);
 
@@ -26,7 +26,9 @@ const selectComparisonFormation = async (
   // A機: 耐久値選択
   await container.getByTestId('health-selector-button-a').click();
   await expect(container.getByTestId('health-selector-listbox-a')).toBeVisible();
-  await container.getByTestId(`health-option-a-${healthA}`).evaluate((el) => (el as HTMLElement).click());
+  await container
+    .getByTestId(`health-option-a-${healthA}`)
+    .evaluate((el) => (el as HTMLElement).click());
 
   // B機: コスト選択
   await container.getByTestId(`cost-button-b-${costB}`).click();
@@ -35,7 +37,9 @@ const selectComparisonFormation = async (
   // B機: 耐久値選択
   await container.getByTestId('health-selector-button-b').click();
   await expect(container.getByTestId('health-selector-listbox-b')).toBeVisible();
-  await container.getByTestId(`health-option-b-${healthB}`).evaluate((el) => (el as HTMLElement).click());
+  await container
+    .getByTestId(`health-option-b-${healthB}`)
+    .evaluate((el) => (el as HTMLElement).click());
 };
 
 test.describe('比較モード', () => {

@@ -155,10 +155,7 @@ describe('calculateCostTransitions', () => {
     };
 
     test('A→A→A→A: 4回撃墜可能', () => {
-      const transitions = calculateCostTransitions(
-        ['A', 'A', 'A', 'A'],
-        formation
-      );
+      const transitions = calculateCostTransitions(['A', 'A', 'A', 'A'], formation);
 
       expect(transitions).toHaveLength(4);
 
@@ -213,10 +210,7 @@ describe('calculateTotalHealth', () => {
       unitB: { cost: 1500, health: 520 },
     };
 
-    const transitions = calculateCostTransitions(
-      ['A', 'A', 'A', 'A'],
-      formation
-    );
+    const transitions = calculateCostTransitions(['A', 'A', 'A', 'A'], formation);
     const totalHealth = calculateTotalHealth(formation, transitions);
 
     // 初期耐久: 520 + 520 = 1040
@@ -352,10 +346,7 @@ describe('calculateCostTransitions - 復活あり', () => {
     };
 
     test('A→A: 1回目で残0→復活(耐久100)、2回目で敗北', () => {
-      const transitions = calculateCostTransitions(
-        ['A', 'A', 'A'],
-        formation
-      );
+      const transitions = calculateCostTransitions(['A', 'A', 'A'], formation);
 
       expect(transitions).toHaveLength(3);
 
@@ -414,10 +405,7 @@ describe('calculateCostTransitions - 復活あり', () => {
     };
 
     test('A→B→A→B: 3回目でA復活、4回目でB復活、5回目で敗北', () => {
-      const transitions = calculateCostTransitions(
-        ['A', 'B', 'A', 'B', 'A'],
-        formation
-      );
+      const transitions = calculateCostTransitions(['A', 'B', 'A', 'B', 'A'], formation);
 
       // 1回目: A撃墜 → 残3500
       expect(transitions[0]).toMatchObject({
@@ -488,10 +476,7 @@ describe('calculateTotalHealth - 復活あり', () => {
       unitB: { cost: 3000, health: 680 },
     };
 
-    const transitions = calculateCostTransitions(
-      ['A', 'A', 'A'],
-      formation
-    );
+    const transitions = calculateCostTransitions(['A', 'A', 'A'], formation);
     const totalHealth = calculateTotalHealth(formation, transitions);
 
     // 初期耐久: 680 + 680 = 1360

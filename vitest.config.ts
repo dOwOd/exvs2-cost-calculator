@@ -5,10 +5,7 @@ export default defineConfig({
   plugins: [preact()],
   test: {
     globals: true,
-    include: [
-      '**/__tests__/**/*.{ts,tsx}',
-      '**/?(*.)+(spec|test).{ts,tsx}',
-    ],
+    include: ['**/__tests__/**/*.{ts,tsx}', '**/?(*.)+(spec|test).{ts,tsx}'],
     exclude: ['node_modules', 'dist', 'e2e'],
     coverage: {
       include: ['src/**/*.ts'],

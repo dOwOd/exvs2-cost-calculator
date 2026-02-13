@@ -34,6 +34,10 @@
 
 ```bash
 pnpm install && pnpm dev   # 開発開始
+pnpm lint                  # ESLint実行
+pnpm lint:fix              # ESLint自動修正
+pnpm format                # Prettierフォーマット適用
+pnpm format:check          # フォーマット差分チェック
 pnpm test                  # ユニットテスト実行（Vitest）←コミット前に必須
 pnpm build && pnpm test:e2e # E2Eテスト実行（Playwright）
 pnpm build                 # 本番ビルド
@@ -53,6 +57,7 @@ git worktree remove ../exvs2-worktree  # 後片付け
 ## ファイル構造
 
 ### コンポーネント（src/components/）
+
 - **Header.astro** - サイト共通ヘッダー（ロゴ、ナビリンク、ThemeToggle統合、現在ページハイライト）
 - **ErrorBoundary.tsx** - エラーバウンダリ（Preact class component、フォールバックUI表示）
 - **Calculator.tsx** - メインコンポーネント（状態管理、通常/比較モード切替、編成→計算→結果の統括、ErrorBoundaryでラップ）
@@ -73,6 +78,7 @@ git worktree remove ../exvs2-worktree  # 後片付け
 - Footer.tsx - フッター（Cookie設定リセットボタン含む）
 
 ### ロジック（src/lib/）
+
 - **calculator.ts** - コスト計算（パターン生成、コスト推移計算、総耐久計算）
 - **evaluators.ts** - パターン評価（全パターン評価、統計計算、コメント生成、比較指標計算）
 - **types.ts** - 型定義（CostType, Formation, EvaluatedPattern, ComparisonMetrics, SavedFormation 等）
@@ -85,14 +91,17 @@ git worktree remove ../exvs2-worktree  # 後片付け
 - imageExport.ts - 画像エクスポート（html-to-image によるPNG生成、Web Share共有）
 
 ### データ（src/data/）
+
 - **overCostHealthTable.ts** - コストオーバー時の復帰耐久値テーブル
 - mobileSuitsData.ts - 機体データ（名前・コスト・耐久値）
 - faqs.ts - FAQデータ（カテゴリ別グルーピング、型定義、ヘルパー関数）
 
 ### レイアウト（src/layouts/）
+
 - **BaseLayout.astro** - 共通レイアウト（head共通要素、OGP、テーマ初期化、named slot `head` で拡張可能）
 
 ### ページ（src/pages/）
+
 - **index.astro** - トップページ（Calculator + 静的SEOコンテンツ + Footer + WebApplication JSON-LD）
 - **guide.astro** - コスト管理ガイドページ（BreadcrumbList JSON-LD）
 - **faq.astro** - よくある質問ページ（FAQPage + BreadcrumbList JSON-LD）
@@ -101,15 +110,21 @@ git worktree remove ../exvs2-worktree  # 後片付け
 > **注意**: 新しいページを追加した場合は、BaseLayout を使用し、JSON-LD 構造化データの追加・更新も検討すること
 
 ### スクリプト（scripts/）
+
 - **generate-ogp.mjs** - OGP画像生成（satori + @resvg/resvg-js、`node scripts/generate-ogp.mjs` で実行）
 
 ### 設定・静的ファイル
+
 - **astro.config.mjs** - Astro設定（site, integrations: preact + sitemap）
+- **eslint.config.js** - ESLint設定（flat config、TypeScript + Astro + Prettier連携）
+- **.prettierrc** - Prettier設定（セミコロン、シングルクォート、100文字幅）
+- **.husky/pre-commit** - pre-commitフック（lint-staged実行）
 - **.node-version** - Node.js バージョン一元管理（CI・Docker・ローカル共通）
 - **public/robots.txt** - クローラー指示（Sitemap URL含む）
 - **public/ogp.png** - OGP画像（1200x630px、generate-ogp.mjsで生成）
 
 ### CI/CD（.github/workflows/）
+
 - **ci.yml** - ユニットテスト（Vitest）・型チェック・ビルド検証（Node: `.node-version` 参照）
 - **e2e.yml** - E2Eテスト（Playwright、非WebKit統合+WebKit個別の4並列、ブラウザキャッシュ付き、Node: `.node-version` 参照）
 - **storybook.yml** - Storybookビルド（Node: `.node-version` 参照）
@@ -117,6 +132,7 @@ git worktree remove ../exvs2-worktree  # 後片付け
 > **注意**: Node.js バージョンは `.node-version` で一元管理。ワークフローでは `node-version-file: '.node-version'` を使用すること
 
 ### Docker
+
 - **Dockerfile** - マルチステージビルド（Node: ARG NODE_MAJOR、非rootユーザー）
 - **docker-compose.yml** - app（本番）/ dev（開発）の2サービス構成
 
@@ -136,9 +152,9 @@ PatternList → PatternCard（各パターン表示）
 
 詳細は `.claude/rules/` を参照（対象ファイル編集時に自動読み込み）
 
-- **開発**: development.md（src/**/* 編集時）
-- **ゲーム仕様**: specifications.md（src/lib/**/*.ts 編集時）
-- **UI実装**: ui-patterns.md（src/components/**/*.tsx 編集時）
+- **開発**: development.md（src/\*_/_ 編集時）
+- **ゲーム仕様**: specifications.md（src/lib/\*_/_.ts 編集時）
+- **UI実装**: ui-patterns.md（src/components/\*_/_.tsx 編集時）
 - **よくある間違い**: common-mistakes.md
 - **Git操作**: git-workflow.md（Git コマンド実行時）
 - **ゲーム戦術**: game-tactics.md（パターン評価・コメント生成時）
@@ -171,6 +187,7 @@ PatternList → PatternCard（各パターン表示）
 
 ## チェックリスト
 
+- [ ] ESLintエラーなし (`pnpm lint`)←コミット前
 - [ ] ユニットテスト追加/更新 (`pnpm test`)←コミット前
 - [ ] コミット規約に従う
 - [ ] PR作成（`Closes #番号`でIssue紐づけ）
@@ -198,8 +215,9 @@ PatternList → PatternCard（各パターン表示）
 ### 現状
 
 - **CI**: ユニットテスト（Vitest）、型チェック（tsc）、ビルド検証、E2Eテスト（Playwright、PRはnon-webkitのみ）、Storybookビルド（PRのみ）
+- **ローカル品質ゲート**: ESLint + Prettier（Husky + lint-staged でpre-commitフック実行）
 - **最適化**: concurrency（連続プッシュ時の自動キャンセル）、paths-ignore
-- **未導入**: lint、依存関係自動更新、Lighthouse
+- **未導入**: 依存関係自動更新、Lighthouse
 
 ## ドキュメント更新確認
 

@@ -117,7 +117,10 @@ test.describe('ヘッダーナビゲーション', () => {
       const nav = page.locator('nav[aria-label="メインナビゲーション"]');
 
       // トップページ: 計算機がハイライト
-      await expect(nav.locator('a', { hasText: 'コスト計算' })).toHaveAttribute('aria-current', 'page');
+      await expect(nav.locator('a', { hasText: 'コスト計算' })).toHaveAttribute(
+        'aria-current',
+        'page',
+      );
 
       // ガイドページに遷移
       await nav.locator('a', { hasText: 'ガイド' }).click();
@@ -125,7 +128,10 @@ test.describe('ヘッダーナビゲーション', () => {
 
       // ガイドがハイライトに変わる
       await expect(nav.locator('a', { hasText: 'ガイド' })).toHaveAttribute('aria-current', 'page');
-      await expect(nav.locator('a', { hasText: 'コスト計算' })).not.toHaveAttribute('aria-current', 'page');
+      await expect(nav.locator('a', { hasText: 'コスト計算' })).not.toHaveAttribute(
+        'aria-current',
+        'page',
+      );
     });
   });
 
@@ -169,7 +175,9 @@ test.describe('ヘッダーナビゲーション', () => {
 
       // もう一度切り替えて元に戻る
       await themeToggle.click();
-      const afterSecondToggleHasDark = await htmlElement.evaluate((el) => el.classList.contains('dark'));
+      const afterSecondToggleHasDark = await htmlElement.evaluate((el) =>
+        el.classList.contains('dark'),
+      );
       expect(afterSecondToggleHasDark).toBe(initialHasDark);
     });
 
@@ -251,9 +259,13 @@ test.describe('ヘッダーナビゲーション', () => {
       expect(box!.height).toBeGreaterThanOrEqual(36);
 
       // クリックでテーマが切り替わる
-      const initialHasDark = await page.locator('html').evaluate((el) => el.classList.contains('dark'));
+      const initialHasDark = await page
+        .locator('html')
+        .evaluate((el) => el.classList.contains('dark'));
       await themeToggle.click();
-      const afterToggleHasDark = await page.locator('html').evaluate((el) => el.classList.contains('dark'));
+      const afterToggleHasDark = await page
+        .locator('html')
+        .evaluate((el) => el.classList.contains('dark'));
       expect(afterToggleHasDark).toBe(!initialHasDark);
     });
   });

@@ -15,7 +15,7 @@ type FormationPanelType = {
   unitB: UnitConfig | null;
   onUnitAChange: (unit: UnitConfig | null) => void;
   onUnitBChange: (unit: UnitConfig | null) => void;
-}
+};
 
 export const FormationPanel = ({
   unitA,
@@ -106,7 +106,10 @@ export const FormationPanel = ({
   return (
     <div class="space-y-4 md:space-y-6">
       {/* 機体A */}
-      <div data-testid="formation-panel-a" class="bg-slate-50 dark:bg-slate-800 p-3 sm:p-4 rounded-lg shadow-sm dark:shadow-none border border-slate-200 dark:border-transparent">
+      <div
+        data-testid="formation-panel-a"
+        class="bg-slate-50 dark:bg-slate-800 p-3 sm:p-4 rounded-lg shadow-sm dark:shadow-none border border-slate-200 dark:border-transparent"
+      >
         <h3 class="text-lg font-bold text-blue-600 dark:text-blue-400 mb-3">機体A</h3>
         <div class="space-y-3">
           <div>
@@ -154,7 +157,10 @@ export const FormationPanel = ({
       </div>
 
       {/* 機体B */}
-      <div data-testid="formation-panel-b" class="bg-slate-50 dark:bg-slate-800 p-3 sm:p-4 rounded-lg shadow-sm dark:shadow-none border border-slate-200 dark:border-transparent">
+      <div
+        data-testid="formation-panel-b"
+        class="bg-slate-50 dark:bg-slate-800 p-3 sm:p-4 rounded-lg shadow-sm dark:shadow-none border border-slate-200 dark:border-transparent"
+      >
         <h3 class="text-lg font-bold text-green-600 dark:text-green-400 mb-3">機体B</h3>
         <div class="space-y-3">
           <div>
@@ -202,4 +208,4 @@ export const FormationPanel = ({
       </div>
     </div>
   );
-}
+};
