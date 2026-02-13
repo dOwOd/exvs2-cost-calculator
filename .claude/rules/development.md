@@ -15,10 +15,12 @@
 ### コミット前
 
 ```bash
-pnpm test
+pnpm lint && pnpm test
 ```
 
-- すべてのユニットテストがパスすることを必ず確認
+- ESLintエラーがないことを確認
+- すべてのユニットテストがパスすることを確認
+- pre-commitフック（Husky + lint-staged）がコミット時に自動実行される
 
 ## コーディングスタイル
 
@@ -29,6 +31,7 @@ pnpm test
   - 例: ジェネレーター関数、メソッドオーバーライドなど
 
 **推奨**:
+
 ```typescript
 const calculateCost = (a: number, b: number): number => {
   return a + b;
@@ -36,11 +39,19 @@ const calculateCost = (a: number, b: number): number => {
 ```
 
 **非推奨**:
+
 ```typescript
 function calculateCost(a: number, b: number): number {
   return a + b;
 }
 ```
+
+## コードフォーマット
+
+- **Prettier** で統一フォーマット（`pnpm format` で適用、`pnpm format:check` で確認）
+- **ESLint** で静的解析（`pnpm lint` で確認、`pnpm lint:fix` で自動修正）
+- Prettierの設定: セミコロンあり、シングルクォート、末尾カンマ、100文字折り返し
+- テスト・Storiesファイルでは `no-explicit-any` と `no-unused-vars` を許容
 
 ## 実装の注意点
 
