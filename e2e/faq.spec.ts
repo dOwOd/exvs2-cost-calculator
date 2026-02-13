@@ -21,7 +21,7 @@ test.describe('FAQページ', () => {
     });
 
     test('5つのカテゴリ見出しが表示される', async ({ page }) => {
-      const categoryHeadings = getFaqContent(page).locator('h2');
+      const categoryHeadings = getFaqContent(page).locator('section.mb-8 > h2');
       await expect(categoryHeadings).toHaveCount(5);
 
       await expect(categoryHeadings.nth(0)).toHaveText('基本ルール');
