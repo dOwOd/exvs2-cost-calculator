@@ -40,6 +40,17 @@ pnpm build                 # 本番ビルド
 pnpm storybook             # Storybook起動
 ```
 
+### git worktreeでE2Eを並行実行
+
+複数タスクを処理する場合、E2Eテスト中に別の開発を進められる。詳細は `.claude/rules/git-workflow.md` を参照。
+
+```bash
+# worktree作成 → E2E実行 → 後片付け
+git worktree add ../exvs2-e2e-test "$(git branch --show-current)"
+cd ../exvs2-e2e-test && pnpm install --frozen-lockfile && pnpm build && pnpm test:e2e
+git worktree remove ../exvs2-e2e-test
+```
+
 ## ファイル構造
 
 ### コンポーネント（src/components/）
@@ -162,9 +173,10 @@ PatternList → PatternCard（各パターン表示）
 ## チェックリスト
 
 - [ ] ユニットテスト追加/更新 (`pnpm test`)←コミット前
-- [ ] E2Eテスト確認 (`pnpm build && pnpm test:e2e`)←プッシュ前
+- [ ] E2Eテスト確認 (`pnpm build && pnpm test:e2e`)←プッシュ前（docs/config変更のみの場合はスキップ可）
 - [ ] コミット規約に従う
-- [ ] PR作成（`Closes #番号`でIssue紐づけ）
+- [ ] ドラフトPR作成（`gh pr create --draft`、`Closes #番号`でIssue紐づけ）
+- [ ] Ready for Review（`gh pr ready`）→ CI実行確認
 
 ## CI/CD・自動化ロードマップ
 

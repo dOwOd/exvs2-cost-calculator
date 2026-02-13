@@ -23,14 +23,47 @@ pnpm test
 - すべてのユニットテストがパスすることを確認してからコミット
 - 1つの論理的変更につき1コミット
 
-## プッシュ前の確認
+## プッシュ前のE2E確認
+
+プッシュ前にローカルでE2Eテストを実行し、パスすることを確認する。GitHub Actionsの無料枠を節約するため、CIでの失敗を未然に防ぐ。
+
+**E2Eスキップ可能な場合**: 変更が `docs/`, `.claude/`, `*.md`, `scripts/` のみの場合はE2E不要（CIのpaths-ignoreでスキップされる）
+
+### 通常の確認方法（単一タスク時）
 
 ```bash
 pnpm build && pnpm test:e2e
 ```
 
-- プッシュ前にローカルでE2Eテストを実行し、パスすることを確認する
-- GitHub Actionsの無料枠を節約するため、CIでの失敗を未然に防ぐ
+### git worktreeを使った並行開発（複数タスク時）
+
+E2Eテスト中に別のIssueの開発を並行して進めたい場合、git worktreeを使う。
+
+```bash
+# 1. 現在のブランチでコミット済みであることを確認
+git status  # clean であること
+
+# 2. E2Eテスト用のworktreeを作成
+BRANCH=$(git branch --show-current)
+git worktree add ../exvs2-e2e-test "$BRANCH"
+
+# 3. worktreeでE2Eテストをバックグラウンド実行
+cd ../exvs2-e2e-test && pnpm install --frozen-lockfile && pnpm build && pnpm test:e2e
+
+# 4. メインのworktreeに戻り、別ブランチで次の開発を開始
+cd /Users/sksn/Development/exvs2-cost-calculator
+git checkout main && git pull origin main
+git checkout -b feature/issue-次の番号-説明
+# 開発を続行...
+
+# 5. E2Eテスト完了後、worktreeを削除
+git worktree remove ../exvs2-e2e-test
+```
+
+**注意**:
+- worktreeは作成元ブランチのコミット済みの状態をチェックアウトする。未コミットの変更は含まれない
+- worktree内でファイル変更・コミットはしない（テスト実行のみ）
+- テスト完了後は必ず `git worktree remove` で後片付けする
 
 ## 安全プロトコル
 
