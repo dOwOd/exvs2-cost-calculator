@@ -35,9 +35,19 @@
 ```bash
 pnpm install && pnpm dev   # 開発開始
 pnpm test                  # ユニットテスト実行（Vitest）←コミット前に必須
-pnpm build && pnpm test:e2e # E2Eテスト実行（Playwright）←プッシュ前に必須
+pnpm build && pnpm test:e2e # E2Eテスト実行（Playwright）
 pnpm build                 # 本番ビルド
 pnpm storybook             # Storybook起動
+```
+
+### git worktreeで並行開発
+
+複数のIssueを並行して開発する場合に利用。詳細は `.claude/rules/git-workflow.md` を参照。
+
+```bash
+git worktree add ../exvs2-worktree "$(git branch --show-current)"
+# メイン側で別ブランチに切り替えて次の開発...
+git worktree remove ../exvs2-worktree  # 後片付け
 ```
 
 ## ファイル構造
@@ -162,7 +172,6 @@ PatternList → PatternCard（各パターン表示）
 ## チェックリスト
 
 - [ ] ユニットテスト追加/更新 (`pnpm test`)←コミット前
-- [ ] E2Eテスト確認 (`pnpm build && pnpm test:e2e`)←プッシュ前
 - [ ] コミット規約に従う
 - [ ] PR作成（`Closes #番号`でIssue紐づけ）
 
@@ -188,7 +197,8 @@ PatternList → PatternCard（各パターン表示）
 
 ### 現状
 
-- **CI**: ユニットテスト（Vitest）、型チェック（tsc）、ビルド検証、E2Eテスト（Playwright）、Storybookビルド
+- **CI**: ユニットテスト（Vitest）、型チェック（tsc）、ビルド検証、E2Eテスト（Playwright、PRはnon-webkitのみ）、Storybookビルド（PRのみ）
+- **最適化**: concurrency（連続プッシュ時の自動キャンセル）、paths-ignore
 - **未導入**: lint、依存関係自動更新、Lighthouse
 
 ## ドキュメント更新確認

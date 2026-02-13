@@ -3,35 +3,44 @@ name: E2E Tests
 on:
   pull_request:
     branches: [main]
+    paths-ignore:
+      - 'docs/**'
+      - '.claude/**'
+      - '*.md'
+      - 'scripts/**'
   push:
     branches: [main]
+    paths-ignore:
+      - 'docs/**'
+      - '.claude/**'
+      - '*.md'
+      - 'scripts/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  setup-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - id: set-matrix
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo 'matrix={"include":[{"name":"non-webkit","projects":"chromium firefox mobile-chrome","browsers":"chromium firefox","cache-key":"chromium-firefox"}]}' >> "$GITHUB_OUTPUT"
+          else
+            echo 'matrix={"include":[{"name":"non-webkit","projects":"chromium firefox mobile-chrome","browsers":"chromium firefox","cache-key":"chromium-firefox"},{"name":"webkit","projects":"webkit","browsers":"webkit","cache-key":"webkit"},{"name":"mobile-safari","projects":"mobile-safari","browsers":"webkit","cache-key":"webkit"},{"name":"tablet","projects":"tablet","browsers":"webkit","cache-key":"webkit"}]}' >> "$GITHUB_OUTPUT"
+          fi
+
   e2e-tests:
+    needs: setup-matrix
     runs-on: ubuntu-latest
     timeout-minutes: 15
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          # 非WebKit系を統合（E2E各40-52秒と高速なため1ジョブにまとめる）
-          - name: non-webkit
-            projects: "chromium firefox mobile-chrome"
-            browsers: "chromium firefox"
-            cache-key: chromium-firefox
-          # WebKit系は個別（各2-4分と低速なため分離して並列化）
-          - name: webkit
-            projects: "webkit"
-            browsers: "webkit"
-            cache-key: webkit
-          - name: mobile-safari
-            projects: "mobile-safari"
-            browsers: "webkit"
-            cache-key: webkit
-          - name: tablet
-            projects: "tablet"
-            browsers: "webkit"
-            cache-key: webkit
+      matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
 
     steps:
       - name: Checkout

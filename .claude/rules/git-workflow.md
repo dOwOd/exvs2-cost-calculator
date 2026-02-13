@@ -23,14 +23,38 @@ pnpm test
 - すべてのユニットテストがパスすることを確認してからコミット
 - 1つの論理的変更につき1コミット
 
-## プッシュ前の確認
+## git worktreeを使った並行開発
+
+複数のIssueを並行して開発する場合、git worktreeを使って別ブランチの作業を同時に進められる。
 
 ```bash
-pnpm build && pnpm test:e2e
+# 1. 現在のブランチでコミット済みであることを確認
+git status  # clean であること
+
+# 2. 並行作業用のworktreeを作成
+BRANCH=$(git branch --show-current)
+git worktree add ../exvs2-worktree "$BRANCH"
+
+# 3. メイン側で別ブランチに切り替えて次の開発を開始
+git checkout main && git pull origin main
+git checkout -b feature/issue-次の番号-説明
+# 開発を続行...
+
+# 4. worktreeでの作業が不要になったら削除
+git worktree remove ../exvs2-worktree
 ```
 
-- プッシュ前にローカルでE2Eテストを実行し、パスすることを確認する
-- GitHub Actionsの無料枠を節約するため、CIでの失敗を未然に防ぐ
+**注意**:
+- worktreeは作成元ブランチのコミット済みの状態をチェックアウトする。未コミットの変更は含まれない
+- 不要になったら必ず `git worktree remove` で後片付けする。放置するとブランチロックが残る
+- **同一ブランチの重複チェックアウト不可**: worktreeが使用中のブランチは、メイン側でチェックアウトできない。メイン側では必ず別ブランチ（mainまたは次のIssueブランチ）に切り替えること
+- 残留worktreeの確認: `git worktree list` で一覧表示、不要なものは `git worktree remove` で削除
+
+### Claude Codeでの運用
+
+- worktreeでの長時間タスク（ビルド、テスト等）は **Bashの `run_in_background` オプション**で実行し、メイン側で次の作業を進める
+- エージェントチーム（`/team`）使用時は **leadがworktreeの管理を担当**する
+- worktree作成前に `git worktree list` で既存のworktreeがないか確認する
 
 ## 安全プロトコル
 
