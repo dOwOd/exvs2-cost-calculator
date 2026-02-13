@@ -51,6 +51,30 @@
 - **FAQページ**: 正式名称（EXバースト / ハーフバースト / フルバースト）を使用
 - **ガイドページ**: 俗称（覚醒）を使用しつつ、見出しと初出で正式名称を併記。理由: 「抜け覚醒」等の俗称との統一
 
+## SSRハイドレーション（client:load コンポーネント）
+
+❌ **間違い**: `useState` の初期値で `window` を参照する（SSRとクライアントでDOM構造が異なる）
+
+```tsx
+// SSR: window未定義 → 空の状態 → フィルターセクション非表示
+// クライアント: URLから復元 → フィルターセクション表示 → DOM不整合
+const [state] = useState(() => {
+  if (typeof window === 'undefined') return defaultState;
+  return readFromWindow();
+});
+```
+
+✅ **正解**: `useEffect` でマウント後に復元する（SSR/クライアント初回レンダリングのDOMが一致）
+
+```tsx
+const [state, setState] = useState(defaultState);
+useEffect(() => {
+  setState(readFromWindow());
+}, []);
+```
+
+理由: `client:load` はSSR + ハイドレーションのため、サーバーとクライアントで初期DOMが異なるとレイアウト崩れが発生する（#2 で発覚）
+
 ## スコープ判断
 
 ❌ **間違い**: コスト計算と無関係なゲームメカニクス（バースト/覚醒システム等）をこのツールに追加する
