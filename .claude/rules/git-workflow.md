@@ -63,7 +63,15 @@ git worktree remove ../exvs2-e2e-test
 **注意**:
 - worktreeは作成元ブランチのコミット済みの状態をチェックアウトする。未コミットの変更は含まれない
 - worktree内でファイル変更・コミットはしない（テスト実行のみ）
-- テスト完了後は必ず `git worktree remove` で後片付けする
+- テスト完了後は必ず `git worktree remove` で後片付けする。放置するとブランチロックが残る
+- **同一ブランチの重複チェックアウト不可**: worktreeが使用中のブランチは、メイン側でチェックアウトできない。メイン側では必ず別ブランチ（mainまたは次のIssueブランチ）に切り替えること
+- 残留worktreeの確認: `git worktree list` で一覧表示、不要なものは `git worktree remove` で削除
+
+### Claude Codeでの運用
+
+- worktreeでのE2Eは **Bashの `run_in_background` オプション**で実行し、メイン側で次の作業を進める
+- エージェントチーム（`/team`）使用時は **leadがworktree E2Eの管理を担当**。テスト完了を確認してからプッシュ・PR作成する
+- worktree作成前に `git worktree list` で既存のworktreeがないか確認する
 
 ## 安全プロトコル
 
