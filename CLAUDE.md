@@ -65,7 +65,7 @@ git worktree remove ../exvs2-worktree  # 後片付け
   - CostSelector.tsx - コスト選択（1500/2000/2500/3000）
   - HealthSelector.tsx - 耐久値選択
   - HealthDropdownPopup.tsx - 耐久値ドロップダウン
-  - MobileSuitSearch.tsx - 機体名検索
+  - MobileSuitSearch.tsx - 機体名検索（お気に入り★トグル、お気に入り一覧表示）
 - **SavedFormationsPanel.tsx** - 保存編成パネル（保存・読込・削除、確認モーダル）
 - **ComparisonResultPanel.tsx** - 編成比較結果パネル（最大3編成の横並び比較、比較指標テーブル）
 - **ResultPanel.tsx** - 結果パネル（EXフィルター + パターンリスト表示）
@@ -87,6 +87,7 @@ git worktree remove ../exvs2-worktree  # 後片付け
 - useCookieConsent.ts - Cookie同意フック（カスタムイベントでコンポーネント間同期）
 - cookieConsent.ts - Cookie同意状態管理（LocalStorage CRUD）
 - recentHistory.ts - 最近の編成履歴管理
+- favoriteSuits.ts - お気に入り機体管理（LocalStorage CRUD、最大20件、カスタムイベント同期）
 - savedFormations.ts - 保存編成管理（LocalStorage CRUD、最大10件）
 - imageExport.ts - 画像エクスポート（html-to-image によるPNG生成、Web Share共有）
 
