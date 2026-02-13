@@ -13,11 +13,7 @@ type HealthDropdownPopupProps = {
   position: { top: number; left: number };
 };
 
-export const HealthDropdownPopup = ({
-  cost,
-  health,
-  position,
-}: HealthDropdownPopupProps) => {
+export const HealthDropdownPopup = ({ cost, health, position }: HealthDropdownPopupProps) => {
   const popupRef = useRef<HTMLDivElement>(null);
   const [adjustedPosition, setAdjustedPosition] = useState(position);
   const [maxHeight, setMaxHeight] = useState<number>(window.innerHeight - 16); // 初期値を画面高さ - padding

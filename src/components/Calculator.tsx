@@ -41,7 +41,7 @@ export const Calculator = () => {
   const compEval2 = useFormationEvaluation(compFormations[2]);
   const compEvals = useMemo(
     () => [compEval0, compEval1, compEval2],
-    [compEval0, compEval1, compEval2]
+    [compEval0, compEval1, compEval2],
   );
 
   // --- 通常モードのハンドラ ---
@@ -58,17 +58,11 @@ export const Calculator = () => {
   };
 
   // --- 比較モードのハンドラ ---
-  const handleCompUnitChange = (
-    index: number,
-    unitId: 'A' | 'B',
-    unit: UnitConfig | null
-  ) => {
+  const handleCompUnitChange = (index: number, unitId: 'A' | 'B', unit: UnitConfig | null) => {
     setCompFormations((prev) => {
       const next = [...prev] as [Formation, Formation, Formation];
       next[index] =
-        unitId === 'A'
-          ? { ...next[index], unitA: unit }
-          : { ...next[index], unitB: unit };
+        unitId === 'A' ? { ...next[index], unitA: unit } : { ...next[index], unitB: unit };
       return next;
     });
   };
@@ -136,7 +130,10 @@ export const Calculator = () => {
 
           {/* 通常モード */}
           {mode === 'normal' && (
-            <div data-testid="main-layout" class="grid grid-cols-1 lg:grid-cols-[400px_1fr] gap-4 md:gap-6">
+            <div
+              data-testid="main-layout"
+              class="grid grid-cols-1 lg:grid-cols-[400px_1fr] gap-4 md:gap-6"
+            >
               {/* 左カラム: 編成選択 + 保存編成 */}
               <aside class="space-y-4 md:space-y-6">
                 <FormationPanel
@@ -146,10 +143,7 @@ export const Calculator = () => {
                   onUnitBChange={handleUnitBChange}
                 />
                 <ErrorBoundary fallbackMessage="保存編成の読み込み中にエラーが発生しました">
-                  <SavedFormationsPanel
-                    formation={formation}
-                    onLoad={handleLoadFormation}
-                  />
+                  <SavedFormationsPanel formation={formation} onLoad={handleLoadFormation} />
                 </ErrorBoundary>
               </aside>
 
@@ -181,7 +175,12 @@ export const Calculator = () => {
                       class="flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-lg bg-green-600 text-white hover:bg-green-700 transition-colors"
                     >
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 4v16m8-8H4"
+                        />
                       </svg>
                       編成を追加
                     </button>
@@ -190,9 +189,7 @@ export const Calculator = () => {
 
                 <div
                   class={`grid gap-4 ${
-                    compCount === 3
-                      ? 'grid-cols-1 md:grid-cols-3'
-                      : 'grid-cols-1 md:grid-cols-2'
+                    compCount === 3 ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-1 md:grid-cols-2'
                   }`}
                 >
                   {Array.from({ length: compCount }, (_, i) => (
@@ -214,8 +211,18 @@ export const Calculator = () => {
                             class="p-1 text-slate-400 hover:text-red-500 dark:hover:text-red-400 transition-colors"
                             title="この編成を削除"
                           >
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            <svg
+                              class="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M6 18L18 6M6 6l12 12"
+                              />
                             </svg>
                           </button>
                         )}

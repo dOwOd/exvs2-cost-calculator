@@ -92,9 +92,7 @@ export const MobileSuitSearch = ({
     switch (event.key) {
       case 'ArrowDown':
         event.preventDefault();
-        setFocusedIndex((prev) =>
-          prev < results.length - 1 ? prev + 1 : prev
-        );
+        setFocusedIndex((prev) => (prev < results.length - 1 ? prev + 1 : prev));
         break;
       case 'ArrowUp':
         event.preventDefault();

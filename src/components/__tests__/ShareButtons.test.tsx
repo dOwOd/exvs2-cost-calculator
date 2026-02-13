@@ -92,7 +92,7 @@ describe('ShareButtons', () => {
       expect(windowOpenSpy).toHaveBeenCalledWith(
         expect.any(String),
         '_blank',
-        'noopener,noreferrer,width=600,height=400'
+        'noopener,noreferrer,width=600,height=400',
       );
     });
   });
@@ -118,7 +118,7 @@ describe('ShareButtons', () => {
       expect(windowOpenSpy).toHaveBeenCalledWith(
         expect.any(String),
         '_blank',
-        'noopener,noreferrer,width=600,height=400'
+        'noopener,noreferrer,width=600,height=400',
       );
     });
   });

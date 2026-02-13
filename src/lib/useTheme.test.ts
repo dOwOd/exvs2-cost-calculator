@@ -103,13 +103,13 @@ describe('Theme utilities', () => {
   describe('resolveTheme', () => {
     test('lightモードの場合はlightを返す', () => {
       const mode: ThemeMode = 'light';
-      const resolveTheme = (m: ThemeMode) => m === 'system' ? 'dark' : m;
+      const resolveTheme = (m: ThemeMode) => (m === 'system' ? 'dark' : m);
       expect(resolveTheme(mode)).toBe('light');
     });
 
     test('darkモードの場合はdarkを返す', () => {
       const mode: ThemeMode = 'dark';
-      const resolveTheme = (m: ThemeMode) => m === 'system' ? 'dark' : m;
+      const resolveTheme = (m: ThemeMode) => (m === 'system' ? 'dark' : m);
       expect(resolveTheme(mode)).toBe('dark');
     });
   });

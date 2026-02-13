@@ -5,164 +5,181 @@ import { faqs, faqCategories, getFaqsByCategory } from '../data/faqs';
 ---
 
 <BaseLayout
-	title="よくある質問（FAQ） - EXVS2 コスト計算機"
-	description="EXVS2コスト計算機に関するよくある質問。チーム共有コスト、コストオーバー、EXオーバーリミット、EXバースト、各コスト帯の特徴、編成別の基本方針などについてQ&A形式で解説する。"
-	ogType="article"
+  title="よくある質問（FAQ） - EXVS2 コスト計算機"
+  description="EXVS2コスト計算機に関するよくある質問。チーム共有コスト、コストオーバー、EXオーバーリミット、EXバースト、各コスト帯の特徴、編成別の基本方針などについてQ&A形式で解説する。"
+  ogType="article"
 >
-	<Fragment slot="head">
-		<script type="application/ld+json" set:html={JSON.stringify({
-			"@context": "https://schema.org",
-			"@type": "BreadcrumbList",
-			"itemListElement": [
-				{ "@type": "ListItem", "position": 1, "name": "トップ", "item": "https://dowo.dev/" },
-				{ "@type": "ListItem", "position": 2, "name": "よくある質問", "item": "https://dowo.dev/faq/" }
-			]
-		})} />
-		<script type="application/ld+json" set:html={JSON.stringify({
-			"@context": "https://schema.org",
-			"@type": "FAQPage",
-			"mainEntity": faqs.map((faq) => ({
-				"@type": "Question",
-				"name": faq.question,
-				"acceptedAnswer": {
-					"@type": "Answer",
-					"text": Array.isArray(faq.answer) ? faq.answer.join(' ') : faq.answer,
-				},
-			})),
-		})} />
-		<style>
-			/* アコーディオン開閉アニメーション */
-			.faq-content {
-				display: grid;
-				grid-template-rows: 0fr;
-				transition: grid-template-rows 0.3s ease;
-			}
-			details[open] > .faq-content {
-				grid-template-rows: 1fr;
-			}
-			.faq-content > .faq-inner {
-				overflow: hidden;
-			}
-			/* summary のデフォルトマーカーを非表示 */
-			summary {
-				list-style: none;
-			}
-			summary::-webkit-details-marker {
-				display: none;
-			}
-			/* 矢印アイコンの回転 */
-			.faq-arrow {
-				transition: transform 0.3s ease;
-			}
-			details[open] > summary .faq-arrow {
-				transform: rotate(180deg);
-			}
-		</style>
-	</Fragment>
+  <Fragment slot="head">
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'トップ', item: 'https://dowo.dev/' },
+          { '@type': 'ListItem', position: 2, name: 'よくある質問', item: 'https://dowo.dev/faq/' },
+        ],
+      })}
+    />
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: faqs.map((faq) => ({
+          '@type': 'Question',
+          name: faq.question,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: Array.isArray(faq.answer) ? faq.answer.join(' ') : faq.answer,
+          },
+        })),
+      })}
+    />
+    <style>
+      /* アコーディオン開閉アニメーション */
+      .faq-content {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.3s ease;
+      }
+      details[open] > .faq-content {
+        grid-template-rows: 1fr;
+      }
+      .faq-content > .faq-inner {
+        overflow: hidden;
+      }
+      /* summary のデフォルトマーカーを非表示 */
+      summary {
+        list-style: none;
+      }
+      summary::-webkit-details-marker {
+        display: none;
+      }
+      /* 矢印アイコンの回転 */
+      .faq-arrow {
+        transition: transform 0.3s ease;
+      }
+      details[open] > summary .faq-arrow {
+        transform: rotate(180deg);
+      }
+    </style>
+  </Fragment>
 
-	<div class="container mx-auto px-4 py-8 max-w-3xl">
-		<h1 class="text-2xl font-bold mb-8">よくある質問（FAQ）</h1>
+  <div class="container mx-auto px-4 py-8 max-w-3xl">
+    <h1 class="text-2xl font-bold mb-8">よくある質問（FAQ）</h1>
 
-		{faqCategories.map((category) => {
-			const categoryFaqs = getFaqsByCategory(category.id);
-			return (
-				<section class="mb-8">
-					<h2 class="text-xl font-semibold mb-4 text-slate-900 dark:text-slate-100">
-						{category.label}
-					</h2>
-					<div class="space-y-3">
-						{categoryFaqs.map((faq) => (
-							<details class="bg-white dark:bg-slate-800 rounded-lg shadow-sm group">
-								<summary class="flex items-center justify-between cursor-pointer p-5 text-lg font-semibold text-slate-900 dark:text-slate-100 select-none">
-									<span class="pr-4">{faq.question}</span>
-									<svg
-										class="faq-arrow w-5 h-5 shrink-0 text-slate-500 dark:text-slate-400"
-										xmlns="http://www.w3.org/2000/svg"
-										viewBox="0 0 20 20"
-										fill="currentColor"
-									>
-										<path
-											fill-rule="evenodd"
-											d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-											clip-rule="evenodd"
-										/>
-									</svg>
-								</summary>
-								<div class="faq-content">
-									<div class="faq-inner">
-										<div class="px-5 pb-5">
-											{Array.isArray(faq.answer) ? (
-												<ul class="text-slate-700 dark:text-slate-300 leading-relaxed space-y-2 list-none">
-													{faq.answer.map((item) => (
-														<li>{item}</li>
-													))}
-												</ul>
-											) : (
-												<p class="text-slate-700 dark:text-slate-300 leading-relaxed">
-													{faq.answer}
-												</p>
-											)}
-											{faq.formula && (
-												<p class="mt-2 font-mono bg-slate-200 dark:bg-slate-700 px-3 py-2 rounded text-sm">
-													{faq.formula}
-												</p>
-											)}
-											{faq.link && (
-												<p class="mt-2">
-													<a
-														href={faq.link.url}
-														target="_blank"
-														rel="noopener noreferrer"
-														class="text-blue-600 dark:text-blue-400 hover:underline text-sm inline-flex items-center gap-1"
-													>
-														{faq.link.text}
-														<svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 inline-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>
-													</a>
-												</p>
-											)}
-											{faq.guideLink && (
-												<p class="mt-2">
-													<a
-														href={faq.guideLink.url}
-														class="text-blue-600 dark:text-blue-400 hover:underline text-sm"
-													>
-														{faq.guideLink.text} &rarr;
-													</a>
-												</p>
-											)}
-										</div>
-									</div>
-								</div>
-							</details>
-						))}
-					</div>
-				</section>
-			);
-		})}
+    {
+      faqCategories.map((category) => {
+        const categoryFaqs = getFaqsByCategory(category.id);
+        return (
+          <section class="mb-8">
+            <h2 class="text-xl font-semibold mb-4 text-slate-900 dark:text-slate-100">
+              {category.label}
+            </h2>
+            <div class="space-y-3">
+              {categoryFaqs.map((faq) => (
+                <details class="bg-white dark:bg-slate-800 rounded-lg shadow-sm group">
+                  <summary class="flex items-center justify-between cursor-pointer p-5 text-lg font-semibold text-slate-900 dark:text-slate-100 select-none">
+                    <span class="pr-4">{faq.question}</span>
+                    <svg
+                      class="faq-arrow w-5 h-5 shrink-0 text-slate-500 dark:text-slate-400"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </summary>
+                  <div class="faq-content">
+                    <div class="faq-inner">
+                      <div class="px-5 pb-5">
+                        {Array.isArray(faq.answer) ? (
+                          <ul class="text-slate-700 dark:text-slate-300 leading-relaxed space-y-2 list-none">
+                            {faq.answer.map((item) => (
+                              <li>{item}</li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p class="text-slate-700 dark:text-slate-300 leading-relaxed">
+                            {faq.answer}
+                          </p>
+                        )}
+                        {faq.formula && (
+                          <p class="mt-2 font-mono bg-slate-200 dark:bg-slate-700 px-3 py-2 rounded text-sm">
+                            {faq.formula}
+                          </p>
+                        )}
+                        {faq.link && (
+                          <p class="mt-2">
+                            <a
+                              href={faq.link.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              class="text-blue-600 dark:text-blue-400 hover:underline text-sm inline-flex items-center gap-1"
+                            >
+                              {faq.link.text}
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="w-3.5 h-3.5 inline-block"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              >
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                                <polyline points="15 3 21 3 21 9" />
+                                <line x1="10" y1="14" x2="21" y2="3" />
+                              </svg>
+                            </a>
+                          </p>
+                        )}
+                        {faq.guideLink && (
+                          <p class="mt-2">
+                            <a
+                              href={faq.guideLink.url}
+                              class="text-blue-600 dark:text-blue-400 hover:underline text-sm"
+                            >
+                              {faq.guideLink.text} &rarr;
+                            </a>
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </details>
+              ))}
+            </div>
+          </section>
+        );
+      })
+    }
 
-		<section class="mt-12 border-t border-slate-200 dark:border-slate-700 pt-8">
-			<h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-3">このページを共有</h2>
-			<ShareButtons
-				client:visible
-				url="https://dowo.dev/faq/"
-				text="EXVS2のコスト管理に関するよくある質問"
-				hashtags={['EXVS2IB', 'イニブ']}
-			/>
-		</section>
+    <section class="mt-12 border-t border-slate-200 dark:border-slate-700 pt-8">
+      <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-3">
+        このページを共有
+      </h2>
+      <ShareButtons
+        client:visible
+        url="https://dowo.dev/faq/"
+        text="EXVS2のコスト管理に関するよくある質問"
+        hashtags={['EXVS2IB', 'イニブ']}
+      />
+    </section>
 
-		<nav class="mt-12 mb-8 flex justify-between">
-			<a
-				href="/"
-				class="text-blue-600 dark:text-blue-400 hover:underline"
-			>
-				&larr; 編成を計算してみる
-			</a>
-			<a
-				href="/guide/"
-				class="text-blue-600 dark:text-blue-400 hover:underline"
-			>
-				コストの仕組みとセオリー解説 &rarr;
-			</a>
-		</nav>
-	</div>
+    <nav class="mt-12 mb-8 flex justify-between">
+      <a href="/" class="text-blue-600 dark:text-blue-400 hover:underline">
+        &larr; 編成を計算してみる
+      </a>
+      <a href="/guide/" class="text-blue-600 dark:text-blue-400 hover:underline">
+        コストの仕組みとセオリー解説 &rarr;
+      </a>
+    </nav>
+  </div>
 </BaseLayout>

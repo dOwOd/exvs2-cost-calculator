@@ -31,14 +31,14 @@
 
 ## 更新先の選択
 
-| 内容 | 更新先 |
-|------|--------|
-| よくある間違い | `common-mistakes.md` |
-| 開発ルール変更 | `development.md` |
-| Git操作ルール | `git-workflow.md` |
-| ゲーム仕様変更 | `specifications.md` |
-| UI実装パターン | `ui-patterns.md` |
-| 技術スタック変更 | `CLAUDE.md` |
+| 内容             | 更新先               |
+| ---------------- | -------------------- |
+| よくある間違い   | `common-mistakes.md` |
+| 開発ルール変更   | `development.md`     |
+| Git操作ルール    | `git-workflow.md`    |
+| ゲーム仕様変更   | `specifications.md`  |
+| UI実装パターン   | `ui-patterns.md`     |
+| 技術スタック変更 | `CLAUDE.md`          |
 
 ## 更新しない内容
 

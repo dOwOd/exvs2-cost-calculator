@@ -12,8 +12,7 @@ const siteLinks = [
   { href: '/privacy/', label: 'プライバシーポリシー' },
 ];
 
-const linkClass =
-  'hover:text-blue-600 dark:hover:text-blue-400 transition-colors';
+const linkClass = 'hover:text-blue-600 dark:hover:text-blue-400 transition-colors';
 
 export const Footer = () => {
   const currentYear = new Date().getFullYear();

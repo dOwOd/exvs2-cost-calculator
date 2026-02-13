@@ -13,12 +13,8 @@ type FormationEvaluationResult = {
   minimumDefeatHealth: number;
 };
 
-export const useFormationEvaluation = (
-  formation: Formation
-): FormationEvaluationResult => {
-  const [evaluatedPatterns, setEvaluatedPatterns] = useState<
-    EvaluatedPattern[]
-  >([]);
+export const useFormationEvaluation = (formation: Formation): FormationEvaluationResult => {
+  const [evaluatedPatterns, setEvaluatedPatterns] = useState<EvaluatedPattern[]>([]);
   const [minimumDefeatHealth, setMinimumDefeatHealth] = useState<number>(0);
 
   useEffect(() => {

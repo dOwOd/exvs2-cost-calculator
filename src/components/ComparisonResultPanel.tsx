@@ -69,13 +69,8 @@ const MetricRow = ({
   );
 };
 
-export const ComparisonResultPanel = ({
-  formations,
-  evals,
-}: ComparisonResultPanelType) => {
-  const [exFilters, setExFilters] = useState<boolean[]>(() =>
-    formations.map(() => false)
-  );
+export const ComparisonResultPanel = ({ formations, evals }: ComparisonResultPanelType) => {
+  const [exFilters, setExFilters] = useState<boolean[]>(() => formations.map(() => false));
 
   // 各編成×パターンの展開状態（key: `${formationIndex}-${rank}`）
   const [expandedCards, setExpandedCards] = useState<Set<string>>(() => {
@@ -119,23 +114,15 @@ export const ComparisonResultPanel = ({
   const processedData = useMemo(() => {
     return formations.map((formation, i) => {
       const eval_ = evals[i];
-      const effectivePatterns = getEffectivePatterns(
-        eval_.evaluatedPatterns,
-        formation
-      );
+      const effectivePatterns = getEffectivePatterns(eval_.evaluatedPatterns, formation);
       const sortedPatterns = getTopPatterns(effectivePatterns, formation);
       const filteredPatterns = activeExFilters[i]
         ? sortedPatterns.filter((p) => !p.isEXActivationFailure)
         : sortedPatterns;
       const topPatterns = filteredPatterns.slice(0, TOP_PATTERN_COUNT);
-      const metrics = calculateComparisonMetrics(
-        sortedPatterns,
-        eval_.minimumDefeatHealth
-      );
+      const metrics = calculateComparisonMetrics(sortedPatterns, eval_.minimumDefeatHealth);
       const maxTotalHealth =
-        sortedPatterns.length > 0
-          ? Math.max(...sortedPatterns.map((p) => p.totalHealth))
-          : 0;
+        sortedPatterns.length > 0 ? Math.max(...sortedPatterns.map((p) => p.totalHealth)) : 0;
 
       return {
         formation,
@@ -153,16 +140,11 @@ export const ComparisonResultPanel = ({
   const hasAnyComplete = processedData.some((d) => d.isComplete);
 
   return (
-    <div
-      data-testid="comparison-result-panel"
-      class="bg-slate-100 dark:bg-slate-900 rounded-lg"
-    >
+    <div data-testid="comparison-result-panel" class="bg-slate-100 dark:bg-slate-900 rounded-lg">
       {/* 比較指標サマリー */}
       {hasAnyComplete && (
         <div class="p-3 sm:p-4 border-b border-slate-200 dark:border-slate-700">
-          <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">
-            比較指標
-          </h3>
+          <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">比較指標</h3>
           <div class="overflow-x-auto">
             <table data-testid="comparison-metrics-table" class="w-full text-sm">
               <thead>
@@ -189,30 +171,28 @@ export const ComparisonResultPanel = ({
                 <MetricRow
                   label="総耐久（最大）"
                   values={allMetrics.map((m) =>
-                    m.totalPatternCount > 0 ? m.totalHealthRange.max : '-'
+                    m.totalPatternCount > 0 ? m.totalHealthRange.max : '-',
                   )}
                   highlightBest="max"
                 />
                 <MetricRow
                   label="総耐久（最小）"
                   values={allMetrics.map((m) =>
-                    m.totalPatternCount > 0 ? m.totalHealthRange.min : '-'
+                    m.totalPatternCount > 0 ? m.totalHealthRange.min : '-',
                   )}
                   highlightBest="max"
                 />
                 <MetricRow
                   label="最短敗北耐久"
                   values={allMetrics.map((m) =>
-                    m.minimumDefeatHealth > 0 ? m.minimumDefeatHealth : '-'
+                    m.minimumDefeatHealth > 0 ? m.minimumDefeatHealth : '-',
                   )}
                   highlightBest="min"
                 />
                 <MetricRow
                   label="EX発動可能"
                   values={allMetrics.map((m) =>
-                    m.totalPatternCount > 0
-                      ? `${m.exAvailableCount}/${m.totalPatternCount}`
-                      : '-'
+                    m.totalPatternCount > 0 ? `${m.exAvailableCount}/${m.totalPatternCount}` : '-',
                   )}
                 />
               </tbody>
@@ -238,9 +218,7 @@ export const ComparisonResultPanel = ({
                 type="checkbox"
                 data-testid={`comparison-ex-filter-${i}`}
                 checked={activeExFilters[i]}
-                onChange={(e) =>
-                  handleExFilterChange(i, e.currentTarget.checked)
-                }
+                onChange={(e) => handleExFilterChange(i, e.currentTarget.checked)}
                 class="rounded border-slate-300 dark:border-slate-600"
               />
               編成{i + 1}: EX発動可能のみ
@@ -251,9 +229,7 @@ export const ComparisonResultPanel = ({
         {/* パターンカード表示（グリッド） */}
         <div
           class={`grid gap-4 ${
-            formations.length === 3
-              ? 'grid-cols-1 lg:grid-cols-3'
-              : 'grid-cols-1 lg:grid-cols-2'
+            formations.length === 3 ? 'grid-cols-1 lg:grid-cols-3' : 'grid-cols-1 lg:grid-cols-2'
           }`}
         >
           {processedData.map((data, i) => (

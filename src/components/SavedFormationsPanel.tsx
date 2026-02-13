@@ -11,10 +11,7 @@ type SavedFormationsPanelProps = {
   onLoad: (formation: Formation) => void;
 };
 
-export const SavedFormationsPanel = ({
-  formation,
-  onLoad,
-}: SavedFormationsPanelProps) => {
+export const SavedFormationsPanel = ({ formation, onLoad }: SavedFormationsPanelProps) => {
   const [savedFormations, setSavedFormations] = useState<SavedFormation[]>([]);
   const [saveName, setSaveName] = useState('');
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
@@ -68,9 +65,7 @@ export const SavedFormationsPanel = ({
   return (
     <div class="bg-slate-50 dark:bg-slate-800 p-3 sm:p-4 rounded-lg shadow-sm dark:shadow-none border border-slate-200 dark:border-transparent">
       <div class="flex items-center justify-between mb-3">
-        <h3 class="text-lg font-bold text-slate-700 dark:text-slate-300">
-          保存編成
-        </h3>
+        <h3 class="text-lg font-bold text-slate-700 dark:text-slate-300">保存編成</h3>
         {canSave && (
           <button
             data-testid="save-formation-button"
@@ -85,9 +80,7 @@ export const SavedFormationsPanel = ({
       {/* 保存ダイアログ */}
       {isSaveDialogOpen && (
         <div data-testid="save-dialog" class="mb-3 p-3 bg-slate-100 dark:bg-slate-700 rounded">
-          <label class="block text-sm text-slate-600 dark:text-slate-400 mb-1">
-            編成名
-          </label>
+          <label class="block text-sm text-slate-600 dark:text-slate-400 mb-1">編成名</label>
           <div class="flex gap-2">
             <input
               data-testid="save-name-input"
@@ -115,9 +108,7 @@ export const SavedFormationsPanel = ({
 
       {/* 保存済み編成一覧 */}
       {savedFormations.length === 0 ? (
-        <p class="text-sm text-slate-500 dark:text-slate-400">
-          保存された編成はありません
-        </p>
+        <p class="text-sm text-slate-500 dark:text-slate-400">保存された編成はありません</p>
       ) : (
         <ul data-testid="saved-formations-list" class="space-y-2">
           {savedFormations.map((saved) => (

@@ -33,7 +33,7 @@ describe('ErrorBoundary', () => {
     render(
       <ErrorBoundary>
         <NormalChild />
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
 
     expect(screen.getByText('正常なコンテンツ')).toBeDefined();
@@ -43,7 +43,7 @@ describe('ErrorBoundary', () => {
     render(
       <ErrorBoundary>
         <ThrowError message="テストエラー" />
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
 
     expect(screen.getByRole('alert')).toBeDefined();
@@ -55,7 +55,7 @@ describe('ErrorBoundary', () => {
     render(
       <ErrorBoundary fallbackMessage="カスタムエラーメッセージ">
         <ThrowError message="テストエラー" />
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
 
     expect(screen.getByText('カスタムエラーメッセージ')).toBeDefined();
@@ -65,11 +65,11 @@ describe('ErrorBoundary', () => {
     render(
       <ErrorBoundary>
         <ThrowError message="テストエラー" />
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
 
     const boundaryLog = consoleErrorSpy.mock.calls.find(
-      (call: unknown[]) => call[0] === '[ErrorBoundary]'
+      (call: unknown[]) => call[0] === '[ErrorBoundary]',
     );
     expect(boundaryLog).toBeDefined();
     expect(boundaryLog![1]).toBeInstanceOf(Error);
@@ -86,7 +86,7 @@ describe('ErrorBoundary', () => {
     render(
       <ErrorBoundary>
         <ThrowError message="テストエラー" />
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
 
     fireEvent.click(screen.getByText('ページを再読み込み'));

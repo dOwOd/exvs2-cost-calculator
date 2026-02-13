@@ -2,13 +2,7 @@
  * EXVS2 評価関数
  */
 
-import type {
-  Formation,
-  EvaluatedPattern,
-  ComparisonMetrics,
-  BattleState,
-  UnitId,
-} from './types';
+import type { Formation, EvaluatedPattern, ComparisonMetrics, BattleState, UnitId } from './types';
 import {
   generatePatterns,
   calculateCostTransitions,
@@ -21,10 +15,7 @@ import {
  * 条件: 自機と僚機のいずれもが撃墜されたら敗北する状況
  * つまり、残コスト <= min(コストA, コストB) の状態になったか
  */
-export const checkEXActivation = (
-  formation: Formation,
-  transitions: BattleState[]
-): boolean => {
+export const checkEXActivation = (formation: Formation, transitions: BattleState[]): boolean => {
   if (!formation.unitA || !formation.unitB) {
     return false;
   }
@@ -45,20 +36,18 @@ export const checkEXActivation = (
   }
 
   return false;
-}
-
+};
 
 /**
  * 全パターンを評価
  */
-export const evaluateAllPatterns = (
-  formation: Formation
-): EvaluatedPattern[] => {
+export const evaluateAllPatterns = (formation: Formation): EvaluatedPattern[] => {
   if (!formation.unitA || !formation.unitB) {
     return [];
   }
 
-  const revivalCount = (formation.unitA.hasPartialRevival ? 1 : 0) + (formation.unitB.hasPartialRevival ? 1 : 0);
+  const revivalCount =
+    (formation.unitA.hasPartialRevival ? 1 : 0) + (formation.unitB.hasPartialRevival ? 1 : 0);
   const maxKills = 4 + revivalCount;
   const patterns = generatePatterns(maxKills);
 
@@ -83,7 +72,7 @@ export const evaluateAllPatterns = (
   });
 
   return evaluated;
-}
+};
 
 /**
  * ソートされたパターンを取得（重複排除）
@@ -92,7 +81,7 @@ export const evaluateAllPatterns = (
 export const getTopPatterns = (
   patterns: EvaluatedPattern[],
   formation?: Formation,
-  limit = Infinity
+  limit = Infinity,
 ): EvaluatedPattern[] => {
   // 高コスト側の機体IDを特定（同コストの場合はnull = 優先なし）
   const higherCostUnit: UnitId | null = (() => {
@@ -123,9 +112,7 @@ export const getTopPatterns = (
 
   for (const pattern of sorted) {
     // 実際の撃墜順（敗北までの部分）を文字列化
-    const actualPattern = pattern.transitions
-      .map((t) => t.killedUnit)
-      .join('');
+    const actualPattern = pattern.transitions.map((t) => t.killedUnit).join('');
 
     // 未出現のパターンのみ追加
     if (!seen.has(actualPattern)) {
@@ -140,14 +127,14 @@ export const getTopPatterns = (
   }
 
   return unique;
-}
+};
 
 /**
  * 比較指標を計算
  */
 export const calculateComparisonMetrics = (
   evaluatedPatterns: EvaluatedPattern[],
-  minimumDefeatHealth: number
+  minimumDefeatHealth: number,
 ): ComparisonMetrics => {
   if (evaluatedPatterns.length === 0) {
     return {
@@ -159,9 +146,7 @@ export const calculateComparisonMetrics = (
   }
 
   const healths = evaluatedPatterns.map((p) => p.totalHealth);
-  const exAvailableCount = evaluatedPatterns.filter(
-    (p) => p.canActivateEXOverLimit
-  ).length;
+  const exAvailableCount = evaluatedPatterns.filter((p) => p.canActivateEXOverLimit).length;
 
   return {
     totalHealthRange: {
@@ -181,10 +166,10 @@ export const calculateComparisonMetrics = (
  */
 export const getEffectivePatterns = (
   patterns: EvaluatedPattern[],
-  formation: Formation
+  formation: Formation,
 ): EvaluatedPattern[] => {
   if (!formation.unitA || !formation.unitB) {
     return [];
   }
   return patterns;
-}
+};

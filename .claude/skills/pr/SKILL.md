@@ -1,4 +1,5 @@
 ## Create PR Workflow
+
 1. Verify current branch is NOT main: `git branch --show-current`
 2. If on main, create and checkout a new branch: `git checkout -b issue-{number}-{description}`
 3. Stage and commit all changes with a descriptive message

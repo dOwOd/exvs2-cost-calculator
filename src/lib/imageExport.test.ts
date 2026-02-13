@@ -4,11 +4,7 @@
 
 import { vi } from 'vitest';
 import type { Formation } from './types';
-import {
-  canShareFiles,
-  generateFilename,
-  generatePatternCardImage,
-} from './imageExport';
+import { canShareFiles, generateFilename, generatePatternCardImage } from './imageExport';
 
 // html-to-imageをモック
 const mockToPng = vi.fn();
@@ -79,9 +75,7 @@ describe('generateFilename', () => {
       unitA: { cost: 3000, health: 680 },
       unitB: { cost: 2500, health: 620 },
     };
-    expect(generateFilename(1, formation)).toBe(
-      'exvs2-pattern-1-3000+2500.png',
-    );
+    expect(generateFilename(1, formation)).toBe('exvs2-pattern-1-3000+2500.png');
   });
 
   test('同コスト編成でファイル名を生成', () => {
@@ -89,9 +83,7 @@ describe('generateFilename', () => {
       unitA: { cost: 2000, health: 600 },
       unitB: { cost: 2000, health: 580 },
     };
-    expect(generateFilename(3, formation)).toBe(
-      'exvs2-pattern-3-2000+2000.png',
-    );
+    expect(generateFilename(3, formation)).toBe('exvs2-pattern-3-2000+2000.png');
   });
 
   test('片方がnullの場合コスト0で生成', () => {
@@ -99,9 +91,7 @@ describe('generateFilename', () => {
       unitA: { cost: 3000, health: 680 },
       unitB: null,
     };
-    expect(generateFilename(1, formation)).toBe(
-      'exvs2-pattern-1-3000+0.png',
-    );
+    expect(generateFilename(1, formation)).toBe('exvs2-pattern-1-3000+0.png');
   });
 
   test('ランク番号が反映される', () => {
@@ -109,15 +99,17 @@ describe('generateFilename', () => {
       unitA: { cost: 1500, health: 500 },
       unitB: { cost: 1500, health: 500 },
     };
-    expect(generateFilename(10, formation)).toBe(
-      'exvs2-pattern-10-1500+1500.png',
-    );
+    expect(generateFilename(10, formation)).toBe('exvs2-pattern-10-1500+1500.png');
   });
 });
 
 describe('generatePatternCardImage', () => {
   const mockBlob = new Blob(['test'], { type: 'image/png' });
-  let mockClassList: { contains: ReturnType<typeof vi.fn>; add: ReturnType<typeof vi.fn>; remove: ReturnType<typeof vi.fn> };
+  let mockClassList: {
+    contains: ReturnType<typeof vi.fn>;
+    add: ReturnType<typeof vi.fn>;
+    remove: ReturnType<typeof vi.fn>;
+  };
 
   beforeEach(() => {
     mockToPng.mockReset();
@@ -158,10 +150,13 @@ describe('generatePatternCardImage', () => {
     const result = await generatePatternCardImage(mockElement);
 
     expect(mockElement.classList.add).toHaveBeenCalledWith('exporting');
-    expect(mockToPng).toHaveBeenCalledWith(mockElement, expect.objectContaining({
-      pixelRatio: 2,
-      cacheBust: true,
-    }));
+    expect(mockToPng).toHaveBeenCalledWith(
+      mockElement,
+      expect.objectContaining({
+        pixelRatio: 2,
+        cacheBust: true,
+      }),
+    );
     expect(mockElement.classList.remove).toHaveBeenCalledWith('exporting');
     expect(result).toBe(mockBlob);
   });
@@ -180,9 +175,12 @@ describe('generatePatternCardImage', () => {
 
     await generatePatternCardImage(mockElement);
 
-    expect(mockToPng).toHaveBeenCalledWith(mockElement, expect.objectContaining({
-      backgroundColor: '#f1f5f9',
-    }));
+    expect(mockToPng).toHaveBeenCalledWith(
+      mockElement,
+      expect.objectContaining({
+        backgroundColor: '#f1f5f9',
+      }),
+    );
   });
 
   test('ダークモード時にbackgroundColorとしてslate-900を渡す', async () => {
@@ -199,9 +197,12 @@ describe('generatePatternCardImage', () => {
 
     await generatePatternCardImage(mockElement);
 
-    expect(mockToPng).toHaveBeenCalledWith(mockElement, expect.objectContaining({
-      backgroundColor: '#0f172a',
-    }));
+    expect(mockToPng).toHaveBeenCalledWith(
+      mockElement,
+      expect.objectContaining({
+        backgroundColor: '#0f172a',
+      }),
+    );
   });
 
   test('filter関数がdata-export-exclude要素を除外する', async () => {
@@ -235,9 +236,7 @@ describe('generatePatternCardImage', () => {
       dataset: {},
     } as unknown as HTMLElement;
 
-    await expect(generatePatternCardImage(mockElement)).rejects.toThrow(
-      'render failed',
-    );
+    await expect(generatePatternCardImage(mockElement)).rejects.toThrow('render failed');
     expect(mockElement.classList.add).toHaveBeenCalledWith('exporting');
     expect(mockElement.classList.remove).toHaveBeenCalledWith('exporting');
   });
