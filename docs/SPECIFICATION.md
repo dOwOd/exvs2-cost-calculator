@@ -237,6 +237,19 @@ const filteredPatterns = showOnlyEXAvailable
   : sortedPatterns;
 ```
 
+#### 先撃墜フィルター
+
+- セグメントコントロール（すべて / A先撃墜 / B先撃墜）で切り替え
+- `transitions[0].killedUnit` でフィルタリング
+- **異なるコスト編成時のみ表示**（同コスト編成ではA/Bの区別に意味がないため非表示）
+- EXフィルターと併用可能
+
+**実装:**
+
+```typescript
+if (firstKillFilter !== 'all' && p.transitions[0]?.killedUnit !== firstKillFilter) return false;
+```
+
 ---
 
 ## 5. パターン生成と重複排除
