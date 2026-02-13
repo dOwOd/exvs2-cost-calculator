@@ -23,54 +23,37 @@ pnpm test
 - すべてのユニットテストがパスすることを確認してからコミット
 - 1つの論理的変更につき1コミット
 
-## プッシュ前のE2E確認
+## git worktreeを使った並行開発
 
-プッシュ前にローカルでE2Eテストを実行し、パスすることを確認する。GitHub Actionsの無料枠を節約するため、CIでの失敗を未然に防ぐ。
-
-**E2Eスキップ可能な場合**: 変更が `docs/`, `.claude/`, `*.md`, `scripts/` のみの場合はE2E不要（CIのpaths-ignoreでスキップされる）
-
-### 通常の確認方法（単一タスク時）
-
-```bash
-pnpm build && pnpm test:e2e
-```
-
-### git worktreeを使った並行開発（複数タスク時）
-
-E2Eテスト中に別のIssueの開発を並行して進めたい場合、git worktreeを使う。
+複数のIssueを並行して開発する場合、git worktreeを使って別ブランチの作業を同時に進められる。
 
 ```bash
 # 1. 現在のブランチでコミット済みであることを確認
 git status  # clean であること
 
-# 2. E2Eテスト用のworktreeを作成
+# 2. 並行作業用のworktreeを作成
 BRANCH=$(git branch --show-current)
-git worktree add ../exvs2-e2e-test "$BRANCH"
+git worktree add ../exvs2-worktree "$BRANCH"
 
-# 3. worktreeでE2Eテストをバックグラウンド実行
-cd ../exvs2-e2e-test && pnpm install --frozen-lockfile && pnpm build && pnpm test:e2e
-
-# 4. メインのworktreeに戻り、別ブランチで次の開発を開始
-cd /Users/sksn/Development/exvs2-cost-calculator
+# 3. メイン側で別ブランチに切り替えて次の開発を開始
 git checkout main && git pull origin main
 git checkout -b feature/issue-次の番号-説明
 # 開発を続行...
 
-# 5. E2Eテスト完了後、worktreeを削除
-git worktree remove ../exvs2-e2e-test
+# 4. worktreeでの作業が不要になったら削除
+git worktree remove ../exvs2-worktree
 ```
 
 **注意**:
 - worktreeは作成元ブランチのコミット済みの状態をチェックアウトする。未コミットの変更は含まれない
-- worktree内でファイル変更・コミットはしない（テスト実行のみ）
-- テスト完了後は必ず `git worktree remove` で後片付けする。放置するとブランチロックが残る
+- 不要になったら必ず `git worktree remove` で後片付けする。放置するとブランチロックが残る
 - **同一ブランチの重複チェックアウト不可**: worktreeが使用中のブランチは、メイン側でチェックアウトできない。メイン側では必ず別ブランチ（mainまたは次のIssueブランチ）に切り替えること
 - 残留worktreeの確認: `git worktree list` で一覧表示、不要なものは `git worktree remove` で削除
 
 ### Claude Codeでの運用
 
-- worktreeでのE2Eは **Bashの `run_in_background` オプション**で実行し、メイン側で次の作業を進める
-- エージェントチーム（`/team`）使用時は **leadがworktree E2Eの管理を担当**。テスト完了を確認してからプッシュ・PR作成する
+- worktreeでの長時間タスク（ビルド、テスト等）は **Bashの `run_in_background` オプション**で実行し、メイン側で次の作業を進める
+- エージェントチーム（`/team`）使用時は **leadがworktreeの管理を担当**する
 - worktree作成前に `git worktree list` で既存のworktreeがないか確認する
 
 ## 安全プロトコル
@@ -114,23 +97,3 @@ git checkout -b fix/issue-番号-説明
 2. **Issue紐づけ必須**: 本文に `Closes #番号` を含める（マージ時にIssue自動クローズ）
 3. **タイトル形式**: `Type: 概要`（コミットメッセージ形式）
 4. **プッシュとPR作成**: ユーザー承認後にClaude Codeが実行
-5. **ドラフトPRで作成**: `gh pr create --draft` でドラフトとして作成（CI節約のため）
-
-## ドラフトPR運用フロー
-
-CI/CD利用時間を節約するため、PRはドラフトで作成し、準備完了後にReady for Reviewに変更する。
-
-### 手順
-
-1. ブランチ作成・開発
-2. **ドラフトPRを作成**: `gh pr create --draft`
-3. 開発・修正を繰り返しプッシュ（ドラフト中はCI実行なし）
-4. ローカルで `pnpm test` / `pnpm build && pnpm test:e2e` を確認
-5. **Ready for Reviewに変更**: `gh pr ready` → CI実行開始
-6. CI通過後にレビュー・マージ
-
-### 注意
-
-- ドラフトPRではCI/E2E/Storybookが一切実行されない
-- Ready for Review後の追加プッシュではCIが実行される（concurrencyにより前のrunは自動キャンセル）
-- PRでのE2Eテストはnon-webkit（chromium/firefox/mobile-chrome）のみ実行。WebKit系はmainマージ時にフルスイート実行
