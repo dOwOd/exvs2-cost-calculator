@@ -2,6 +2,7 @@
  * お気に入り機体管理のテスト
  */
 
+import { vi } from 'vitest';
 import {
   getFavoriteSuits,
   addFavoriteSuit,
@@ -52,7 +53,7 @@ const suitB: MobileSuitInfo = {
   hasPartialRevival: false,
 };
 const suitC: MobileSuitInfo = {
-  name: 'ガンダムMk-II',
+  name: 'ガンダムMk-Ⅱ',
   cost: 2000,
   health: 580,
   hasPartialRevival: false,
