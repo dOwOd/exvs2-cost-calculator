@@ -2,9 +2,10 @@
  * 機体名検索コンポーネント
  */
 
-import { useState, useRef, useEffect } from 'preact/hooks';
+import { useState, useRef, useEffect, useCallback } from 'preact/hooks';
 import { searchMobileSuits, type MobileSuitInfo } from '../data/mobileSuitsData';
 import { getRecentSuits, addToRecentSuits } from '../lib/recentHistory';
+import { getFavoriteSuits, toggleFavoriteSuit, isFavoriteSuit } from '../lib/favoriteSuits';
 
 type MobileSuitSearchProps = {
   onSelect: (suit: MobileSuitInfo) => void;
@@ -22,14 +23,16 @@ export const MobileSuitSearch = ({
   const [isOpen, setIsOpen] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const [recentSuits, setRecentSuits] = useState<MobileSuitInfo[]>([]);
+  const [favoriteSuits, setFavoriteSuits] = useState<MobileSuitInfo[]>([]);
   const [isCollapsed, setIsCollapsed] = useState(true);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // マウント時に履歴を読み込み
+  // マウント時に履歴とお気に入りを読み込み
   useEffect(() => {
     setRecentSuits(getRecentSuits());
+    setFavoriteSuits(getFavoriteSuits());
   }, []);
 
   // 履歴更新イベントをリッスン（他のコンポーネントインスタンスとの同期）
@@ -41,6 +44,18 @@ export const MobileSuitSearch = ({
     window.addEventListener('recent-suits-updated', handleHistoryUpdate);
     return () => {
       window.removeEventListener('recent-suits-updated', handleHistoryUpdate);
+    };
+  }, []);
+
+  // お気に入り更新イベントをリッスン
+  useEffect(() => {
+    const handleFavoritesUpdate = () => {
+      setFavoriteSuits(getFavoriteSuits());
+    };
+
+    window.addEventListener('favorite-suits-updated', handleFavoritesUpdate);
+    return () => {
+      window.removeEventListener('favorite-suits-updated', handleFavoritesUpdate);
     };
   }, []);
 
@@ -86,15 +101,19 @@ export const MobileSuitSearch = ({
     setFocusedIndex(-1);
   };
 
+  const handleToggleFavorite = useCallback((e: Event, suit: MobileSuitInfo) => {
+    e.stopPropagation();
+    toggleFavoriteSuit(suit);
+    setFavoriteSuits(getFavoriteSuits());
+  }, []);
+
   const handleKeyDown = (event: KeyboardEvent) => {
     if (!isOpen) return;
 
     switch (event.key) {
       case 'ArrowDown':
         event.preventDefault();
-        setFocusedIndex((prev) =>
-          prev < results.length - 1 ? prev + 1 : prev
-        );
+        setFocusedIndex((prev) => (prev < results.length - 1 ? prev + 1 : prev));
         break;
       case 'ArrowUp':
         event.preventDefault();
@@ -163,13 +182,52 @@ export const MobileSuitSearch = ({
                 >
                   <div class="flex justify-between items-center">
                     <span>{suit.name}</span>
-                    <span class="text-sm text-slate-500 dark:text-slate-400">
-                      {suit.cost}/{suit.health}
-                    </span>
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm text-slate-500 dark:text-slate-400">
+                        {suit.cost}/{suit.health}
+                      </span>
+                      <button
+                        type="button"
+                        data-testid={`favorite-toggle-${suit.name}-${suit.cost}`}
+                        onClick={(e) => handleToggleFavorite(e, suit)}
+                        class="text-lg leading-none hover:scale-110 transition-transform"
+                        aria-label={
+                          isFavoriteSuit(suit)
+                            ? `${suit.name}をお気に入りから削除`
+                            : `${suit.name}をお気に入りに追加`
+                        }
+                      >
+                        {isFavoriteSuit(suit) ? (
+                          <span class="text-yellow-400">★</span>
+                        ) : (
+                          <span class="text-slate-400">☆</span>
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </li>
               ))}
             </ul>
+          )}
+
+          {!isOpen && favoriteSuits.length > 0 && (
+            <div class="mt-2">
+              <div class="text-xs text-slate-500 mb-1">お気に入り</div>
+              <div class="flex flex-wrap gap-1">
+                {favoriteSuits.map((suit) => (
+                  <button
+                    key={`fav-${suit.name}-${suit.cost}-${suit.health}`}
+                    type="button"
+                    data-testid={`favorite-suit-${suit.name}-${suit.cost}`}
+                    onClick={() => handleSelect(suit)}
+                    class="flex items-center gap-1 px-2 py-1 text-xs bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 rounded border border-slate-300 dark:border-slate-600"
+                  >
+                    <span>{suit.name}</span>
+                    <span class="text-yellow-400">★</span>
+                  </button>
+                ))}
+              </div>
+            </div>
           )}
 
           {!isOpen && recentSuits.length > 0 && (

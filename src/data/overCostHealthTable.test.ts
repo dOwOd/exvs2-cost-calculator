@@ -134,14 +134,10 @@ describe('getRespawnHealth', () => {
       [1500, 460, 1000, 310],
       [1500, 440, 500, 150],
       [1500, 440, 1000, 300],
-    ] as const)(
-      'コスト%i 耐久%i 残コスト%i → %i',
-      (cost, health, remainingCost, expected) => {
-        // 旧テーブルには mobileSuitsData に存在しない耐久値（460, 740）も含まれていたため
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        expect(getRespawnHealth(cost, health as any, remainingCost)).toBe(expected);
-      }
-    );
+    ] as const)('コスト%i 耐久%i 残コスト%i → %i', (cost, health, remainingCost, expected) => {
+      // 旧テーブルには mobileSuitsData に存在しない耐久値（460, 740）も含まれていたため
+      expect(getRespawnHealth(cost, health as any, remainingCost)).toBe(expected);
+    });
   });
 
   describe('1500/540のコストオーバー（旧テーブル未登録）', () => {

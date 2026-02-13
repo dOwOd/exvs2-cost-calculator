@@ -94,20 +94,20 @@ pnpm dev
 
 ### コマンド一覧
 
-| コマンド              | 説明                                      |
-| :-------------------- | :---------------------------------------- |
-| `pnpm install`        | 依存関係をインストール                    |
-| `pnpm dev`            | 開発サーバーを起動 (`localhost:4321`)     |
-| `pnpm build`          | 本番用にビルド (`./dist/`)                |
-| `pnpm preview`        | ビルドしたサイトをプレビュー              |
-| `pnpm test`           | ユニットテスト実行                        |
-| `pnpm test:watch`     | ユニットテスト（ウォッチモード）          |
-| `pnpm test:coverage`  | カバレッジ計測                            |
-| `pnpm test:e2e`       | E2Eテスト実行                             |
-| `pnpm test:e2e:ui`    | E2EテストUI モードで実行                  |
-| `pnpm test:e2e:headed`| E2Eテストヘッドモードで実行（デバッグ用） |
-| `pnpm storybook`      | Storybookを起動 (`localhost:6006`)        |
-| `pnpm build-storybook`| Storybookをビルド                         |
+| コマンド               | 説明                                      |
+| :--------------------- | :---------------------------------------- |
+| `pnpm install`         | 依存関係をインストール                    |
+| `pnpm dev`             | 開発サーバーを起動 (`localhost:4321`)     |
+| `pnpm build`           | 本番用にビルド (`./dist/`)                |
+| `pnpm preview`         | ビルドしたサイトをプレビュー              |
+| `pnpm test`            | ユニットテスト実行                        |
+| `pnpm test:watch`      | ユニットテスト（ウォッチモード）          |
+| `pnpm test:coverage`   | カバレッジ計測                            |
+| `pnpm test:e2e`        | E2Eテスト実行                             |
+| `pnpm test:e2e:ui`     | E2EテストUI モードで実行                  |
+| `pnpm test:e2e:headed` | E2Eテストヘッドモードで実行（デバッグ用） |
+| `pnpm storybook`       | Storybookを起動 (`localhost:6006`)        |
+| `pnpm build-storybook` | Storybookをビルド                         |
 
 ## 📁 プロジェクト構造
 
@@ -143,6 +143,7 @@ src/
 **「自機と僚機のいずれもが撃墜されたら敗北する状況」**になると、チームとして発動可能。
 
 **例:**
+
 - **3000+3000**: 1回撃墜後（残3000 <= 3000）→ ✅ EX発動可
 - **3000+2500**: 2回撃墜後（残500 <= 2500）→ ✅ EX発動可
 - **1500+1500**: 3回撃墜後（残1500 <= 1500）→ ✅ EX発動可
@@ -187,11 +188,13 @@ src/
 コミット時に自動的に実装内容の理解度をチェックするpre-commitフックが設定されています。
 
 **自動実行条件:**
+
 - 15行以上の変更がある場合に自動実行
 - Claude CLIで実装意図に関する質問を生成
 - 質問を確認し、ブロッカー行を削除するとコミット続行
 
 **スキップ方法:**
+
 ```bash
 SKIP_COMMIT_CHECK=1 git commit -m "message"
 ```

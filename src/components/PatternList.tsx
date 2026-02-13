@@ -12,16 +12,10 @@ type PatternListType = {
   patterns: EvaluatedPattern[];
   maxTotalHealth: number;
   formation: Formation;
-}
+};
 
-export const PatternList = ({
-  patterns,
-  maxTotalHealth,
-  formation,
-}: PatternListType) => {
-  const [expandedIndices, setExpandedIndices] = useState<Set<number>>(
-    () => new Set([0, 1, 2])
-  );
+export const PatternList = ({ patterns, maxTotalHealth, formation }: PatternListType) => {
+  const [expandedIndices, setExpandedIndices] = useState<Set<number>>(() => new Set([0, 1, 2]));
 
   // patterns変更時にTOP 3にリセット
   useEffect(() => {
@@ -70,7 +64,12 @@ export const PatternList = ({
               class="text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 flex items-center gap-1"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
               すべて折りたたみ
             </button>
@@ -81,7 +80,12 @@ export const PatternList = ({
               class="text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 flex items-center gap-1"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 15l7-7 7 7"
+                />
               </svg>
               すべて展開
             </button>
@@ -102,4 +106,4 @@ export const PatternList = ({
       ))}
     </div>
   );
-}
+};

@@ -46,8 +46,7 @@ export const addToRecentSuits = (suit: MobileSuitInfo): void => {
 
   // 同じ機体（name, cost, healthが一致）を除外
   const filtered = current.filter(
-    (s) =>
-      !(s.name === suit.name && s.cost === suit.cost && s.health === suit.health)
+    (s) => !(s.name === suit.name && s.cost === suit.cost && s.health === suit.health),
   );
 
   // 先頭に追加し、最大件数に制限

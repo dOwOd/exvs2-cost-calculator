@@ -11,13 +11,9 @@ type ResultPanelType = {
   patterns: EvaluatedPattern[];
   formation: Formation;
   minimumDefeatHealth: number;
-}
+};
 
-export const ResultPanel = ({
-  patterns,
-  formation,
-  minimumDefeatHealth,
-}: ResultPanelType) => {
+export const ResultPanel = ({ patterns, formation, minimumDefeatHealth }: ResultPanelType) => {
   const [showOnlyEXAvailable, setShowOnlyEXAvailable] = useState(false);
 
   // 両方選択済みかどうか
@@ -37,7 +33,7 @@ export const ResultPanel = ({
   // ガイダンスメッセージを生成
   const getGuidanceMessage = () => {
     if (!formation.unitA && !formation.unitB) {
-      return '機体を選択して計算を開始しましょう';
+      return '編成を入力すると計算結果が表示されます';
     }
     if (!formation.unitA) {
       return '機体Aを選択すると計算結果が表示されます';
@@ -127,40 +123,51 @@ export const ResultPanel = ({
                 EXオーバーリミット発動可能のみ表示
               </span>
             </label>
-
           </div>
         )}
       </div>
 
       {/* 編成サマリー */}
-      {isFormationComplete && sortedPatterns.length > 0 && (() => {
-        const healthValues = sortedPatterns.map((p) => p.totalHealth);
-        const maxHealth = Math.max(...healthValues);
-        const minHealth = Math.min(...healthValues);
-        return (
-          <div class="mx-3 sm:mx-4 md:mx-6 mt-3 sm:mt-4 md:mt-6 bg-slate-200 dark:bg-slate-800 p-3 sm:p-4 rounded">
-            <div class="grid grid-cols-2 gap-2 sm:gap-4 text-center">
-              <div>
-                <div class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">総耐久の範囲</div>
-                <div class="text-base sm:text-xl font-semibold text-slate-900 dark:text-slate-100 font-mono">{minHealth}〜{maxHealth}</div>
-              </div>
-              <div>
-                <div class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">最短敗北耐久</div>
-                <div class="text-base sm:text-xl font-semibold text-slate-900 dark:text-slate-100 font-mono">{minimumDefeatHealth}</div>
+      {isFormationComplete &&
+        sortedPatterns.length > 0 &&
+        (() => {
+          const healthValues = sortedPatterns.map((p) => p.totalHealth);
+          const maxHealth = Math.max(...healthValues);
+          const minHealth = Math.min(...healthValues);
+          return (
+            <div class="mx-3 sm:mx-4 md:mx-6 mt-3 sm:mt-4 md:mt-6 bg-slate-200 dark:bg-slate-800 p-3 sm:p-4 rounded">
+              <div class="grid grid-cols-2 gap-2 sm:gap-4 text-center">
+                <div>
+                  <div class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+                    総耐久の範囲
+                  </div>
+                  <div class="text-base sm:text-xl font-semibold text-slate-900 dark:text-slate-100 font-mono">
+                    {minHealth}〜{maxHealth}
+                  </div>
+                </div>
+                <div>
+                  <div class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+                    最短敗北耐久
+                  </div>
+                  <div class="text-base sm:text-xl font-semibold text-slate-900 dark:text-slate-100 font-mono">
+                    {minimumDefeatHealth}
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        );
-      })()}
+          );
+        })()}
 
       {/* パターンリスト */}
       <div class="p-3 sm:p-4 md:p-6">
         <PatternList
           patterns={filteredPatterns}
-          maxTotalHealth={sortedPatterns.length > 0 ? Math.max(...sortedPatterns.map((p) => p.totalHealth)) : 0}
+          maxTotalHealth={
+            sortedPatterns.length > 0 ? Math.max(...sortedPatterns.map((p) => p.totalHealth)) : 0
+          }
           formation={formation}
         />
       </div>
     </div>
   );
-}
+};

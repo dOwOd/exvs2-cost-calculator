@@ -5,11 +5,7 @@
 
 import { useState, useEffect, useCallback } from 'preact/hooks';
 import type { CookieConsentStatus } from './cookieConsent';
-import {
-  getCookieConsent,
-  setCookieConsent,
-  resetCookieConsent,
-} from './cookieConsent';
+import { getCookieConsent, setCookieConsent, resetCookieConsent } from './cookieConsent';
 
 const CONSENT_CHANGE_EVENT = 'cookie-consent-change';
 

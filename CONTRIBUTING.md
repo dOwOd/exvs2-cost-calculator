@@ -96,6 +96,7 @@ pnpm test:coverage
 E2Eテストは[Playwright](https://playwright.dev)を使用しています。
 
 **テストの実行:**
+
 ```bash
 # すべてのE2Eテストを実行
 pnpm test:e2e
@@ -108,6 +109,7 @@ pnpm test:e2e:headed
 ```
 
 **テストの書き方:**
+
 - テストファイルは`e2e/`ディレクトリに配置
 - ファイル名は`*.spec.ts`形式
 - `data-testid`属性を使用して要素を特定

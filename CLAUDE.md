@@ -34,49 +34,75 @@
 
 ```bash
 pnpm install && pnpm dev   # 開発開始
-pnpm test                  # ユニットテスト実行（Jest）
-pnpm test:e2e              # E2Eテスト実行（Playwright）
+pnpm lint                  # ESLint実行
+pnpm lint:fix              # ESLint自動修正
+pnpm format                # Prettierフォーマット適用
+pnpm format:check          # フォーマット差分チェック
+pnpm test                  # ユニットテスト実行（Vitest）←コミット前に必須
+pnpm build && pnpm test:e2e # E2Eテスト実行（Playwright）
 pnpm build                 # 本番ビルド
 pnpm storybook             # Storybook起動
+```
+
+### git worktreeで並行開発
+
+複数のIssueを並行して開発する場合に利用。詳細は `.claude/rules/git-workflow.md` を参照。
+
+```bash
+git worktree add ../exvs2-worktree "$(git branch --show-current)"
+# メイン側で別ブランチに切り替えて次の開発...
+git worktree remove ../exvs2-worktree  # 後片付け
 ```
 
 ## ファイル構造
 
 ### コンポーネント（src/components/）
-- **Calculator.tsx** - メインコンポーネント（状態管理、編成→計算→結果の統括）
+
+- **Header.astro** - サイト共通ヘッダー（ロゴ、ナビリンク、ThemeToggle統合、現在ページハイライト）
+- **ErrorBoundary.tsx** - エラーバウンダリ（Preact class component、フォールバックUI表示）
+- **Calculator.tsx** - メインコンポーネント（状態管理、通常/比較モード切替、編成→計算→結果の統括、ErrorBoundaryでラップ）
 - **FormationPanel.tsx** - 編成パネル（A機/B機のコスト・耐久選択）
   - CostSelector.tsx - コスト選択（1500/2000/2500/3000）
   - HealthSelector.tsx - 耐久値選択
   - HealthDropdownPopup.tsx - 耐久値ドロップダウン
-  - MobileSuitSearch.tsx - 機体名検索
+  - MobileSuitSearch.tsx - 機体名検索（お気に入り★トグル、お気に入り一覧表示）
 - **SavedFormationsPanel.tsx** - 保存編成パネル（保存・読込・削除、確認モーダル）
+- **ComparisonResultPanel.tsx** - 編成比較結果パネル（最大3編成の横並び比較、比較指標テーブル）
 - **ResultPanel.tsx** - 結果パネル（EXフィルター + パターンリスト表示）
   - PatternList.tsx - パターン一覧（全パターンをPatternCardで描画）
-    - PatternCard.tsx - 個別パターンカード（ランク・撃墜順・コスト推移テーブル・画像エクスポート）
+    - PatternCard.tsx - 個別パターンカード（ランク・撃墜順・コスト推移テーブル・画像エクスポート・SNSシェア）
+- **ShareButtons.tsx** - SNSシェアボタン（Twitter/X・LINE・Web Share API）
 - CookieConsentBanner.tsx - Cookie同意バナー（広告Cookie同意/拒否）
 - ThemeToggle.tsx - ダーク/ライトモード切替
 - Tooltip.tsx - ツールチップ
 - Footer.tsx - フッター（Cookie設定リセットボタン含む）
 
 ### ロジック（src/lib/）
+
 - **calculator.ts** - コスト計算（パターン生成、コスト推移計算、総耐久計算）
-- **evaluators.ts** - パターン評価（全パターン評価、統計計算、コメント生成）
-- **types.ts** - 型定義（CostType, Formation, EvaluatedPattern, SavedFormation 等）
+- **evaluators.ts** - パターン評価（全パターン評価、統計計算、コメント生成、比較指標計算）
+- **types.ts** - 型定義（CostType, Formation, EvaluatedPattern, ComparisonMetrics, SavedFormation 等）
+- useFormationEvaluation.ts - 編成評価フック（編成→評価パターン・最短敗北耐久を算出）
 - useTheme.ts - テーマ管理フック
 - useCookieConsent.ts - Cookie同意フック（カスタムイベントでコンポーネント間同期）
 - cookieConsent.ts - Cookie同意状態管理（LocalStorage CRUD）
 - recentHistory.ts - 最近の編成履歴管理
+- favoriteSuits.ts - お気に入り機体管理（LocalStorage CRUD、最大20件、カスタムイベント同期）
 - savedFormations.ts - 保存編成管理（LocalStorage CRUD、最大10件）
 - imageExport.ts - 画像エクスポート（html-to-image によるPNG生成、Web Share共有）
 
 ### データ（src/data/）
+
 - **overCostHealthTable.ts** - コストオーバー時の復帰耐久値テーブル
 - mobileSuitsData.ts - 機体データ（名前・コスト・耐久値）
+- faqs.ts - FAQデータ（カテゴリ別グルーピング、型定義、ヘルパー関数）
 
 ### レイアウト（src/layouts/）
+
 - **BaseLayout.astro** - 共通レイアウト（head共通要素、OGP、テーマ初期化、named slot `head` で拡張可能）
 
 ### ページ（src/pages/）
+
 - **index.astro** - トップページ（Calculator + 静的SEOコンテンツ + Footer + WebApplication JSON-LD）
 - **guide.astro** - コスト管理ガイドページ（BreadcrumbList JSON-LD）
 - **faq.astro** - よくある質問ページ（FAQPage + BreadcrumbList JSON-LD）
@@ -85,26 +111,34 @@ pnpm storybook             # Storybook起動
 > **注意**: 新しいページを追加した場合は、BaseLayout を使用し、JSON-LD 構造化データの追加・更新も検討すること
 
 ### スクリプト（scripts/）
+
 - **generate-ogp.mjs** - OGP画像生成（satori + @resvg/resvg-js、`node scripts/generate-ogp.mjs` で実行）
 
 ### 設定・静的ファイル
+
 - **astro.config.mjs** - Astro設定（site, integrations: preact + sitemap）
+- **eslint.config.js** - ESLint設定（flat config、TypeScript + Astro + Prettier連携）
+- **.prettierrc** - Prettier設定（セミコロン、シングルクォート、100文字幅）
+- **.husky/pre-commit** - pre-commitフック（lint-staged実行）
 - **.node-version** - Node.js バージョン一元管理（CI・Docker・ローカル共通）
 - **public/robots.txt** - クローラー指示（Sitemap URL含む）
 - **public/ogp.png** - OGP画像（1200x630px、generate-ogp.mjsで生成）
 
 ### CI/CD（.github/workflows/）
+
 - **ci.yml** - ユニットテスト（Vitest）・型チェック・ビルド検証（Node: `.node-version` 参照）
-- **e2e.yml** - E2Eテスト（Playwright、3シャード並列、Node: `.node-version` 参照）
+- **e2e.yml** - E2Eテスト（Playwright、非WebKit統合+WebKit個別の4並列、ブラウザキャッシュ付き、Node: `.node-version` 参照）
 - **storybook.yml** - Storybookビルド（Node: `.node-version` 参照）
 - **renovate-review.yml** - Renovate PRレビュー（Claude Code Actionで依存関係PRに自動コメント）
 
 ### 依存関係管理
+
 - **renovate.json** - Renovate設定（minor/patch自動マージ、major・Astro・Preactは手動レビュー、週末スケジュール）
 
 > **注意**: Node.js バージョンは `.node-version` で一元管理。ワークフローでは `node-version-file: '.node-version'` を使用すること
 
 ### Docker
+
 - **Dockerfile** - マルチステージビルド（Node: ARG NODE_MAJOR、非rootユーザー）
 - **docker-compose.yml** - app（本番）/ dev（開発）の2サービス構成
 
@@ -124,9 +158,9 @@ PatternList → PatternCard（各パターン表示）
 
 詳細は `.claude/rules/` を参照（対象ファイル編集時に自動読み込み）
 
-- **開発**: development.md（src/**/* 編集時）
-- **ゲーム仕様**: specifications.md（src/lib/**/*.ts 編集時）
-- **UI実装**: ui-patterns.md（src/components/**/*.tsx 編集時）
+- **開発**: development.md（src/\*_/_ 編集時）
+- **ゲーム仕様**: specifications.md（src/lib/\*_/_.ts 編集時）
+- **UI実装**: ui-patterns.md（src/components/\*_/_.tsx 編集時）
 - **よくある間違い**: common-mistakes.md
 - **Git操作**: git-workflow.md（Git コマンド実行時）
 - **ゲーム戦術**: game-tactics.md（パターン評価・コメント生成時）
@@ -159,7 +193,8 @@ PatternList → PatternCard（各パターン表示）
 
 ## チェックリスト
 
-- [ ] テスト追加/更新 (`pnpm test`)
+- [ ] ESLintエラーなし (`pnpm lint`)←コミット前
+- [ ] ユニットテスト追加/更新 (`pnpm test`)←コミット前
 - [ ] コミット規約に従う
 - [ ] PR作成（`Closes #番号`でIssue紐づけ）
 
@@ -185,9 +220,11 @@ PatternList → PatternCard（各パターン表示）
 
 ### 現状
 
-- **CI**: ユニットテスト（Vitest）、型チェック（tsc）、ビルド検証、E2Eテスト（Playwright）、Storybookビルド
+- **CI**: ユニットテスト（Vitest）、型チェック（tsc）、ビルド検証、E2Eテスト（Playwright、PRはnon-webkitのみ）、Storybookビルド（PRのみ）
+- **ローカル品質ゲート**: ESLint + Prettier（Husky + lint-staged でpre-commitフック実行）
 - **依存関係管理**: Renovate（minor/patch自動マージ、major・フレームワーク系は手動）+ Claude Codeレビュー
-- **未導入**: lint、Lighthouse
+- **最適化**: concurrency（連続プッシュ時の自動キャンセル）、paths-ignore
+- **未導入**: Lighthouse
 
 ## ドキュメント更新確認
 

@@ -15,11 +15,7 @@ const OVERCOST_EXCEPTIONS: Readonly<Record<string, number>> = {
   '2000-660-1000': 340,
 };
 
-const calculateOverCostHealth = (
-  cost: number,
-  health: number,
-  remainingCost: number
-): number => {
+const calculateOverCostHealth = (cost: number, health: number, remainingCost: number): number => {
   const key = `${cost}-${health}-${remainingCost}`;
   const exception = OVERCOST_EXCEPTIONS[key];
   if (exception !== undefined) return exception;
@@ -36,7 +32,7 @@ const calculateOverCostHealth = (
 export const getRespawnHealth = (
   cost: CostType,
   initialHealth: HealthType,
-  remainingCost: number
+  remainingCost: number,
 ): number => {
   if (remainingCost <= 0) return 0;
   if (remainingCost >= cost) return initialHealth;

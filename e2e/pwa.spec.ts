@@ -9,7 +9,10 @@ import { test, expect } from '@playwright/test';
 
 test.describe('PWA機能', () => {
   // Service WorkerのテストはChromiumのみで実行
-  test.skip(({ browserName }) => browserName !== 'chromium', 'Service Worker tests require Chromium');
+  test.skip(
+    ({ browserName }) => browserName !== 'chromium',
+    'Service Worker tests require Chromium',
+  );
 
   test('Service Workerが正常に登録される', async ({ page }) => {
     await page.goto('/');

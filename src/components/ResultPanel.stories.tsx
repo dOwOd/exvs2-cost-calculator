@@ -10,11 +10,7 @@ import {
   formation3000_2500,
   formation2500_2500,
 } from '../stories/mocks/formations';
-import {
-  patterns3000_3000,
-  patterns3000_2500,
-  patterns2500_2500,
-} from '../stories/mocks/patterns';
+import { patterns3000_3000, patterns3000_2500, patterns2500_2500 } from '../stories/mocks/patterns';
 import { calculateMinimumDefeatHealth } from '../lib/calculator';
 
 type Props = ComponentProps<typeof ResultPanel>;

@@ -27,16 +27,16 @@ description: セッション中の変更に基づいてドキュメントを更�
 
 ### Step 2: 更新対象の判定
 
-| 変更カテゴリ | 更新対象ファイル |
-|---|---|
-| 技術スタック変更 | `CLAUDE.md`（依存関係、設定） |
-| ファイル構造変更 | `CLAUDE.md`（ファイル構造マップ） |
-| ゲーム仕様変更 | `docs/SPECIFICATION.md`, `.claude/rules/specifications.md` |
-| UI実装パターン変更 | `.claude/rules/ui-patterns.md` |
-| 開発ルール変更 | `.claude/rules/development.md` |
-| よくある間違い発見 | `.claude/rules/common-mistakes.md` |
-| Git操作ルール変更 | `.claude/rules/git-workflow.md` |
-| 戦術知識変更 | `docs/GAME_KNOWLEDGE.md`, `.claude/rules/game-tactics.md` |
+| 変更カテゴリ       | 更新対象ファイル                                           |
+| ------------------ | ---------------------------------------------------------- |
+| 技術スタック変更   | `CLAUDE.md`（依存関係、設定）                              |
+| ファイル構造変更   | `CLAUDE.md`（ファイル構造マップ）                          |
+| ゲーム仕様変更     | `docs/SPECIFICATION.md`, `.claude/rules/specifications.md` |
+| UI実装パターン変更 | `.claude/rules/ui-patterns.md`                             |
+| 開発ルール変更     | `.claude/rules/development.md`                             |
+| よくある間違い発見 | `.claude/rules/common-mistakes.md`                         |
+| Git操作ルール変更  | `.claude/rules/git-workflow.md`                            |
+| 戦術知識変更       | `docs/GAME_KNOWLEDGE.md`, `.claude/rules/game-tactics.md`  |
 
 ### Step 3: ユーザーに確認
 

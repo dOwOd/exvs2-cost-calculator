@@ -2,11 +2,7 @@
  * 最近使用した機体の履歴管理のテスト
  */
 
-import {
-  getRecentSuits,
-  addToRecentSuits,
-  clearRecentSuits,
-} from './recentHistory';
+import { getRecentSuits, addToRecentSuits, clearRecentSuits } from './recentHistory';
 import type { MobileSuitInfo } from '../data/mobileSuitsData';
 
 // LocalStorageをモック
@@ -118,7 +114,12 @@ describe('addToRecentSuits', () => {
   test('最大件数を超えると最古の1件が削除される', () => {
     addToRecentSuits({ name: 'νガンダム', cost: 3000, health: 680, hasPartialRevival: false });
     addToRecentSuits({ name: 'サザビー', cost: 3000, health: 680, hasPartialRevival: false });
-    addToRecentSuits({ name: 'ユニコーンガンダム', cost: 3000, health: 680, hasPartialRevival: false });
+    addToRecentSuits({
+      name: 'ユニコーンガンダム',
+      cost: 3000,
+      health: 680,
+      hasPartialRevival: false,
+    });
     addToRecentSuits({ name: 'Hi-νガンダム', cost: 3000, health: 680, hasPartialRevival: false });
     addToRecentSuits({ name: 'V2ガンダム', cost: 3000, health: 680, hasPartialRevival: false });
     addToRecentSuits({ name: 'ゴッドガンダム', cost: 3000, health: 800, hasPartialRevival: false });
