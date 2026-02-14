@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import Header from '../components/Header.astro';
+import { ENABLE_AD_COOKIES, AD_PUBLISHER_ID } from '../lib/cookieConsent';
 
 interface Props {
   title: string;
@@ -11,6 +12,7 @@ interface Props {
 const { title, description, ogType = 'website' } = Astro.props;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 const ogImageUrl = new URL('/ogp.png', Astro.site).href;
+const showAds = ENABLE_AD_COOKIES && AD_PUBLISHER_ID !== '';
 ---
 
 <!doctype html>
@@ -67,6 +69,16 @@ const ogImageUrl = new URL('/ogp.png', Astro.site).href;
         }
       })();
     </script>
+
+    {
+      showAds && (
+        <script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${AD_PUBLISHER_ID}`}
+          crossorigin="anonymous"
+        />
+      )
+    }
 
     <slot name="head" />
   </head>
