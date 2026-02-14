@@ -39,6 +39,7 @@ export const HealthSelector = ({
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
         setFocusedIndex(-1);
+        setHoveredHealth(null);
       }
     };
 
@@ -93,12 +94,18 @@ export const HealthSelector = ({
     setHoveredHealth(null);
   };
 
-  // focusedIndex 変更時にスクロール追従
+  // focusedIndex 変更時にスクロール追従 + ポップアップ表示
   useEffect(() => {
     if (!isOpen || focusedIndex < 0 || !listRef.current) return;
     const item = listRef.current.children[focusedIndex] as HTMLElement | undefined;
-    item?.scrollIntoView({ block: 'nearest' });
-  }, [focusedIndex, isOpen]);
+    if (!item) return;
+    item.scrollIntoView({ block: 'nearest' });
+
+    // キーボード操作時もポップアップを表示
+    const rect = item.getBoundingClientRect();
+    setHoveredHealth(healthOptions[focusedIndex]);
+    setPopupPosition({ top: rect.top, left: rect.right + 8 });
+  }, [focusedIndex, isOpen, healthOptions]);
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (!isOpen) {
@@ -129,6 +136,7 @@ export const HealthSelector = ({
         event.preventDefault();
         setIsOpen(false);
         setFocusedIndex(-1);
+        setHoveredHealth(null);
         buttonRef.current?.focus();
         break;
     }
