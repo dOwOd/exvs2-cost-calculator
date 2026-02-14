@@ -186,7 +186,7 @@ export const Calculator = () => {
               </aside>
 
               {/* 右カラム: 結果表示 */}
-              <main id="main">
+              <main id="main" tabIndex={-1} class="outline-none">
                 <ResultPanel
                   patterns={normalEval.evaluatedPatterns}
                   formation={formation}
