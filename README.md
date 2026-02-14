@@ -4,30 +4,29 @@
 
 ## 📋 概要
 
-2機編成（コスト + 耐久値）を選択すると、全16通りの撃墜順パターンを評価し、総耐久最大順でソートして表示します。
+2機編成（コスト + 耐久値）を選択すると、撃墜順パターンを自動生成・評価し、総耐久最大順でソートして表示します。
 
 ### 主な機能
 
-- ✅ 編成選択（コスト: 3000/2500/2000/1500、耐久値: コスト別リスト）
-- ✅ 撃墜順パターン自動生成・評価（16通り → 重複排除 → 全パターン表示）
-- ✅ 総耐久最大順でソート（リスポーン耐久変動を考慮した真の総耐久値）
-- ✅ 最短での敗北時の耐久値表示（片方の機体のみ狙われた場合の最小ダメージ）
-- ✅ EXオーバーリミット発動可能フィルター（チェックボックスで絞り込み）
-- ✅ コスト推移の視覚的表現
-  - **コストバー**: 残コストを横長バーで表示（赤/オレンジ/黄/青で色分け）
-    - 🔴 EX発動可能（最もピンチな状態）
-    - 🟠 残コスト3000以下
-    - 🟡 コストオーバー
-    - 🔵 通常
-- ✅ リスポーン時の耐久値変動を考慮した真の総耐久計算
-- ✅ EXオーバーリミット発動判定
-- ✅ PWA対応（オフライン動作可能、ホーム画面に追加可能）
+- 編成選択（コスト: 3000/2500/2000/1500、耐久値: 機体名検索で選択）
+- 撃墜順パターン自動生成・評価（敗北までの全パターン、重複排除）
+- 総耐久最大順でソート（リスポーン耐久変動を考慮した真の総耐久値）
+- 最短での敗北時の耐久値表示（片方の機体のみ狙われた場合の最小ダメージ）
+- EXオーバーリミット発動可能フィルター
+- コスト推移の視覚的表現（コストバー: 赤/オレンジ/黄/青で色分け）
+- 編成の保存・読み込み・比較（最大3編成の横並び比較）
+- 機体名検索・お気に入り機能
+- URL共有・SNSシェア（Twitter/X、LINE、Web Share API）
+- 画像エクスポート（パターンカードのPNG出力）
+- ダークモード対応
+- レスポンシブ対応
+- PWA対応（オフライン動作可能、ホーム画面に追加可能）
 
-### v1.0 スコープ外
+### コンテンツページ
 
-- バースト機能
-- コスト推移グラフ（数値テーブルのみ実装）
-- スマートフォン対応
+- [コスト管理ガイド](/guide) - 撃墜順・コストオーバーの基本解説
+- [よくある質問](/faq) - FAQ（JSON-LD対応）
+- [プライバシーポリシー](/privacy)
 
 ## 🚀 技術スタック
 
@@ -35,8 +34,9 @@
 - **UIライブラリ**: [Preact](https://preactjs.com)
 - **スタイリング**: [Tailwind CSS](https://tailwindcss.com) v4
 - **言語**: TypeScript
-- **テスト**: Jest + ts-jest（ユニットテスト）、Playwright（E2Eテスト）
+- **テスト**: [Vitest](https://vitest.dev)（ユニットテスト）、[Playwright](https://playwright.dev)（E2Eテスト）
 - **UIカタログ**: [Storybook](https://storybook.js.org)
+- **コード品質**: ESLint + Prettier（Husky + lint-staged でpre-commit実行）
 - **パッケージマネージャー**: [pnpm](https://pnpm.io)
 - **開発環境**: Docker
 
@@ -79,7 +79,7 @@ docker compose down
 
 ### 前提条件
 
-- Node.js 24.x 以上
+- Node.js（バージョンは `.node-version` を参照）
 - pnpm 9.x 以上
 
 ### セットアップ
@@ -96,16 +96,19 @@ pnpm dev
 
 | コマンド               | 説明                                      |
 | :--------------------- | :---------------------------------------- |
-| `pnpm install`         | 依存関係をインストール                    |
 | `pnpm dev`             | 開発サーバーを起動 (`localhost:4321`)     |
 | `pnpm build`           | 本番用にビルド (`./dist/`)                |
 | `pnpm preview`         | ビルドしたサイトをプレビュー              |
-| `pnpm test`            | ユニットテスト実行                        |
+| `pnpm test`            | ユニットテスト実行（Vitest）              |
 | `pnpm test:watch`      | ユニットテスト（ウォッチモード）          |
 | `pnpm test:coverage`   | カバレッジ計測                            |
-| `pnpm test:e2e`        | E2Eテスト実行                             |
-| `pnpm test:e2e:ui`     | E2EテストUI モードで実行                  |
+| `pnpm test:e2e`        | E2Eテスト実行（Playwright）               |
+| `pnpm test:e2e:ui`     | E2EテストUIモードで実行                   |
 | `pnpm test:e2e:headed` | E2Eテストヘッドモードで実行（デバッグ用） |
+| `pnpm lint`            | ESLint実行                                |
+| `pnpm lint:fix`        | ESLint自動修正                            |
+| `pnpm format`          | Prettierフォーマット適用                  |
+| `pnpm format:check`    | フォーマット差分チェック                  |
 | `pnpm storybook`       | Storybookを起動 (`localhost:6006`)        |
 | `pnpm build-storybook` | Storybookをビルド                         |
 
@@ -113,23 +116,51 @@ pnpm dev
 
 ```
 src/
-├── lib/
-│   ├── types.ts          # 型定義
-│   ├── calculator.ts     # パターン生成・コスト計算
-│   └── evaluators.ts     # 評価関数・EX発動判定
-├── data/
-│   ├── healthData.ts     # コスト別耐久値データ
-│   └── overCostHealthTable.ts  # コストオーバー残耐久テーブル
 ├── components/
-│   ├── Calculator.tsx    # メイン（状態管理）
-│   ├── FormationPanel.tsx  # 編成選択
-│   ├── ResultPanel.tsx   # 結果表示
-│   ├── PatternCard.tsx   # パターン詳細
-│   └── ...
+│   ├── Calculator.tsx          # メイン（状態管理、通常/比較モード切替）
+│   ├── FormationPanel.tsx      # 編成パネル（A機/B機のコスト・耐久選択）
+│   ├── CostSelector.tsx        # コスト選択（1500/2000/2500/3000）
+│   ├── HealthSelector.tsx      # 耐久値選択
+│   ├── HealthDropdownPopup.tsx # 耐久値ドロップダウン
+│   ├── MobileSuitSearch.tsx    # 機体名検索（お気に入り機能付き）
+│   ├── SavedFormationsPanel.tsx # 保存編成パネル
+│   ├── ComparisonResultPanel.tsx # 編成比較結果パネル
+│   ├── ResultPanel.tsx         # 結果パネル（フィルター + パターンリスト）
+│   ├── PatternList.tsx         # パターン一覧
+│   ├── PatternCard.tsx         # 個別パターンカード
+│   ├── ShareButtons.tsx        # SNSシェアボタン
+│   ├── ErrorBoundary.tsx       # エラーバウンダリ
+│   ├── Header.astro            # サイト共通ヘッダー
+│   ├── Footer.tsx              # フッター
+│   ├── ThemeToggle.tsx         # ダーク/ライトモード切替
+│   ├── Tooltip.tsx             # ツールチップ
+│   └── CookieConsentBanner.tsx # Cookie同意バナー
+├── lib/
+│   ├── types.ts                # 型定義
+│   ├── calculator.ts           # パターン生成・コスト計算
+│   ├── evaluators.ts           # 評価関数・EX発動判定
+│   ├── useFormationEvaluation.ts # 編成評価フック
+│   ├── useTheme.ts             # テーマ管理フック
+│   ├── useCookieConsent.ts     # Cookie同意フック
+│   ├── urlSharing.ts           # URL共有
+│   ├── imageExport.ts          # 画像エクスポート
+│   ├── savedFormations.ts      # 保存編成管理
+│   ├── favoriteSuits.ts        # お気に入り機体管理
+│   ├── recentHistory.ts        # 最近の編成履歴管理
+│   └── cookieConsent.ts        # Cookie同意状態管理
+├── data/
+│   ├── mobileSuitsData.ts      # 機体データ（名前・コスト・耐久値）
+│   ├── faqs.ts                 # FAQデータ
+│   └── overCostHealthTable.ts  # コストオーバー残耐久テーブル
 ├── pages/
-│   └── index.astro       # トップページ
+│   ├── index.astro             # トップページ
+│   ├── guide.astro             # コスト管理ガイド
+│   ├── faq.astro               # よくある質問
+│   └── privacy.astro           # プライバシーポリシー
+├── layouts/
+│   └── BaseLayout.astro        # 共通レイアウト
 └── styles/
-    └── global.css        # グローバルスタイル
+    └── global.css              # グローバルスタイル
 ```
 
 ## 🎯 重要な仕様
@@ -144,9 +175,9 @@ src/
 
 **例:**
 
-- **3000+3000**: 1回撃墜後（残3000 <= 3000）→ ✅ EX発動可
-- **3000+2500**: 2回撃墜後（残500 <= 2500）→ ✅ EX発動可
-- **1500+1500**: 3回撃墜後（残1500 <= 1500）→ ✅ EX発動可
+- **3000+3000**: 1回撃墜後（残3000 <= 3000）→ EX発動可
+- **3000+2500**: 2回撃墜後（残500 <= 2500）→ EX発動可
+- **1500+1500**: 3回撃墜後（残1500 <= 1500）→ EX発動可
 
 ### コスト管理
 
@@ -182,25 +213,6 @@ src/
 - コードレビュー基準
 
 詳細仕様は [docs/SPECIFICATION.md](./docs/SPECIFICATION.md) を参照。
-
-### 🔍 実装理解度チェック（pre-commitフック）
-
-コミット時に自動的に実装内容の理解度をチェックするpre-commitフックが設定されています。
-
-**自動実行条件:**
-
-- 15行以上の変更がある場合に自動実行
-- Claude CLIで実装意図に関する質問を生成
-- 質問を確認し、ブロッカー行を削除するとコミット続行
-
-**スキップ方法:**
-
-```bash
-SKIP_COMMIT_CHECK=1 git commit -m "message"
-```
-
-**閾値のカスタマイズ:**
-`.git/hooks/pre-commit` の `LINE_THRESHOLD` を編集してください。
 
 ## 📄 ライセンス
 
