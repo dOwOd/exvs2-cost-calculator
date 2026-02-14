@@ -132,12 +132,18 @@ export const Calculator = () => {
           </div>
 
           {/* モード切替 */}
-          <div class="mb-4 md:mb-6 flex gap-2" data-testid="mode-toggle">
+          <div
+            class="mb-4 md:mb-6 flex gap-2"
+            data-testid="mode-toggle"
+            role="group"
+            aria-label="モード切り替え"
+          >
             <button
               type="button"
               data-testid="mode-normal"
               onClick={() => setMode('normal')}
-              class={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
+              aria-pressed={mode === 'normal'}
+              class={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-800 ${
                 mode === 'normal'
                   ? 'bg-blue-600 text-white'
                   : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600'
@@ -149,7 +155,8 @@ export const Calculator = () => {
               type="button"
               data-testid="mode-comparison"
               onClick={() => setMode('comparison')}
-              class={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
+              aria-pressed={mode === 'comparison'}
+              class={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-800 ${
                 mode === 'comparison'
                   ? 'bg-blue-600 text-white'
                   : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600'
@@ -161,12 +168,14 @@ export const Calculator = () => {
 
           {/* 通常モード */}
           {mode === 'normal' && (
-            <div
+            <main
+              id="main"
+              tabIndex={-1}
               data-testid="main-layout"
-              class="grid grid-cols-1 lg:grid-cols-[400px_1fr] gap-4 md:gap-6"
+              class="grid grid-cols-1 lg:grid-cols-[400px_1fr] gap-4 md:gap-6 outline-none"
             >
               {/* 左カラム: 編成選択 + 保存編成 */}
-              <aside class="space-y-4 md:space-y-6">
+              <div class="space-y-4 md:space-y-6">
                 <FormationPanel
                   unitA={formation.unitA}
                   unitB={formation.unitB}
@@ -176,10 +185,10 @@ export const Calculator = () => {
                 <ErrorBoundary fallbackMessage="保存編成の読み込み中にエラーが発生しました">
                   <SavedFormationsPanel formation={formation} onLoad={handleLoadFormation} />
                 </ErrorBoundary>
-              </aside>
+              </div>
 
               {/* 右カラム: 結果表示 */}
-              <main>
+              <div>
                 <ResultPanel
                   patterns={normalEval.evaluatedPatterns}
                   formation={formation}
@@ -187,13 +196,13 @@ export const Calculator = () => {
                   initialExOnly={urlFilterState.exOnly}
                   initialFirstKillFilter={urlFilterState.firstKillFilter}
                 />
-              </main>
-            </div>
+              </div>
+            </main>
           )}
 
           {/* 比較モード */}
           {mode === 'comparison' && (
-            <div data-testid="comparison-layout">
+            <main id="main" tabIndex={-1} data-testid="comparison-layout" class="outline-none">
               {/* 編成パネル群 */}
               <div class="mb-4 md:mb-6">
                 <div class="flex items-center justify-between mb-3">
@@ -276,7 +285,7 @@ export const Calculator = () => {
                 formations={compFormations.slice(0, compCount)}
                 evals={compEvals.slice(0, compCount)}
               />
-            </div>
+            </main>
           )}
         </div>
       </div>

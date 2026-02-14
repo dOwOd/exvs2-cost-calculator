@@ -159,7 +159,7 @@ export const MobileSuitSearch = ({
             onInput={(e) => setQuery((e.target as HTMLInputElement).value)}
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
-            class="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200 rounded border border-slate-300 dark:border-slate-600 focus:border-blue-500 focus:outline-none w-full"
+            class="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200 rounded border border-slate-300 dark:border-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-800 w-full"
           />
 
           {isOpen && results.length > 0 && (

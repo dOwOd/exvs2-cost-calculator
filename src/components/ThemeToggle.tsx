@@ -13,7 +13,7 @@ export const ThemeToggle = () => {
       onClick={toggleTheme}
       data-testid="theme-toggle"
       aria-label={isDark ? 'ライトモードに切り替え' : 'ダークモードに切り替え'}
-      class="p-2 rounded-lg bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors"
+      class="p-2 rounded-lg bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-800"
     >
       {isDark ? (
         // 太陽アイコン（ライトモードに切り替え）

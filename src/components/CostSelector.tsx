@@ -20,7 +20,8 @@ export const CostSelector = ({ selectedCost, onSelect, testIdPrefix = '' }: Cost
           key={cost}
           data-testid={testIdPrefix ? `cost-button-${testIdPrefix}-${cost}` : `cost-button-${cost}`}
           onClick={() => onSelect(cost)}
-          class={`min-h-[44px] px-2 sm:px-4 py-2 rounded font-semibold transition-colors text-sm sm:text-base ${
+          aria-pressed={selectedCost === cost}
+          class={`min-h-[44px] px-2 sm:px-4 py-2 rounded font-semibold transition-colors text-sm sm:text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-800 ${
             selectedCost === cost
               ? 'bg-blue-600 text-white'
               : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
