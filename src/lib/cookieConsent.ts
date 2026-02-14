@@ -4,6 +4,12 @@
  */
 
 /**
+ * 広告Cookie機能のフィーチャーフラグ
+ * 広告導入時に true に変更するだけでCookie同意バナー・設定が有効になる
+ */
+export const ENABLE_AD_COOKIES = false;
+
+/**
  * Cookie同意状態の型
  */
 export type CookieConsentStatus = 'granted' | 'denied' | 'undecided';
