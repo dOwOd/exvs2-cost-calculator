@@ -168,6 +168,8 @@ PatternList → PatternCard（各パターン表示）
 
 `.claude/agents/` にカスタムエージェント定義を配置。プロジェクト単位でチームを構成する。
 
+### exvs2（開発チーム）
+
 - **lead.md** - チームリーダー（タスク分割・割当、統合・レビュー、Git/PR管理、CI/CD設定）
 - **logic.md** - ゲームロジック＆テスト担当（`src/lib/`, `src/data/`, テストファイル）
 - **ui.md** - UIコンポーネント担当（`src/components/`）
@@ -175,11 +177,19 @@ PatternList → PatternCard（各パターン表示）
 - **refactor.md** - DRYリファクタリング担当（重複検出、共通関数切り出し、コンポーネント化）
 - **qa.md** - 品質保証担当（ユニットテスト、E2Eテスト、Lighthouse、仕様整合性検証）
 
+### exvs2-infra（インフラチーム）
+
+- **infra-lead.md** - インフラチームリーダー（タスク統括、調査・設計の統合、Issue作成、デプロイ管理）
+- **researcher.md** - 技術調査担当（Cloudflare Workers、外部API、セキュリティのベストプラクティス収集）
+- **architect.md** - アーキテクチャ設計担当（拡張性重視の設計、型定義、ディレクトリ構成、ミドルウェアパターン）
+
 ### チーム運用
 
-- チーム名: `exvs2`（プロジェクト固定、Issueごとに作り直さない）
+- 開発チーム名: `exvs2`（フロントエンド・ゲームロジック）
+- インフラチーム名: `exvs2-infra`（サーバーレスAPI・インフラ）
+- 各チームはプロジェクト固定、Issueごとに作り直さない
 - Issueはタスクとして管理し、同じチーム内で処理する
-- セッション開始時に `TeamCreate(team_name: "exvs2")` で起動
+- セッション開始時に対象チームを `TeamCreate` で起動
 
 ## スキル
 
