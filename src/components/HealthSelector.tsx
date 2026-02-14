@@ -29,6 +29,7 @@ export const HealthSelector = ({
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
 
   // 外部クリックで閉じる
   useEffect(() => {
@@ -92,6 +93,13 @@ export const HealthSelector = ({
     setHoveredHealth(null);
   };
 
+  // focusedIndex 変更時にスクロール追従
+  useEffect(() => {
+    if (!isOpen || focusedIndex < 0 || !listRef.current) return;
+    const item = listRef.current.children[focusedIndex] as HTMLElement | undefined;
+    item?.scrollIntoView({ block: 'nearest' });
+  }, [focusedIndex, isOpen]);
+
   const handleKeyDown = (event: KeyboardEvent) => {
     if (!isOpen) {
       if (event.key === 'Enter' || event.key === ' ') {
@@ -153,6 +161,7 @@ export const HealthSelector = ({
 
       {isOpen && (
         <ul
+          ref={listRef}
           role="listbox"
           data-testid={
             testIdPrefix ? `health-selector-listbox-${testIdPrefix}` : 'health-selector-listbox'
