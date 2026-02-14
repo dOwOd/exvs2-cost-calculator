@@ -3,12 +3,13 @@
  * 広告Cookieの同意/拒否をユーザーに求める
  */
 
+import { ENABLE_AD_COOKIES } from '../lib/cookieConsent';
 import { useCookieConsent } from '../lib/useCookieConsent';
 
 export const CookieConsentBanner = () => {
   const { status, grant, deny } = useCookieConsent();
 
-  if (status !== 'undecided') {
+  if (!ENABLE_AD_COOKIES || status !== 'undecided') {
     return null;
   }
 

@@ -3,6 +3,7 @@
  */
 
 import {
+  ENABLE_AD_COOKIES,
   getCookieConsent,
   setCookieConsent,
   resetCookieConsent,
@@ -29,6 +30,12 @@ const localStorageMock = (() => {
 
 Object.defineProperty(global, 'localStorage', {
   value: localStorageMock,
+});
+
+describe('ENABLE_AD_COOKIES', () => {
+  test('フィーチャーフラグが false であること（広告未導入）', () => {
+    expect(ENABLE_AD_COOKIES).toBe(false);
+  });
 });
 
 describe('getCookieConsent', () => {

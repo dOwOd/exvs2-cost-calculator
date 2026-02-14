@@ -3,6 +3,7 @@
  */
 
 import { GitHubIcon } from './icons/GitHubIcon';
+import { ENABLE_AD_COOKIES } from '../lib/cookieConsent';
 import { useCookieConsent } from '../lib/useCookieConsent';
 
 const siteLinks = [
@@ -36,7 +37,7 @@ export const Footer = () => {
                     </a>
                   </li>
                 ))}
-                {status !== 'undecided' && (
+                {ENABLE_AD_COOKIES && status !== 'undecided' && (
                   <li>
                     <button type="button" onClick={reset} class={linkClass}>
                       Cookie設定

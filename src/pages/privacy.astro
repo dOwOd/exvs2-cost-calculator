@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { ENABLE_AD_COOKIES } from '../lib/cookieConsent';
 import { CookieConsentBanner } from '../components/CookieConsentBanner';
 ---
 
@@ -42,52 +43,61 @@ import { CookieConsentBanner } from '../components/CookieConsentBanner';
         </p>
       </section>
 
-      <section>
-        <h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">
-          広告配信について
-        </h2>
-        <p>
-          当サイトでは、第三者配信の広告サービス「Google
-          AdSense（グーグルアドセンス）」を利用しています。
-        </p>
-        <p class="mt-2">
-          Google などの第三者配信事業者は、Cookie
-          を使用して、当サイトや他のウェブサイトへの過去のアクセス情報に基づいて広告を配信します。
-          Google が広告 Cookie
-          を使用することにより、当サイトや他のサイトにアクセスした際の情報に基づいて、Google
-          やそのパートナーは適切な広告を表示します。
-        </p>
-        <p class="mt-2">
-          パーソナライズ広告を無効にする場合は、
-          <a
-            href="https://www.google.com/settings/ads"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-blue-600 dark:text-blue-400 hover:underline">Google 広告設定</a
-          >
-          から設定できます。 また、
-          <a
-            href="https://www.aboutads.info/choices/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-blue-600 dark:text-blue-400 hover:underline">aboutads.info</a
-          >
-          にアクセスすることで、第三者配信事業者の Cookie を使用したパーソナライズ広告を無効にできます。
-        </p>
-      </section>
+      {
+        ENABLE_AD_COOKIES && (
+          <section>
+            <h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">
+              広告配信について
+            </h2>
+            <p>
+              当サイトでは、第三者配信の広告サービス「Google
+              AdSense（グーグルアドセンス）」を利用しています。
+            </p>
+            <p class="mt-2">
+              Google などの第三者配信事業者は、Cookie
+              を使用して、当サイトや他のウェブサイトへの過去のアクセス情報に基づいて広告を配信します。
+              Google が広告 Cookie
+              を使用することにより、当サイトや他のサイトにアクセスした際の情報に基づいて、Google
+              やそのパートナーは適切な広告を表示します。
+            </p>
+            <p class="mt-2">
+              パーソナライズ広告を無効にする場合は、
+              <a
+                href="https://www.google.com/settings/ads"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                Google 広告設定
+              </a>
+              から設定できます。また、
+              <a
+                href="https://www.aboutads.info/choices/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                aboutads.info
+              </a>
+              にアクセスすることで、第三者配信事業者の Cookie
+              を使用したパーソナライズ広告を無効にできます。
+            </p>
+          </section>
+        )
+      }
 
       <section>
         <h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">
-          Cookie について
+          Cookie・LocalStorage について
         </h2>
         <p>
           Cookie とは、ウェブサイトがお客様のブラウザに送信する小さなテキストファイルです。
-          当サイトでは以下の目的で Cookie を使用しています。
+          当サイトでは以下の目的で Cookie および LocalStorage を使用しています。
         </p>
         <ul class="list-disc list-inside mt-2 space-y-1">
           <li>テーマ設定（ダークモード / ライトモード）の保存</li>
-          <li>編成データの保存（LocalStorage）</li>
-          <li>第三者配信事業者（Google AdSense）による広告配信</li>
+          <li>編成データ・お気に入り機体の保存</li>
+          {ENABLE_AD_COOKIES && <li>第三者配信事業者（Google AdSense）による広告配信</li>}
         </ul>
         <p class="mt-2">
           ブラウザの設定により Cookie

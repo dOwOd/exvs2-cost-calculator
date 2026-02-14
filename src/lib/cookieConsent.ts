@@ -4,6 +4,18 @@
  */
 
 /**
+ * 広告Cookie機能のフィーチャーフラグ
+ * 広告導入時に true に変更するだけでCookie同意バナー・設定が有効になる
+ */
+export const ENABLE_AD_COOKIES = false;
+
+/**
+ * Google AdSense パブリッシャーID
+ * AdSenseアカウント作成後に取得したIDを設定する（例: "ca-pub-1234567890123456"）
+ */
+export const AD_PUBLISHER_ID = '';
+
+/**
  * Cookie同意状態の型
  */
 export type CookieConsentStatus = 'granted' | 'denied' | 'undecided';
