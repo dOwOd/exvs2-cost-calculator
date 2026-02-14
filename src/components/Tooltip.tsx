@@ -1,6 +1,6 @@
 /**
  * ツールチップコンポーネント
- * ホバー時に詳細説明を表示
+ * ホバー時またはフォーカス時に詳細説明を表示
  */
 
 import type { ComponentChildren } from 'preact';
@@ -13,9 +13,16 @@ type TooltipType = {
   children: ComponentChildren;
   /** 表示位置 */
   align?: 'center' | 'left' | 'right';
+  /** キーボードフォーカス可能にする */
+  focusable?: boolean;
 };
 
-export const Tooltip = ({ content, children, align = 'center' }: TooltipType) => {
+export const Tooltip = ({
+  content,
+  children,
+  align = 'center',
+  focusable = false,
+}: TooltipType) => {
   const [isVisible, setIsVisible] = useState(false);
 
   // 位置に応じたスタイル
@@ -39,14 +46,16 @@ export const Tooltip = ({ content, children, align = 'center' }: TooltipType) =>
       <span
         onMouseEnter={show}
         onMouseLeave={hide}
-        onFocusin={show}
-        onFocusout={hide}
-        class="cursor-help"
+        onFocus={focusable ? show : undefined}
+        onBlur={focusable ? hide : undefined}
+        tabIndex={focusable ? 0 : undefined}
+        class={`cursor-help${focusable ? ' rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500' : ''}`}
       >
         {children}
       </span>
       {isVisible && (
         <span
+          role="tooltip"
           class={`absolute z-[100] top-full ${positionClasses[align]} mt-2 px-3 py-2 bg-slate-800 dark:bg-slate-950 text-slate-100 dark:text-slate-200 text-sm rounded-lg shadow-lg border border-slate-300 dark:border-slate-700 whitespace-nowrap`}
         >
           {content}
@@ -71,12 +80,11 @@ type InfoIconType = {
  */
 export const InfoIcon = ({ tooltip, align = 'center' }: InfoIconType) => {
   return (
-    <Tooltip content={tooltip} align={align}>
+    <Tooltip content={tooltip} align={align} focusable>
       <span
         role="img"
         aria-label="情報"
-        tabIndex={0}
-        class="inline-flex items-center justify-center w-4 h-4 ml-1 text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 focus:text-blue-600 dark:focus:text-blue-400 transition-colors rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+        class="inline-flex items-center justify-center w-4 h-4 ml-1 text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
       >
         ⓘ
       </span>
