@@ -31,13 +31,16 @@ export const Tooltip = ({ content, children, align = 'center' }: TooltipType) =>
     right: 'right-4',
   };
 
+  const show = () => setIsVisible(true);
+  const hide = () => setIsVisible(false);
+
   return (
     <span class="relative inline-block">
       <span
-        onMouseEnter={() => setIsVisible(true)}
-        onMouseLeave={() => setIsVisible(false)}
-        onFocus={() => setIsVisible(true)}
-        onBlur={() => setIsVisible(false)}
+        onMouseEnter={show}
+        onMouseLeave={hide}
+        onFocusin={show}
+        onFocusout={hide}
         class="cursor-help"
       >
         {children}
