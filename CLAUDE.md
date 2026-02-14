@@ -108,6 +108,7 @@ git worktree remove ../exvs2-worktree  # 後片付け
 - **guide.astro** - コスト管理ガイドページ（BreadcrumbList JSON-LD）
 - **faq.astro** - よくある質問ページ（FAQPage + BreadcrumbList JSON-LD）
 - **privacy.astro** - プライバシーポリシーページ（BreadcrumbList JSON-LD）
+- **404.astro** - カスタム404ページ（トップページへの導線）
 
 > **注意**: 新しいページを追加した場合は、BaseLayout を使用し、JSON-LD 構造化データの追加・更新も検討すること
 
