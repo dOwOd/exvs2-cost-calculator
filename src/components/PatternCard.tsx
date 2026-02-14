@@ -356,7 +356,7 @@ export const PatternCard = ({
                       <span class="flex items-center justify-center">
                         状態
                         <InfoIcon
-                          tooltip="✓=通常 ⚠️=コストオーバー 🔄=復活あり 💀=敗北"
+                          tooltip="✓=通常 ⚠️=コストオーバー 🔄=復活あり 💥=敗北"
                           align="right"
                         />
                       </span>
@@ -451,7 +451,7 @@ export const PatternCard = ({
                       <td class="py-2 px-1 sm:px-2 text-center whitespace-nowrap">
                         {trans.isDefeat ? (
                           <span class="text-red-600 dark:text-red-400 font-semibold">
-                            💀 <span class="hidden sm:inline">敗北</span>
+                            💥 <span class="hidden sm:inline">敗北</span>
                           </span>
                         ) : trans.isPartialRevival ? (
                           <span class="text-purple-600 dark:text-purple-400 font-semibold">
