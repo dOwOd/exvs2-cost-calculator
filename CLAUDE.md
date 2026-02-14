@@ -2,6 +2,13 @@
 
 機動戦士ガンダム EXVS2 のコスト計算ツール
 
+## 共有設定
+
+`.claude/rules/` と `.claude/skills/` の一部は [claude-shared](https://github.com/dOwOd/claude-shared) からシンボリックリンクで参照している。
+
+- **共有ファイルの変更**: `~/Development/claude-shared/` 側を編集・コミットする
+- **プロジェクト固有の上書き**: シンボリックリンクを削除してローカルファイルに置き換える
+
 ## Gitワークフロー
 
 - Issue/機能ごとに必ず `main` から新しいブランチを作成する。`main` に直接コミットしない
