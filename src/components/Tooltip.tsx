@@ -15,6 +15,8 @@ type TooltipType = {
   align?: 'center' | 'left' | 'right';
   /** キーボードフォーカス可能にする */
   focusable?: boolean;
+  /** トリガー要素の追加クラス */
+  triggerClass?: string;
 };
 
 export const Tooltip = ({
@@ -22,6 +24,7 @@ export const Tooltip = ({
   children,
   align = 'center',
   focusable = false,
+  triggerClass = '',
 }: TooltipType) => {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -49,7 +52,7 @@ export const Tooltip = ({
         onFocus={focusable ? show : undefined}
         onBlur={focusable ? hide : undefined}
         tabIndex={focusable ? 0 : undefined}
-        class={`cursor-help${focusable ? ' rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500' : ''}`}
+        class={`cursor-help${focusable ? ' rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500' : ''}${triggerClass ? ` ${triggerClass}` : ''}`}
       >
         {children}
       </span>
@@ -80,12 +83,13 @@ type InfoIconType = {
  */
 export const InfoIcon = ({ tooltip, align = 'center' }: InfoIconType) => {
   return (
-    <Tooltip content={tooltip} align={align} focusable>
-      <span
-        role="img"
-        aria-label="情報"
-        class="inline-flex items-center justify-center w-4 h-4 ml-1 text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-      >
+    <Tooltip
+      content={tooltip}
+      align={align}
+      focusable
+      triggerClass="inline-flex items-center justify-center w-4 h-4 ml-1 text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+    >
+      <span role="img" aria-label="情報">
         ⓘ
       </span>
     </Tooltip>
