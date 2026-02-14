@@ -173,7 +173,8 @@ export const ResultPanel = ({
 
         {/* フィルター（両方選択済みの場合のみ表示） */}
         {isFormationComplete && (
-          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <fieldset class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-none p-0 m-0">
+            <legend class="sr-only">パターン表示フィルター</legend>
             <label class="flex items-center gap-3 cursor-pointer group">
               <div class="relative">
                 <input
@@ -183,7 +184,7 @@ export const ResultPanel = ({
                   onChange={(e) => handleExFilterChange(e.currentTarget.checked)}
                   class="sr-only peer"
                 />
-                <div class="w-6 h-6 border-2 border-slate-300 dark:border-slate-600 rounded-md bg-slate-100 dark:bg-slate-800 peer-checked:bg-blue-600 peer-checked:border-blue-600 transition-all duration-200 group-hover:border-slate-400 dark:group-hover:border-slate-500">
+                <div class="w-6 h-6 border-2 border-slate-300 dark:border-slate-600 rounded-md bg-slate-100 dark:bg-slate-800 peer-checked:bg-blue-600 peer-checked:border-blue-600 transition-all duration-200 group-hover:border-slate-400 dark:group-hover:border-slate-500 peer-focus-visible:ring-2 peer-focus-visible:ring-blue-500 peer-focus-visible:ring-offset-2 dark:peer-focus-visible:ring-offset-gray-800">
                   <svg
                     class={`w-full h-full text-white transition-all duration-200 ${showOnlyEXAvailable ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}
                     fill="none"
@@ -223,7 +224,11 @@ export const ResultPanel = ({
                   <div class="text-xs text-slate-500 dark:text-slate-400 mb-1.5 sm:hidden">
                     先撃墜フィルター
                   </div>
-                  <div class="inline-flex rounded-lg bg-slate-200 dark:bg-slate-800 p-0.5">
+                  <div
+                    class="inline-flex rounded-lg bg-slate-200 dark:bg-slate-800 p-0.5"
+                    role="radiogroup"
+                    aria-label="先撃墜フィルター"
+                  >
                     {(
                       [
                         ['all', 'すべて'],
@@ -234,9 +239,11 @@ export const ResultPanel = ({
                       <button
                         key={value}
                         type="button"
+                        role="radio"
+                        aria-checked={firstKillFilter === value}
                         data-testid={`first-kill-filter-${value.toLowerCase()}`}
                         onClick={() => handleFirstKillFilterChange(value as FirstKillFilter)}
-                        class={`px-3 py-1 text-sm font-medium rounded-md transition-all duration-200 ${
+                        class={`px-3 py-1 text-sm font-medium rounded-md transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-800 ${
                           firstKillFilter === value
                             ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 shadow-sm'
                             : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
@@ -289,7 +296,7 @@ export const ResultPanel = ({
                 )}
               </button>
             </div>
-          </div>
+          </fieldset>
         )}
       </div>
 

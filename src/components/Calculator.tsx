@@ -132,12 +132,18 @@ export const Calculator = () => {
           </div>
 
           {/* モード切替 */}
-          <div class="mb-4 md:mb-6 flex gap-2" data-testid="mode-toggle">
+          <div
+            class="mb-4 md:mb-6 flex gap-2"
+            data-testid="mode-toggle"
+            role="group"
+            aria-label="モード切り替え"
+          >
             <button
               type="button"
               data-testid="mode-normal"
               onClick={() => setMode('normal')}
-              class={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
+              aria-pressed={mode === 'normal'}
+              class={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-800 ${
                 mode === 'normal'
                   ? 'bg-blue-600 text-white'
                   : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600'
@@ -149,7 +155,8 @@ export const Calculator = () => {
               type="button"
               data-testid="mode-comparison"
               onClick={() => setMode('comparison')}
-              class={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
+              aria-pressed={mode === 'comparison'}
+              class={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-800 ${
                 mode === 'comparison'
                   ? 'bg-blue-600 text-white'
                   : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600'
@@ -179,7 +186,7 @@ export const Calculator = () => {
               </aside>
 
               {/* 右カラム: 結果表示 */}
-              <main>
+              <main id="main">
                 <ResultPanel
                   patterns={normalEval.evaluatedPatterns}
                   formation={formation}

@@ -36,6 +36,8 @@ export const Tooltip = ({ content, children, align = 'center' }: TooltipType) =>
       <span
         onMouseEnter={() => setIsVisible(true)}
         onMouseLeave={() => setIsVisible(false)}
+        onFocus={() => setIsVisible(true)}
+        onBlur={() => setIsVisible(false)}
         class="cursor-help"
       >
         {children}
@@ -67,7 +69,12 @@ type InfoIconType = {
 export const InfoIcon = ({ tooltip, align = 'center' }: InfoIconType) => {
   return (
     <Tooltip content={tooltip} align={align}>
-      <span class="inline-flex items-center justify-center w-4 h-4 ml-1 text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+      <span
+        role="img"
+        aria-label="情報"
+        tabIndex={0}
+        class="inline-flex items-center justify-center w-4 h-4 ml-1 text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 focus:text-blue-600 dark:focus:text-blue-400 transition-colors rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
         ⓘ
       </span>
     </Tooltip>
