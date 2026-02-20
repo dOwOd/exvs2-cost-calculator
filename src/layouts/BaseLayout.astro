@@ -11,7 +11,7 @@ interface Props {
 
 const { title, description, ogType = 'website' } = Astro.props;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
-const ogImageUrl = new URL('/ogp.png', Astro.site).href;
+const ogImageUrl = new URL(`${import.meta.env.BASE_URL}ogp.png`, Astro.site).href;
 const showAds = ENABLE_AD_COOKIES && AD_PUBLISHER_ID !== '';
 ---
 
@@ -19,8 +19,8 @@ const showAds = ENABLE_AD_COOKIES && AD_PUBLISHER_ID !== '';
 <html lang="ja">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
+    <link rel="icon" href={`${import.meta.env.BASE_URL}favicon.ico`} />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>

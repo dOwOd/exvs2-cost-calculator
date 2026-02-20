@@ -3,6 +3,8 @@
  * カテゴリ別にグルーピングされたFAQ一覧
  */
 
+const base = import.meta.env.BASE_URL;
+
 /** FAQカテゴリ定義 */
 export type FaqCategory = {
   id: 'basic-rules' | 'ex-over-limit' | 'ex-burst' | 'tactics' | 'calculator';
@@ -43,7 +45,7 @@ export const faqs: FaqItem[] = [
       'EXVS2では、2機編成のチームが合計6000のコストを共有する。A機とB機が別々のコストを持つのではなく、チーム全体で1つの残コストを管理する仕組みである。機体が撃墜されると、その機体のコスト分が残コストから差し引かれ、残コストが0以下になると敗北となる。',
     category: 'basic-rules',
     link: { url: 'https://gundam-vs.jp/extreme/ac2ib/howto/', text: '公式サイト - 遊び方ルール' },
-    guideLink: { url: '/guide/#shared-cost', text: 'ガイド - チーム共有コストとは' },
+    guideLink: { url: `${base}guide/#shared-cost`, text: 'ガイド - チーム共有コストとは' },
   },
   {
     question: '各コスト帯の特徴は？',
@@ -54,14 +56,14 @@ export const faqs: FaqItem[] = [
       '1500コスト: 基本性能こそ低いが、特定の局面で高コスト機を上回る爆発力を持つ機体が多い。3000と組んだ場合にEXオーバーリミットが発動できない撃墜順が生まれやすく、上級者向けのコスト帯である。',
     ],
     category: 'basic-rules',
-    guideLink: { url: '/guide/#cost-types', text: 'ガイド - コストタイプと性能' },
+    guideLink: { url: `${base}guide/#cost-types`, text: 'ガイド - コストタイプと性能' },
   },
   {
     question: 'コストオーバーとは？',
     answer:
       '撃墜された機体が再出撃する際、残コストがその機体のコスト未満だと「コストオーバー」状態になり、初期耐久値より低い耐久で復帰する。高コストの機体ほどペナルティが深刻で、例えば同じ残コスト500でも3000コスト機は耐久約18%、2000コスト機は耐久25%で復帰するなど、高コストほど復帰耐久が大幅に低くなる。',
     category: 'basic-rules',
-    guideLink: { url: '/guide/#cost-over', text: 'ガイド - コストオーバーとは' },
+    guideLink: { url: `${base}guide/#cost-over`, text: 'ガイド - コストオーバーとは' },
   },
   // --- EXオーバーリミット ---
   {
@@ -70,7 +72,10 @@ export const faqs: FaqItem[] = [
       'チームの残コストが編成内の最低コスト以下になった時に1度だけ発動可能となる。つまり「自機と僚機のいずれが撃墜されても敗北する状況」で発動できる。',
     formula: '発動条件: 残コスト ≤ min(A機コスト, B機コスト)',
     category: 'ex-over-limit',
-    guideLink: { url: '/guide/#ex-over-limit', text: 'ガイド - EXオーバーリミットの発動条件' },
+    guideLink: {
+      url: `${base}guide/#ex-over-limit`,
+      text: 'ガイド - EXオーバーリミットの発動条件',
+    },
   },
   {
     question: 'EXオーバーリミットの効果は？',
@@ -100,7 +105,7 @@ export const faqs: FaqItem[] = [
       url: 'https://gundam-vs.jp/extreme/ac2ib/howto/rules/ex_burst/',
       text: '公式サイト - EXバースト解説',
     },
-    guideLink: { url: '/guide/#burst', text: 'ガイド - 覚醒（EXバースト）システム' },
+    guideLink: { url: `${base}guide/#burst`, text: 'ガイド - 覚醒（EXバースト）システム' },
   },
   {
     question: '「覚醒」と「EXバースト」の表現の違いは？',
@@ -120,14 +125,14 @@ export const faqs: FaqItem[] = [
     answer:
       '低コストが先に撃墜されると、高コスト機がコストオーバーで低耐久復帰になる。高性能な機体が低耐久で慎重に動かざるを得なくなり、相手2機に集中攻撃される不利な展開になりやすいためである。ただし、EXVS2ではEXオーバーリミットの仕組みにより、高コスト先撃墜後に続けて撃墜されるとEXオーバーリミットが発動できずに敗北するリスクもあり、従来作品よりも高コスト先撃墜のリスクが増している。',
     category: 'tactics',
-    guideLink: { url: '/guide/#theory', text: 'ガイド - 高コスト先撃墜セオリー' },
+    guideLink: { url: `${base}guide/#theory`, text: 'ガイド - 高コスト先撃墜セオリー' },
   },
   {
     question: '低コスト同士の編成（2000+2000や1500+1500）の特徴は？',
     answer:
       '低コスト同士ではコストオーバーが発生せず、フル耐久で復帰できる。ただし、フル耐久でEXオーバーリミットが発動すると耐久回復の恩恵を受けにくいデメリットがある。そのため、EXオーバーリミット発動前にある程度耐久を減らしておく強気な立ち回りも選択肢になるが、両機が瀕死で片方が撃墜されるとEXオーバーリミット発動までの約3秒で残りの機体も撃墜される危険性がある。2000+2000では両前衛をベースに交互に撃墜される展開が原則である。',
     category: 'tactics',
-    guideLink: { url: '/guide/#formations', text: 'ガイド - 編成別のコスト管理' },
+    guideLink: { url: `${base}guide/#formations`, text: 'ガイド - 編成別のコスト管理' },
   },
   {
     question: '1500コストは初心者向けか？',
@@ -140,7 +145,7 @@ export const faqs: FaqItem[] = [
     answer:
       '3000+2500や3000+2000では基本的に3000が前衛、低コストが後衛を務める。2500+2500や2500+2000ではダブル前衛をベースに耐久調整しながら立ち回る。2000+2000でも両前衛が原則で、味方が先に撃墜された場合は残った側も守りに入らず積極的に前に出ることが重要である。2000+1500では1500が2回撃墜される展開が総耐久的に有利である。編成ごとの詳細は「コストの仕組みとセオリー解説」ページを参照されたい。',
     category: 'tactics',
-    guideLink: { url: '/guide/#formations', text: 'ガイド - 編成別のコスト管理' },
+    guideLink: { url: `${base}guide/#formations`, text: 'ガイド - 編成別のコスト管理' },
   },
   // --- 計算・ツール ---
   {

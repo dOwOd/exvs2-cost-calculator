@@ -11,6 +11,7 @@ const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
 // https://astro.build/config
 export default defineConfig({
   site: 'https://dowo.dev',
+  base: '/works/exvs2-cost-calculator/',
   output: 'static',
   integrations: [preact(), sitemap()],
 
