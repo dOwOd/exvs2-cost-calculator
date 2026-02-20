@@ -104,6 +104,7 @@ git worktree remove ../exvs2-worktree  # 後片付け
 - **overCostHealthTable.ts** - コストオーバー時の復帰耐久値テーブル
 - mobileSuitsData.ts - 機体データ（名前・コスト・耐久値）
 - faqs.ts - FAQデータ（カテゴリ別グルーピング、型定義、ヘルパー関数）
+- changelog.ts - リリースノートデータ（型定義、バージョン別変更履歴）
 
 ### レイアウト（src/layouts/）
 
@@ -115,6 +116,7 @@ git worktree remove ../exvs2-worktree  # 後片付け
 - **guide.astro** - コスト管理ガイドページ（BreadcrumbList JSON-LD）
 - **faq.astro** - よくある質問ページ（FAQPage + BreadcrumbList JSON-LD）
 - **privacy.astro** - プライバシーポリシーページ（BreadcrumbList JSON-LD）
+- **changelog.astro** - 更新履歴ページ（BreadcrumbList JSON-LD）
 - **404.astro** - カスタム404ページ（トップページへの導線）
 
 > **注意**: 新しいページを追加した場合は、BaseLayout を使用し、JSON-LD 構造化データの追加・更新も検討すること
@@ -238,6 +240,24 @@ PatternList → PatternCard（各パターン表示）
 - **ローカル品質ゲート**: ESLint + Prettier（Husky + lint-staged でpre-commitフック実行）
 - **最適化**: concurrency（連続プッシュ時の自動キャンセル）、paths-ignore
 - **未導入**: 依存関係自動更新、Lighthouse
+
+## リリース・デプロイ ロードマップ
+
+```
+#139 バージョン管理・表示とリリースノート（/changelog）構築
+ ↓  package.json version → 0.1.0、ビルド時埋め込み、/changelog ページ
+#136 Cloudflare Pages デプロイ（dowo.dev/works/exvs2-cost-calculator/）
+ ↓  本番URL確定 → Turnstile・CORS設定が可能に
+#129 問い合わせ機能（Phase 1: Worker → Phase 2: /contact → Phase 3: 結合テスト）
+```
+
+### バージョニング方針
+
+- **セマンティックバージョニング**（semver: `MAJOR.MINOR.PATCH`）
+- 初回リリース: `v0.1.0`（主要機能が揃った段階で `v1.0.0` を検討）
+- Git タグ: `v0.1.0` 形式
+- サイト上にバージョン番号を表示し、`/changelog` へリンク
+- リリースノートはサイト内 `/changelog` で公開（リポジトリがプライベートのため GitHub Releases は不可）
 
 ## ドキュメント更新確認
 

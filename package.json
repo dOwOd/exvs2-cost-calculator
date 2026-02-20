@@ -1,7 +1,7 @@
 {
   "name": "exvs2-cost-calculator",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "engines": {
     "node": ">=20.0.0",
     "pnpm": ">=9.0.0"

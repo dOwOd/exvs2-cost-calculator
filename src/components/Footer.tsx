@@ -72,7 +72,10 @@ export const Footer = () => {
             </a>
           </div>
           <div class="text-xs text-slate-400 dark:text-slate-500">
-            © {currentYear} EXVS2 コスト計算機
+            <a href="/changelog/" class={linkClass}>
+              v{__APP_VERSION__}
+            </a>
+            <span class="mx-1">&middot;</span>© {currentYear} EXVS2 コスト計算機
           </div>
         </div>
       </div>
