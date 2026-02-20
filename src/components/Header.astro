@@ -28,15 +28,16 @@ const isCurrentPage = (href: string) => {
 <header class="border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
   <div class="container mx-auto px-3 sm:px-4 md:px-6">
     <div class="flex items-center justify-between h-14">
-      <div class="flex items-center gap-6">
+      <div class="flex items-center gap-2 sm:gap-6">
         <a
           href={base}
           class="text-lg font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors whitespace-nowrap"
         >
-          EXVS2 コスト計算機
+          <span class="sm:hidden">EXVS2</span>
+          <span class="hidden sm:inline">EXVS2 コスト計算機</span>
         </a>
         <nav aria-label="メインナビゲーション">
-          <ul class="flex items-center gap-1">
+          <ul class="flex items-center gap-0.5 sm:gap-1">
             {
               navItems.map((item) => {
                 const current = isCurrentPage(item.href);
@@ -46,7 +47,7 @@ const isCurrentPage = (href: string) => {
                       href={item.href}
                       aria-current={current ? 'page' : undefined}
                       class:list={[
-                        'px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
+                        'px-2 sm:px-3 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap',
                         current
                           ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300'
                           : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-700',
@@ -61,7 +62,9 @@ const isCurrentPage = (href: string) => {
           </ul>
         </nav>
       </div>
-      <ThemeToggle client:load />
+      <div class="shrink-0">
+        <ThemeToggle client:load />
+      </div>
     </div>
   </div>
 </header>
