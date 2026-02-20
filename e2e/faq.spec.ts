@@ -5,13 +5,14 @@
  */
 
 import { test, expect } from '@playwright/test';
+import { BASE } from './helpers';
 
 /** FAQページのメインコンテンツ領域を取得（Firefox デバッグUIとの衝突を回避） */
 const getFaqContent = (page: import('@playwright/test').Page) => page.locator('.container.mx-auto');
 
 test.describe('FAQページ', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/faq/');
+    await page.goto(`${BASE}/faq/`);
   });
 
   test.describe('ページ表示', () => {
@@ -39,7 +40,7 @@ test.describe('FAQページ', () => {
     test('ガイドページへのナビゲーションリンクが表示される', async ({ page }) => {
       const guideLink = page.locator('a', { hasText: 'コストの仕組みとセオリー解説' });
       await expect(guideLink).toBeVisible();
-      await expect(guideLink).toHaveAttribute('href', '/guide/');
+      await expect(guideLink).toHaveAttribute('href', `${BASE}/guide/`);
     });
   });
 

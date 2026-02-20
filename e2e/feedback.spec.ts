@@ -4,10 +4,11 @@
  */
 
 import { test, expect } from '@playwright/test';
+import { BASE } from './helpers';
 
 test.describe('機体選択時のフィードバック表示', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
+    await page.goto(`${BASE}/`);
   });
 
   test('初期状態でガイダンスが表示される', async ({ page }) => {

@@ -23,7 +23,10 @@ export const CookieConsentBanner = () => {
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <p class="text-sm text-slate-600 dark:text-slate-300">
             当サイトでは広告配信のためにCookieを使用します。詳細は
-            <a href="/privacy" class="text-blue-600 dark:text-blue-400 hover:underline">
+            <a
+              href={`${import.meta.env.BASE_URL}privacy/`}
+              class="text-blue-600 dark:text-blue-400 hover:underline"
+            >
               プライバシーポリシー
             </a>
             をご覧ください。

@@ -5,10 +5,11 @@
  */
 
 import { test, expect } from '@playwright/test';
+import { BASE } from './helpers';
 
 test.describe('レスポンシブデザイン - デスクトップ', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
+    await page.goto(`${BASE}/`);
   });
 
   test.describe('デスクトップ表示 (1024px+)', () => {

@@ -3,10 +3,11 @@
  */
 
 import { test, expect } from '@playwright/test';
+import { BASE } from './helpers';
 
 test.describe('URL共有: クエリパラメータからの編成復元', () => {
   test('両機体がURLパラメータから復元される', async ({ page }) => {
-    await page.goto('/?a=3000-680&b=2500-620');
+    await page.goto(`${BASE}/?a=3000-680&b=2500-620`);
 
     // 編成情報が表示されることを確認
     await expect(page.getByTestId('formation-status-a')).toContainText('コスト3000 / 耐久680');
@@ -17,7 +18,7 @@ test.describe('URL共有: クエリパラメータからの編成復元', () => 
   });
 
   test('フィルター状態がURLパラメータから復元される', async ({ page }) => {
-    await page.goto('/?a=3000-680&b=2500-620&exOnly=true&fk=A');
+    await page.goto(`${BASE}/?a=3000-680&b=2500-620&exOnly=true&fk=A`);
 
     // EXフィルターがONになっていることを確認
     await expect(page.getByTestId('ex-filter-checkbox')).toBeChecked();
@@ -29,7 +30,7 @@ test.describe('URL共有: クエリパラメータからの編成復元', () => 
 
   test('URLパラメータ復元時のレイアウトが手動選択時と一致する', async ({ page }) => {
     // 1. 手動選択でのレイアウトを取得
-    await page.goto('/');
+    await page.goto(`${BASE}/`);
     await page.getByTestId('cost-button-a-3000').click();
     await page.getByTestId('health-selector-button-a').click();
     await page.getByTestId('health-option-a-680').click();
@@ -41,7 +42,7 @@ test.describe('URL共有: クエリパラメータからの編成復元', () => 
     const manualButtonBox = await page.getByTestId('copy-url-button').boundingBox();
 
     // 2. URLパラメータからのアクセスでのレイアウトを取得
-    await page.goto('/?a=3000-680&b=2500-620');
+    await page.goto(`${BASE}/?a=3000-680&b=2500-620`);
     await expect(page.getByTestId('copy-url-button')).toBeVisible();
 
     const urlButtonBox = await page.getByTestId('copy-url-button').boundingBox();
@@ -53,7 +54,7 @@ test.describe('URL共有: クエリパラメータからの編成復元', () => 
   });
 
   test('不正なURLパラメータでクラッシュしない', async ({ page }) => {
-    await page.goto('/?a=invalid&b=9999-999');
+    await page.goto(`${BASE}/?a=invalid&b=9999-999`);
 
     // ページが正常に表示されることを確認
     await expect(page.getByTestId('formation-status-a')).toContainText('未選択');
@@ -61,7 +62,7 @@ test.describe('URL共有: クエリパラメータからの編成復元', () => 
   });
 
   test('片方のみのURLパラメータが復元される', async ({ page }) => {
-    await page.goto('/?a=3000-680');
+    await page.goto(`${BASE}/?a=3000-680`);
 
     await expect(page.getByTestId('formation-status-a')).toContainText('コスト3000 / 耐久680');
     await expect(page.getByTestId('formation-status-b')).toContainText('未選択');
@@ -70,7 +71,7 @@ test.describe('URL共有: クエリパラメータからの編成復元', () => 
 
 test.describe('URL共有: 編成変更時のURL更新', () => {
   test('機体選択時にURLが更新される', async ({ page }) => {
-    await page.goto('/');
+    await page.goto(`${BASE}/`);
 
     // A機を選択
     await page.getByTestId('cost-button-a-3000').click();
@@ -92,13 +93,13 @@ test.describe('URL共有: 編成変更時のURL更新', () => {
 
 test.describe('URL共有: URLコピーボタン', () => {
   test('編成完了時にURLコピーボタンが表示される', async ({ page }) => {
-    await page.goto('/?a=3000-680&b=2500-620');
+    await page.goto(`${BASE}/?a=3000-680&b=2500-620`);
 
     await expect(page.getByTestId('copy-url-button')).toBeVisible();
   });
 
   test('編成未完了時にURLコピーボタンが表示されない', async ({ page }) => {
-    await page.goto('/?a=3000-680');
+    await page.goto(`${BASE}/?a=3000-680`);
 
     await expect(page.getByTestId('copy-url-button')).not.toBeVisible();
   });

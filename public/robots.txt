@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://dowo.dev/sitemap-index.xml
+Sitemap: https://dowo.dev/works/exvs2-cost-calculator/sitemap-index.xml
