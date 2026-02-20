@@ -11,6 +11,7 @@ import {
   generateFilename,
 } from '../lib/imageExport';
 import { InfoIcon } from './Tooltip';
+import { trackEvent } from '../lib/analytics';
 
 type PatternCardType = {
   pattern: EvaluatedPattern;
@@ -66,10 +67,12 @@ export const PatternCard = ({
     setIsExporting(true);
     try {
       const blob = await generatePatternCardImage(cardRef.current);
+      trackEvent('image_export', { rank });
       const filename = generateFilename(rank, formation);
       const costA = formation.unitA?.cost ?? 0;
       const costB = formation.unitB?.cost ?? 0;
       await shareImage(blob, filename, `EXVS2 パターン #${rank} (${costA}+${costB})`);
+      trackEvent('share_image', { rank });
     } catch (error) {
       // ユーザーが共有をキャンセルした場合はエラーを無視
       if (error instanceof Error && error.name !== 'AbortError') {
@@ -193,6 +196,7 @@ export const PatternCard = ({
                     '_blank',
                     'noopener,noreferrer,width=600,height=400',
                   );
+                  trackEvent('share_twitter', { rank });
                 }}
                 title="Xでシェア"
                 class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
@@ -214,6 +218,7 @@ export const PatternCard = ({
                     '_blank',
                     'noopener,noreferrer,width=600,height=400',
                   );
+                  trackEvent('share_line', { rank });
                 }}
                 title="LINEでシェア"
                 class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"

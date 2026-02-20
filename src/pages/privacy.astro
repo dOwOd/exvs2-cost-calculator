@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { ENABLE_AD_COOKIES } from '../lib/cookieConsent';
+import { ENABLE_AD_COOKIES, ENABLE_ANALYTICS } from '../lib/cookieConsent';
 import { CookieConsentBanner } from '../components/CookieConsentBanner';
 
 const base = import.meta.env.BASE_URL;
@@ -93,6 +93,49 @@ const siteBase = `${import.meta.env.SITE}${base}`;
 
       <section>
         <h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">
+          アクセス解析について
+        </h2>
+        <p>
+          当サイトでは、サイトの利用状況を把握し改善に役立てるため、以下のアクセス解析ツールを使用しています。
+        </p>
+        <h3 class="text-lg font-semibold mt-4 mb-2 text-slate-900 dark:text-slate-100">
+          Cloudflare Web Analytics
+        </h3>
+        <p>
+          Cloudflare Web Analytics はCookieを使用せず、個人を特定する情報を収集しません。
+          ページビュー数やアクセス元の国・ブラウザなどの基本的な統計情報のみを収集します。
+        </p>
+        {
+          ENABLE_ANALYTICS && (
+            <>
+              <h3 class="text-lg font-semibold mt-4 mb-2 text-slate-900 dark:text-slate-100">
+                Google アナリティクス 4（GA4）
+              </h3>
+              <p>
+                当サイトでは、Google LLC が提供する Google アナリティクス 4 を利用しています。 GA4
+                は Cookie を使用してサイトの利用状況を分析します。
+                収集されたデータは匿名化されており、個人を特定するものではありません。
+              </p>
+              <p class="mt-2">
+                GA4 による Cookie の使用を希望されない場合は、当サイトの Cookie
+                同意バナーで「拒否する」を選択するか、
+                <a
+                  href="https://tools.google.com/dlpage/gaoptout"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-blue-600 dark:text-blue-400 hover:underline"
+                >
+                  Google アナリティクス オプトアウト アドオン
+                </a>
+                をインストールすることで無効にできます。
+              </p>
+            </>
+          )
+        }
+      </section>
+
+      <section>
+        <h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">
           Cookie・LocalStorage について
         </h2>
         <p>
@@ -103,6 +146,7 @@ const siteBase = `${import.meta.env.SITE}${base}`;
           <li>テーマ設定（ダークモード / ライトモード）の保存</li>
           <li>編成データ・お気に入り機体の保存</li>
           {ENABLE_AD_COOKIES && <li>第三者配信事業者（Google AdSense）による広告配信</li>}
+          {ENABLE_ANALYTICS && <li>アクセス解析（Google アナリティクス 4）による利用状況の分析</li>}
         </ul>
         <p class="mt-2">
           ブラウザの設定により Cookie
@@ -129,6 +173,7 @@ const siteBase = `${import.meta.env.SITE}${base}`;
 
       <section class="text-sm text-slate-500 dark:text-slate-400">
         <p>制定日: 2026年2月10日</p>
+        <p>改定日: 2026年2月21日（アクセス解析に関する記載を追加）</p>
       </section>
     </div>
   </div>

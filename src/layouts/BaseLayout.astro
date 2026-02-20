@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import Header from '../components/Header.astro';
-import { ENABLE_AD_COOKIES, AD_PUBLISHER_ID } from '../lib/cookieConsent';
+import { ENABLE_AD_COOKIES, AD_PUBLISHER_ID, CF_ANALYTICS_TOKEN } from '../lib/cookieConsent';
 
 interface Props {
   title: string;
@@ -13,6 +13,7 @@ const { title, description, ogType = 'website' } = Astro.props;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 const ogImageUrl = new URL(`${import.meta.env.BASE_URL}ogp.png`, Astro.site).href;
 const showAds = ENABLE_AD_COOKIES && AD_PUBLISHER_ID !== '';
+const showCfAnalytics = CF_ANALYTICS_TOKEN !== '';
 ---
 
 <!doctype html>
@@ -81,9 +82,26 @@ const showAds = ENABLE_AD_COOKIES && AD_PUBLISHER_ID !== '';
     }
 
     <slot name="head" />
+
+    {/* Cloudflare Web Analytics (Cookie不要 - トークン設定時のみロード) */}
+    {
+      showCfAnalytics && (
+        <script
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={`{"token":"${CF_ANALYTICS_TOKEN}"}`}
+        />
+      )
+    }
   </head>
   <body class="bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-slate-100 min-h-screen">
     <Header />
     <slot />
+
+    {/* GA4 初期化 (consent-gated) */}
+    <script>
+      import { initAnalytics } from '../lib/analytics';
+      initAnalytics();
+    </script>
   </body>
 </html>

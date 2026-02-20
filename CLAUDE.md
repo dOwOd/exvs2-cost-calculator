@@ -92,7 +92,8 @@ git worktree remove ../exvs2-worktree  # 後片付け
 - useFormationEvaluation.ts - 編成評価フック（編成→評価パターン・最短敗北耐久を算出）
 - useTheme.ts - テーマ管理フック
 - useCookieConsent.ts - Cookie同意フック（カスタムイベントでコンポーネント間同期）
-- cookieConsent.ts - Cookie同意状態管理（LocalStorage CRUD）
+- **analytics.ts** - アナリティクス（GA4動的ロード、consent-gated初期化、型付きイベント送信）
+- cookieConsent.ts - Cookie同意状態管理（LocalStorage CRUD、アナリティクス設定フラグ）
 - recentHistory.ts - 最近の編成履歴管理
 - favoriteSuits.ts - お気に入り機体管理（LocalStorage CRUD、最大20件、カスタムイベント同期）
 - savedFormations.ts - 保存編成管理（LocalStorage CRUD、最大10件）

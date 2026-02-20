@@ -7,6 +7,7 @@ import type { EvaluatedPattern, Formation } from '../lib/types';
 import { PatternList } from './PatternList';
 import { getTopPatterns, getEffectivePatterns } from '../lib/evaluators';
 import { encodeFormationToParams } from '../lib/urlSharing';
+import { trackEvent } from '../lib/analytics';
 
 type FirstKillFilter = 'all' | 'A' | 'B';
 
@@ -106,11 +107,13 @@ export const ResultPanel = ({
   const handleExFilterChange = (checked: boolean) => {
     setShowOnlyEXAvailable(checked);
     updateUrlWithFilters(checked, firstKillFilter);
+    trackEvent('filter_ex_toggle', { enabled: checked });
   };
 
   const handleFirstKillFilterChange = (value: FirstKillFilter) => {
     setFirstKillFilter(value);
     updateUrlWithFilters(showOnlyEXAvailable, value);
+    trackEvent('filter_first_kill', { value });
   };
 
   // URLコピーハンドラ
@@ -119,6 +122,7 @@ export const ResultPanel = ({
     if (success) {
       setCopyFeedback(true);
       setTimeout(() => setCopyFeedback(false), 2000);
+      trackEvent('url_copy');
     }
   };
 
