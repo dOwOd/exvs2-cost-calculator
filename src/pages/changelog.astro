@@ -1,0 +1,77 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { releases } from '../data/changelog';
+import type { ChangeType } from '../data/changelog';
+
+const badgeColors: Record<ChangeType, string> = {
+  Add: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+  Fix: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+  Update: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+  Remove: 'bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-200',
+  Refactor: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+  Chore: 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200',
+};
+---
+
+<BaseLayout
+  title="更新履歴 - EXVS2 コスト計算機"
+  description="EXVS2コスト計算機の更新履歴。バージョンごとの変更内容を確認できます。"
+  ogType="article"
+>
+  <Fragment slot="head">
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'トップ', item: 'https://dowo.dev/' },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: '更新履歴',
+            item: 'https://dowo.dev/changelog/',
+          },
+        ],
+      })}
+    />
+  </Fragment>
+
+  <div class="container mx-auto px-4 py-8 max-w-3xl">
+    <h1 class="text-2xl font-bold mb-8">更新履歴</h1>
+
+    {
+      releases.map((release) => (
+        <section class="mb-10">
+          <div class="flex items-baseline gap-3 mb-4">
+            <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100">
+              v{release.version}
+            </h2>
+            <time datetime={release.date} class="text-sm text-slate-500 dark:text-slate-400">
+              {release.date}
+            </time>
+          </div>
+          <p class="text-slate-700 dark:text-slate-300 mb-3">{release.summary}</p>
+          <ul class="space-y-2">
+            {release.changes.map((change) => (
+              <li class="flex items-start gap-2">
+                <span
+                  class={`inline-block px-2 py-0.5 text-xs font-medium rounded shrink-0 mt-0.5 ${badgeColors[change.type]}`}
+                >
+                  {change.type}
+                </span>
+                <span class="text-slate-700 dark:text-slate-300">{change.description}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+
+    <nav class="mt-12 mb-8">
+      <a href="/" class="text-blue-600 dark:text-blue-400 hover:underline">
+        &larr; トップページへ戻る
+      </a>
+    </nav>
+  </div>
+</BaseLayout>
