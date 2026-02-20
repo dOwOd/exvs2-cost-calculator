@@ -3,7 +3,7 @@
  */
 
 import { GitHubIcon } from './icons/GitHubIcon';
-import { ENABLE_AD_COOKIES } from '../lib/cookieConsent';
+import { ENABLE_COOKIE_CONSENT } from '../lib/cookieConsent';
 import { useCookieConsent } from '../lib/useCookieConsent';
 
 const base = import.meta.env.BASE_URL;
@@ -39,7 +39,7 @@ export const Footer = () => {
                     </a>
                   </li>
                 ))}
-                {ENABLE_AD_COOKIES && status !== 'undecided' && (
+                {ENABLE_COOKIE_CONSENT && status !== 'undecided' && (
                   <li>
                     <button type="button" onClick={reset} class={linkClass}>
                       Cookie設定

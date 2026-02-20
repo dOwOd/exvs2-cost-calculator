@@ -11,6 +11,7 @@ import { ResultPanel } from './ResultPanel';
 import { ComparisonResultPanel } from './ComparisonResultPanel';
 import { useFormationEvaluation } from '../lib/useFormationEvaluation';
 import { encodeFormationToParams, decodeFormationFromParams } from '../lib/urlSharing';
+import { trackEvent } from '../lib/analytics';
 
 type CalculatorMode = 'normal' | 'comparison';
 
@@ -74,6 +75,16 @@ export const Calculator = () => {
     () => [compEval0, compEval1, compEval2],
     [compEval0, compEval1, compEval2],
   );
+
+  // --- 計算完了イベント送信（両機揃った時） ---
+  useEffect(() => {
+    if (formation.unitA && formation.unitB) {
+      trackEvent('calculate', {
+        cost_a: formation.unitA.cost,
+        cost_b: formation.unitB.cost,
+      });
+    }
+  }, [formation.unitA, formation.unitB]);
 
   // --- 通常モードのハンドラ ---
   const handleUnitAChange = (unit: UnitConfig | null) => {
@@ -141,7 +152,10 @@ export const Calculator = () => {
             <button
               type="button"
               data-testid="mode-normal"
-              onClick={() => setMode('normal')}
+              onClick={() => {
+                setMode('normal');
+                trackEvent('mode_switch', { mode: 'normal' });
+              }}
               aria-pressed={mode === 'normal'}
               class={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-800 ${
                 mode === 'normal'
@@ -154,7 +168,10 @@ export const Calculator = () => {
             <button
               type="button"
               data-testid="mode-comparison"
-              onClick={() => setMode('comparison')}
+              onClick={() => {
+                setMode('comparison');
+                trackEvent('mode_switch', { mode: 'comparison' });
+              }}
               aria-pressed={mode === 'comparison'}
               class={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-800 ${
                 mode === 'comparison'
