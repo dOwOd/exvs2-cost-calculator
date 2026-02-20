@@ -3,10 +3,11 @@
  */
 
 import { test, expect } from '@playwright/test';
+import { BASE } from './helpers';
 
 test.describe('パターンの折りたたみ・展開機能', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
+    await page.goto(`${BASE}/`);
 
     // 編成を選択（3000+3000）- パターン数が多い編成
     await page.getByTestId('cost-button-a-3000').click();

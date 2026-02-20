@@ -158,7 +158,7 @@ test.describe('ヘッダーナビゲーション', () => {
 
   test.describe('ThemeToggle', () => {
     test('ヘッダー内のThemeToggleでテーマが切り替わる', async ({ page }) => {
-      await page.goto('/');
+      await page.goto(`${BASE}/`);
 
       const header = getSiteHeader(page);
       const themeToggle = header.getByTestId('theme-toggle');
@@ -184,7 +184,7 @@ test.describe('ヘッダーナビゲーション', () => {
 
     test('テーマ切り替え後もページ遷移で維持される', async ({ page }) => {
       // ライトモードを明示的に設定してからページを開く
-      await page.goto('/');
+      await page.goto(`${BASE}/`);
       await page.evaluate(() => localStorage.setItem('theme', 'light'));
       await page.reload();
       await page.waitForLoadState('networkidle');
@@ -203,7 +203,7 @@ test.describe('ヘッダーナビゲーション', () => {
       // ガイドページに遷移
       const nav = page.locator('nav[aria-label="メインナビゲーション"]');
       await nav.locator('a', { hasText: 'ガイド' }).click();
-      await expect(page).toHaveURL('/guide/');
+      await expect(page).toHaveURL(`${BASE}/guide/`);
 
       // ダークモードが維持されている
       await expect(page.locator('html')).toHaveClass(/dark/);
@@ -214,7 +214,7 @@ test.describe('ヘッダーナビゲーション', () => {
     test.use({ viewport: { width: 375, height: 667 } });
 
     test('モバイルでヘッダーが表示される', async ({ page }) => {
-      await page.goto('/');
+      await page.goto(`${BASE}/`);
 
       const header = getSiteHeader(page);
       await expect(header).toBeVisible();
@@ -230,25 +230,25 @@ test.describe('ヘッダーナビゲーション', () => {
     });
 
     test('モバイルでナビリンクが遷移できる', async ({ page }) => {
-      await page.goto('/');
+      await page.goto(`${BASE}/`);
 
       const nav = page.locator('nav[aria-label="メインナビゲーション"]');
 
       // ガイドに遷移
       await nav.locator('a', { hasText: 'ガイド' }).click();
-      await expect(page).toHaveURL('/guide/');
+      await expect(page).toHaveURL(`${BASE}/guide/`);
 
       // FAQに遷移
       await nav.locator('a', { hasText: 'FAQ' }).click();
-      await expect(page).toHaveURL('/faq/');
+      await expect(page).toHaveURL(`${BASE}/faq/`);
 
       // トップに遷移
       await nav.locator('a', { hasText: 'コスト計算' }).click();
-      await expect(page).toHaveURL('/');
+      await expect(page).toHaveURL(`${BASE}/`);
     });
 
     test('モバイルでThemeToggleが使える', async ({ page }) => {
-      await page.goto('/');
+      await page.goto(`${BASE}/`);
 
       const themeToggle = getSiteHeader(page).getByTestId('theme-toggle');
       await expect(themeToggle).toBeVisible();
