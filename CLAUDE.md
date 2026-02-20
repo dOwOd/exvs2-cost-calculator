@@ -121,24 +121,29 @@ git worktree remove ../exvs2-worktree  # 後片付け
 
 > **注意**: 新しいページを追加した場合は、BaseLayout を使用し、JSON-LD 構造化データの追加・更新も検討すること
 
+> **注意**: 内部リンクは `import.meta.env.BASE_URL` を使用すること（ハードコードしない）。E2Eテストでは `e2e/helpers.ts` の `BASE` 定数を使用
+
 ### スクリプト（scripts/）
 
 - **generate-ogp.mjs** - OGP画像生成（satori + @resvg/resvg-js、`node scripts/generate-ogp.mjs` で実行）
 
 ### 設定・静的ファイル
 
-- **astro.config.mjs** - Astro設定（site, integrations: preact + sitemap）
+- **astro.config.mjs** - Astro設定（site, base: サブパスデプロイ用, integrations: preact + sitemap）
 - **eslint.config.js** - ESLint設定（flat config、TypeScript + Astro + Prettier連携）
 - **.prettierrc** - Prettier設定（セミコロン、シングルクォート、100文字幅）
 - **.husky/pre-commit** - pre-commitフック（lint-staged実行）
 - **.node-version** - Node.js バージョン一元管理（CI・Docker・ローカル共通）
 - **public/robots.txt** - クローラー指示（Sitemap URL含む）
+- **public/manifest.json** - PWAマニフェスト（start_url・アイコンパスにbase pathを含む）
 - **public/ogp.png** - OGP画像（1200x630px、generate-ogp.mjsで生成）
 
 ### CI/CD（.github/workflows/）
 
 - **ci.yml** - ユニットテスト（Vitest）・型チェック・ビルド検証（Node: `.node-version` 参照）
 - **e2e.yml** - E2Eテスト（Playwright、非WebKit統合+WebKit個別の4並列、ブラウザキャッシュ付き、Node: `.node-version` 参照）
+- **playwright.config.ts** - Playwright設定（6ブラウザプロジェクト、webServer: pnpm preview）
+- **e2e/helpers.ts** - E2Eテスト共通ヘルパー（`BASE` 定数: サブパスプレフィックス）
 - **storybook.yml** - Storybookビルド（Node: `.node-version` 参照）
 
 > **注意**: Node.js バージョンは `.node-version` で一元管理。ワークフローでは `node-version-file: '.node-version'` を使用すること
@@ -247,6 +252,7 @@ PatternList → PatternCard（各パターン表示）
 #139 バージョン管理・表示とリリースノート（/changelog）構築
  ↓  package.json version → 0.1.0、ビルド時埋め込み、/changelog ページ
 #136 Cloudflare Pages デプロイ（dowo.dev/works/exvs2-cost-calculator/）
+ ↓  タグプッシュ（v*） → GitHub Actions → Wrangler でデプロイ
  ↓  本番URL確定 → Turnstile・CORS設定が可能に
 #129 問い合わせ機能（Phase 1: Worker → Phase 2: /contact → Phase 3: 結合テスト）
 ```
