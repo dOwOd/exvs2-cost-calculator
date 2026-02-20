@@ -14,10 +14,7 @@ const defaultProps = {
 };
 
 describe('ShareButtons', () => {
-  let windowOpenSpy: ReturnType<typeof vi.spyOn>;
-
   beforeEach(() => {
-    windowOpenSpy = vi.spyOn(window, 'open').mockImplementation(() => null);
     // Web Share API はデフォルトで非対応
     Object.defineProperty(navigator, 'share', {
       value: undefined,
@@ -27,17 +24,16 @@ describe('ShareButtons', () => {
   });
 
   afterEach(() => {
-    windowOpenSpy.mockRestore();
     cleanup();
   });
 
   describe('レンダリング', () => {
-    test('Twitter/X ボタンが表示されること', () => {
+    test('Twitter/X リンクが表示されること', () => {
       render(<ShareButtons {...defaultProps} />);
       expect(screen.getByLabelText('Xでシェア')).toBeDefined();
     });
 
-    test('LINE ボタンが表示されること', () => {
+    test('LINE リンクが表示されること', () => {
       render(<ShareButtons {...defaultProps} />);
       expect(screen.getByLabelText('LINEでシェア')).toBeDefined();
     });
@@ -61,11 +57,8 @@ describe('ShareButtons', () => {
   describe('Twitter/X シェア', () => {
     test('正しい intent URL が生成されること', () => {
       render(<ShareButtons {...defaultProps} hashtags={['EXVS2IB', 'イニブ']} />);
-      fireEvent.click(screen.getByLabelText('Xでシェア'));
-
-      expect(windowOpenSpy).toHaveBeenCalledTimes(1);
-      const calledUrl = windowOpenSpy.mock.calls[0][0] as string;
-      const parsed = new URL(calledUrl);
+      const link = screen.getByLabelText('Xでシェア') as HTMLAnchorElement;
+      const parsed = new URL(link.href);
 
       expect(parsed.origin + parsed.pathname).toBe('https://twitter.com/intent/tweet');
       expect(parsed.searchParams.get('text')).toBe('テスト共有テキスト');
@@ -75,51 +68,40 @@ describe('ShareButtons', () => {
 
     test('ハッシュタグなしの場合は hashtags パラメータが含まれないこと', () => {
       render(<ShareButtons {...defaultProps} />);
-      fireEvent.click(screen.getByLabelText('Xでシェア'));
-
-      const calledUrl = windowOpenSpy.mock.calls[0][0] as string;
-      const parsed = new URL(calledUrl);
+      const link = screen.getByLabelText('Xでシェア') as HTMLAnchorElement;
+      const parsed = new URL(link.href);
 
       expect(parsed.searchParams.get('text')).toBe('テスト共有テキスト');
       expect(parsed.searchParams.get('url')).toBe('https://example.com/page');
       expect(parsed.searchParams.has('hashtags')).toBe(false);
     });
 
-    test('新しいウィンドウで開かれること', () => {
+    test('新しいタブで開かれる属性が設定されていること', () => {
       render(<ShareButtons {...defaultProps} />);
-      fireEvent.click(screen.getByLabelText('Xでシェア'));
+      const link = screen.getByLabelText('Xでシェア') as HTMLAnchorElement;
 
-      expect(windowOpenSpy).toHaveBeenCalledWith(
-        expect.any(String),
-        '_blank',
-        'noopener,noreferrer,width=600,height=400',
-      );
+      expect(link.target).toBe('_blank');
+      expect(link.rel).toBe('noreferrer');
     });
   });
 
   describe('LINE シェア', () => {
     test('正しいシェア URL が生成されること', () => {
       render(<ShareButtons {...defaultProps} />);
-      fireEvent.click(screen.getByLabelText('LINEでシェア'));
-
-      expect(windowOpenSpy).toHaveBeenCalledTimes(1);
-      const calledUrl = windowOpenSpy.mock.calls[0][0] as string;
-      const parsed = new URL(calledUrl);
+      const link = screen.getByLabelText('LINEでシェア') as HTMLAnchorElement;
+      const parsed = new URL(link.href);
 
       expect(parsed.origin + parsed.pathname).toBe('https://line.me/R/share');
       const shareText = parsed.searchParams.get('text');
       expect(shareText).toBe('テスト共有テキスト https://example.com/page');
     });
 
-    test('新しいウィンドウで開かれること', () => {
+    test('新しいタブで開かれる属性が設定されていること', () => {
       render(<ShareButtons {...defaultProps} />);
-      fireEvent.click(screen.getByLabelText('LINEでシェア'));
+      const link = screen.getByLabelText('LINEでシェア') as HTMLAnchorElement;
 
-      expect(windowOpenSpy).toHaveBeenCalledWith(
-        expect.any(String),
-        '_blank',
-        'noopener,noreferrer,width=600,height=400',
-      );
+      expect(link.target).toBe('_blank');
+      expect(link.rel).toBe('noreferrer');
     });
   });
 
@@ -193,10 +175,8 @@ describe('ShareButtons', () => {
 
     test('空のhashtags配列でも正常動作すること', () => {
       render(<ShareButtons url="https://example.com" text="テスト" hashtags={[]} />);
-      fireEvent.click(screen.getByLabelText('Xでシェア'));
-
-      const calledUrl = windowOpenSpy.mock.calls[0][0] as string;
-      const parsed = new URL(calledUrl);
+      const link = screen.getByLabelText('Xでシェア') as HTMLAnchorElement;
+      const parsed = new URL(link.href);
       expect(parsed.searchParams.has('hashtags')).toBe(false);
     });
   });
