@@ -3,6 +3,7 @@
  */
 
 import { test, expect, type Page } from '@playwright/test';
+import { BASE } from './helpers';
 
 /**
  * 比較モード内の指定スロットで編成を選択するヘルパー
@@ -44,7 +45,7 @@ const selectComparisonFormation = async (
 
 test.describe('比較モード', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
+    await page.goto(`${BASE}/`);
   });
 
   test.describe('モード切替', () => {
@@ -305,7 +306,7 @@ test.describe('比較モード - レスポンシブ', () => {
     test.use({ viewport: { width: 375, height: 667 } });
 
     test('比較モードの編成パネルが縦並びになる', async ({ page }) => {
-      await page.goto('/');
+      await page.goto(`${BASE}/`);
       await page.getByTestId('mode-comparison').click();
 
       const formation0 = page.getByTestId('comparison-formation-0');
@@ -324,7 +325,7 @@ test.describe('比較モード - レスポンシブ', () => {
     });
 
     test('モバイルでも編成追加・削除ができる', async ({ page }) => {
-      await page.goto('/');
+      await page.goto(`${BASE}/`);
       await page.getByTestId('mode-comparison').click();
 
       // 追加ボタンをタップ
@@ -341,7 +342,7 @@ test.describe('比較モード - レスポンシブ', () => {
     test.use({ viewport: { width: 1280, height: 800 } });
 
     test('2つの編成パネルが横並びになる', async ({ page }) => {
-      await page.goto('/');
+      await page.goto(`${BASE}/`);
       await page.getByTestId('mode-comparison').click();
 
       const formation0 = page.getByTestId('comparison-formation-0');
@@ -361,7 +362,7 @@ test.describe('比較モード - レスポンシブ', () => {
     });
 
     test('3つの編成パネルが横並びになる', async ({ page }) => {
-      await page.goto('/');
+      await page.goto(`${BASE}/`);
       await page.getByTestId('mode-comparison').click();
       await page.getByTestId('add-formation-button').click();
 

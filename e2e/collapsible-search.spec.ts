@@ -3,10 +3,11 @@
  */
 
 import { test, expect } from '@playwright/test';
+import { BASE } from './helpers';
 
 test.describe('機体名検索の折りたたみ機能', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
+    await page.goto(`${BASE}/`);
   });
 
   test('初期状態では検索ボックスが折りたたまれている', async ({ page }) => {

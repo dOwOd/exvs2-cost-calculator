@@ -2,24 +2,24 @@
   "name": "EXVS2 コスト計算機",
   "short_name": "EXVS2計算機",
   "description": "機動戦士ガンダム EXTREME VS. 2 コスト計算機 - 最適な撃墜順パターンを計算",
-  "start_url": "/",
+  "start_url": "/works/exvs2-cost-calculator/",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/icons/icon-192x192.png",
+      "src": "/works/exvs2-cost-calculator/icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/icons/icon-512x512.png",
+      "src": "/works/exvs2-cost-calculator/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     },
     {
-      "src": "/icons/maskable-icon-512x512.png",
+      "src": "/works/exvs2-cost-calculator/icons/maskable-icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"

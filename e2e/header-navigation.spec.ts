@@ -5,6 +5,7 @@
  */
 
 import { test, expect, type Page } from '@playwright/test';
+import { BASE } from './helpers';
 
 /** サイトヘッダーを取得（Firefox デバッグUIの header 要素との衝突を回避） */
 const getSiteHeader = (page: Page) => page.locator('body > header');
@@ -12,9 +13,9 @@ const getSiteHeader = (page: Page) => page.locator('body > header');
 test.describe('ヘッダーナビゲーション', () => {
   test.describe('ヘッダー表示', () => {
     const pages = [
-      { path: '/', name: 'トップページ' },
-      { path: '/guide/', name: 'ガイドページ' },
-      { path: '/faq/', name: 'FAQページ' },
+      { path: `${BASE}/`, name: 'トップページ' },
+      { path: `${BASE}/guide/`, name: 'ガイドページ' },
+      { path: `${BASE}/faq/`, name: 'FAQページ' },
     ];
 
     for (const { path, name } of pages) {
@@ -44,36 +45,36 @@ test.describe('ヘッダーナビゲーション', () => {
 
   test.describe('ナビリンク遷移', () => {
     test('計算機リンクでトップページに遷移する', async ({ page }) => {
-      await page.goto('/guide/');
+      await page.goto(`${BASE}/guide/`);
 
       const nav = page.locator('nav[aria-label="メインナビゲーション"]');
       await nav.locator('a', { hasText: 'コスト計算' }).click();
 
-      await expect(page).toHaveURL('/');
+      await expect(page).toHaveURL(`${BASE}/`);
     });
 
     test('ガイドリンクでガイドページに遷移する', async ({ page }) => {
-      await page.goto('/');
+      await page.goto(`${BASE}/`);
 
       const nav = page.locator('nav[aria-label="メインナビゲーション"]');
       await nav.locator('a', { hasText: 'ガイド' }).click();
 
-      await expect(page).toHaveURL('/guide/');
+      await expect(page).toHaveURL(`${BASE}/guide/`);
     });
 
     test('FAQリンクでFAQページに遷移する', async ({ page }) => {
-      await page.goto('/');
+      await page.goto(`${BASE}/`);
 
       const nav = page.locator('nav[aria-label="メインナビゲーション"]');
       await nav.locator('a', { hasText: 'FAQ' }).click();
 
-      await expect(page).toHaveURL('/faq/');
+      await expect(page).toHaveURL(`${BASE}/faq/`);
     });
   });
 
   test.describe('aria-current ハイライト', () => {
     test('トップページで計算機リンクがハイライトされる', async ({ page }) => {
-      await page.goto('/');
+      await page.goto(`${BASE}/`);
 
       const nav = page.locator('nav[aria-label="メインナビゲーション"]');
       const calculatorLink = nav.locator('a', { hasText: 'コスト計算' });
@@ -86,7 +87,7 @@ test.describe('ヘッダーナビゲーション', () => {
     });
 
     test('ガイドページでガイドリンクがハイライトされる', async ({ page }) => {
-      await page.goto('/guide/');
+      await page.goto(`${BASE}/guide/`);
 
       const nav = page.locator('nav[aria-label="メインナビゲーション"]');
       const calculatorLink = nav.locator('a', { hasText: 'コスト計算' });
@@ -99,7 +100,7 @@ test.describe('ヘッダーナビゲーション', () => {
     });
 
     test('FAQページでFAQリンクがハイライトされる', async ({ page }) => {
-      await page.goto('/faq/');
+      await page.goto(`${BASE}/faq/`);
 
       const nav = page.locator('nav[aria-label="メインナビゲーション"]');
       const calculatorLink = nav.locator('a', { hasText: 'コスト計算' });
@@ -112,7 +113,7 @@ test.describe('ヘッダーナビゲーション', () => {
     });
 
     test('ページ遷移後にハイライトが更新される', async ({ page }) => {
-      await page.goto('/');
+      await page.goto(`${BASE}/`);
 
       const nav = page.locator('nav[aria-label="メインナビゲーション"]');
 
@@ -124,7 +125,7 @@ test.describe('ヘッダーナビゲーション', () => {
 
       // ガイドページに遷移
       await nav.locator('a', { hasText: 'ガイド' }).click();
-      await expect(page).toHaveURL('/guide/');
+      await expect(page).toHaveURL(`${BASE}/guide/`);
 
       // ガイドがハイライトに変わる
       await expect(nav.locator('a', { hasText: 'ガイド' })).toHaveAttribute('aria-current', 'page');
@@ -137,21 +138,21 @@ test.describe('ヘッダーナビゲーション', () => {
 
   test.describe('サイト名リンク', () => {
     test('ガイドページからサイト名クリックでトップに遷移する', async ({ page }) => {
-      await page.goto('/guide/');
+      await page.goto(`${BASE}/guide/`);
 
       const header = getSiteHeader(page);
       await header.locator('a', { hasText: 'EXVS2 コスト計算機' }).click();
 
-      await expect(page).toHaveURL('/');
+      await expect(page).toHaveURL(`${BASE}/`);
     });
 
     test('FAQページからサイト名クリックでトップに遷移する', async ({ page }) => {
-      await page.goto('/faq/');
+      await page.goto(`${BASE}/faq/`);
 
       const header = getSiteHeader(page);
       await header.locator('a', { hasText: 'EXVS2 コスト計算機' }).click();
 
-      await expect(page).toHaveURL('/');
+      await expect(page).toHaveURL(`${BASE}/`);
     });
   });
 
