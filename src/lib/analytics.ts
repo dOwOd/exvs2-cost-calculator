@@ -39,11 +39,14 @@ const loadGtagScript = (): void => {
   document.head.appendChild(script);
 };
 
-/** gtagを初期化する */
+/** gtagを初期化する（Google公式スニペットと同じ形式） */
 const setupGtag = (): void => {
   window.dataLayer = window.dataLayer || [];
-  window.gtag = (...args: unknown[]) => {
-    window.dataLayer.push(args);
+  // gtag.jsはdataLayer内のArgumentsオブジェクトをコマンドとして処理する
+  // アロー関数ではargumentsが使えないため、function式を使用
+  window.gtag = function (..._args: unknown[]) {
+    // eslint-disable-next-line prefer-rest-params
+    window.dataLayer.push(arguments);
   };
   window.gtag('js', new Date());
   window.gtag('config', GA4_MEASUREMENT_ID);
