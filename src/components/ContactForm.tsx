@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect, useRef } from 'preact/hooks';
-import { ENABLE_CONTACT, TURNSTILE_SITE_KEY } from '../lib/contactConfig';
+import { ENABLE_CONTACT, TURNSTILE_SITE_KEY, ENABLE_TURNSTILE } from '../lib/contactConfig';
 import { contactSchema, CONTACT_CATEGORIES } from '../lib/contactSchema';
 import type { ContactFormData } from '../lib/contactSchema';
 import { submitContact, getErrorMessage } from '../lib/contactApi';
@@ -48,7 +48,7 @@ export const ContactForm = () => {
   const turnstileWidgetIdRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!ENABLE_CONTACT || !TURNSTILE_SITE_KEY) return;
+    if (!ENABLE_CONTACT || !ENABLE_TURNSTILE || !TURNSTILE_SITE_KEY) return;
 
     const scriptId = 'turnstile-script';
     if (document.getElementById(scriptId)) return;
@@ -97,7 +97,7 @@ export const ContactForm = () => {
       return;
     }
 
-    if (!turnstileToken) {
+    if (ENABLE_TURNSTILE && !turnstileToken) {
       setSubmitError('セキュリティ検証を完了してください。');
       setSubmitState('error');
       return;
@@ -267,7 +267,9 @@ export const ContactForm = () => {
       </div>
 
       {/* Turnstile */}
-      {TURNSTILE_SITE_KEY && <div ref={turnstileContainerRef} data-testid="turnstile-container" />}
+      {ENABLE_TURNSTILE && TURNSTILE_SITE_KEY && (
+        <div ref={turnstileContainerRef} data-testid="turnstile-container" />
+      )}
 
       {/* エラーメッセージ */}
       {submitState === 'error' && submitError && (

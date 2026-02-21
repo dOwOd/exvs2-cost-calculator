@@ -2,7 +2,7 @@
  * E2Eテスト: お問い合わせページ
  *
  * ENABLE_CONTACT = true の状態でのテスト。
- * Turnstile の外部スクリプトは CI 環境でハングするためブロックする。
+ * Turnstile は PUBLIC_ENABLE_TURNSTILE=false でビルド時に無効化。
  * フォーム送信（API連携）のテストは Phase 3 結合テストで本番環境にて実施。
  */
 
@@ -11,10 +11,9 @@ import { BASE } from './helpers';
 
 test.describe('お問い合わせページ', () => {
   test.beforeEach(async ({ page }) => {
-    // 外部サービスへのリクエストをブロック（CI 環境でのハング防止）
-    await page.route(/challenges\.cloudflare\.com/, (route) => route.abort());
+    // API リクエストをブロック（E2E では API 連携をテストしない）
     await page.route(/dowo-api/, (route) => route.abort());
-    await page.goto(`${BASE}/contact/`, { waitUntil: 'domcontentloaded' });
+    await page.goto(`${BASE}/contact/`);
   });
 
   test.describe('ページ表示', () => {
@@ -125,7 +124,7 @@ test.describe('お問い合わせページ', () => {
   test.describe('ダークモード', () => {
     test('ダークモードでフォームが正しく表示される', async ({ page }) => {
       await page.evaluate(() => localStorage.setItem('theme', 'dark'));
-      await page.reload({ waitUntil: 'domcontentloaded' });
+      await page.reload();
 
       await expect(page.locator('html')).toHaveClass(/dark/);
       await expect(page.locator('[data-testid="contact-form"]')).toBeVisible();

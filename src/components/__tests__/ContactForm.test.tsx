@@ -11,6 +11,7 @@ import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/pr
 const mockConfig = vi.hoisted(() => ({
   ENABLE_CONTACT: false,
   TURNSTILE_SITE_KEY: '',
+  ENABLE_TURNSTILE: false,
   CONTACT_API_URL: 'https://api.example.com/contact',
 }));
 
@@ -20,6 +21,9 @@ vi.mock('../../lib/contactConfig', () => ({
   },
   get TURNSTILE_SITE_KEY() {
     return mockConfig.TURNSTILE_SITE_KEY;
+  },
+  get ENABLE_TURNSTILE() {
+    return mockConfig.ENABLE_TURNSTILE;
   },
   get CONTACT_API_URL() {
     return mockConfig.CONTACT_API_URL;
@@ -44,6 +48,7 @@ beforeEach(() => {
   mockSubmitContact.mockReset();
   mockConfig.ENABLE_CONTACT = false;
   mockConfig.TURNSTILE_SITE_KEY = '';
+  mockConfig.ENABLE_TURNSTILE = false;
 });
 
 afterEach(() => {
@@ -163,6 +168,7 @@ describe('ContactForm', () => {
   describe('API送信', () => {
     beforeEach(() => {
       mockConfig.ENABLE_CONTACT = true;
+      mockConfig.ENABLE_TURNSTILE = true;
     });
 
     const fillForm = () => {

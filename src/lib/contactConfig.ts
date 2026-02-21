@@ -6,3 +6,6 @@ export const CONTACT_API_URL: string = 'https://dowo-api.l-doaod.workers.dev/api
 
 /** Turnstile サイトキー */
 export const TURNSTILE_SITE_KEY: string = '0x4AAAAAACgPadjBI8z4wZmk';
+
+/** Turnstile 有効フラグ（E2E テスト時は PUBLIC_ENABLE_TURNSTILE=false で無効化） */
+export const ENABLE_TURNSTILE: boolean = import.meta.env.PUBLIC_ENABLE_TURNSTILE !== 'false';
