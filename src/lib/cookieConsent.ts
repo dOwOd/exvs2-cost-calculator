@@ -22,7 +22,7 @@ export const ENABLE_ANALYTICS = true;
 export const GA4_MEASUREMENT_ID: string = 'G-8WSG8F8W3F';
 
 /** Cloudflare Web Analytics トークン（デプロイ後にCFダッシュボードから取得して設定） */
-export const CF_ANALYTICS_TOKEN: string = '';
+export const CF_ANALYTICS_TOKEN: string = '9acec5d20aa942ae8cc18fd714a75bcb';
 
 /**
  * Cookie同意バナーの表示が必要か
