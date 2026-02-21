@@ -78,11 +78,8 @@ Fix: EX発動判定の条件を <= に修正
 ### テストの実行
 
 ```bash
-# ローカル環境
+# ユニットテスト
 pnpm test
-
-# Docker環境
-docker compose exec dev pnpm test
 
 # ウォッチモード（ファイル変更時に自動実行）
 pnpm test:watch
@@ -165,29 +162,6 @@ pnpm test:e2e
 pnpm build
 ```
 
-### Docker開発
-
-```bash
-# コンテナ起動
-docker compose up dev
-
-# シェルに入る
-docker compose exec dev sh
-
-# コンテナ内でコマンド実行
-docker compose exec dev pnpm install
-docker compose exec dev pnpm test
-
-# E2Eテスト（ビルドが必要）
-docker compose exec dev pnpm build
-docker compose exec dev pnpm test:e2e
-
-# コンテナ停止
-docker compose down
-```
-
----
-
 ## トラブルシューティング
 
 ### テストが失敗する
@@ -195,11 +169,6 @@ docker compose down
 1. `pnpm install`で依存関係を再インストール
 2. キャッシュをクリア: `pnpm test --clearCache`
 3. エラーメッセージを読んで該当ファイルを確認
-
-### Dockerでアクセスできない
-
-- `pnpm dev`に`--host`フラグが付いているか確認
-- ポート4321が他のプロセスで使用されていないか確認
 
 ---
 

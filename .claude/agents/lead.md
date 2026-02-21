@@ -16,7 +16,7 @@
 - テスト実行（`pnpm test`）で品質を保証する
 - ドキュメント（SPECIFICATION.md, CLAUDE.md, GAME_KNOWLEDGE.md）を更新する
 - Git操作（コミット、PR作成）を実行する
-- CI/CD設定（`.github/workflows/`）、Docker設定、ツール設定を管理する
+- CI/CD設定（`.github/workflows/`）、ツール設定を管理する
 
 ## やらないこと
 
@@ -63,7 +63,6 @@
 - `.github/workflows/*.yml` の作成・更新
 - `renovate.json` の設定
 - `lighthouserc.json` の設定
-- Docker関連ファイルの更新
 - GitHub Actions の実行状況監視
 
 ## Gitワークフロー

@@ -134,7 +134,7 @@ git worktree remove ../exvs2-worktree  # 後片付け
 - **eslint.config.js** - ESLint設定（flat config、TypeScript + Astro + Prettier連携）
 - **.prettierrc** - Prettier設定（セミコロン、シングルクォート、100文字幅）
 - **.husky/pre-commit** - pre-commitフック（lint-staged実行）
-- **.node-version** - Node.js バージョン一元管理（CI・Docker・ローカル共通）
+- **.node-version** - Node.js バージョン一元管理（CI・ローカル共通）
 - **public/robots.txt** - クローラー指示（Sitemap URL含む）
 - **public/manifest.json** - PWAマニフェスト（start_url・アイコンパスにbase pathを含む）
 - **public/ogp.png** - OGP画像（1200x630px、generate-ogp.mjsで生成）
@@ -152,11 +152,6 @@ git worktree remove ../exvs2-worktree  # 後片付け
 - **renovate.json** - Renovate設定（patch自動マージ、minor・major・Astro・Preactは手動レビュー、週末スケジュール）
 
 > **注意**: Node.js バージョンは `.node-version` で一元管理。ワークフローでは `node-version-file: '.node-version'` を使用すること
-
-### Docker
-
-- **Dockerfile** - マルチステージビルド（Node: ARG NODE_MAJOR、非rootユーザー）
-- **docker-compose.yml** - app（本番）/ dev（開発）の2サービス構成
 
 ## データフロー
 
