@@ -11,7 +11,7 @@ import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/pr
 const mockConfig = vi.hoisted(() => ({
   ENABLE_CONTACT: false,
   TURNSTILE_SITE_KEY: '',
-  ENABLE_TURNSTILE: false,
+  ENABLE_EXTERNAL_SCRIPTS: false,
   CONTACT_API_URL: 'https://api.example.com/contact',
 }));
 
@@ -22,11 +22,14 @@ vi.mock('../../lib/contactConfig', () => ({
   get TURNSTILE_SITE_KEY() {
     return mockConfig.TURNSTILE_SITE_KEY;
   },
-  get ENABLE_TURNSTILE() {
-    return mockConfig.ENABLE_TURNSTILE;
-  },
   get CONTACT_API_URL() {
     return mockConfig.CONTACT_API_URL;
+  },
+}));
+
+vi.mock('../../lib/cookieConsent', () => ({
+  get ENABLE_EXTERNAL_SCRIPTS() {
+    return mockConfig.ENABLE_EXTERNAL_SCRIPTS;
   },
 }));
 
@@ -48,7 +51,7 @@ beforeEach(() => {
   mockSubmitContact.mockReset();
   mockConfig.ENABLE_CONTACT = false;
   mockConfig.TURNSTILE_SITE_KEY = '';
-  mockConfig.ENABLE_TURNSTILE = false;
+  mockConfig.ENABLE_EXTERNAL_SCRIPTS = false;
 });
 
 afterEach(() => {
@@ -168,7 +171,7 @@ describe('ContactForm', () => {
   describe('API送信', () => {
     beforeEach(() => {
       mockConfig.ENABLE_CONTACT = true;
-      mockConfig.ENABLE_TURNSTILE = true;
+      mockConfig.ENABLE_EXTERNAL_SCRIPTS = true;
     });
 
     const fillForm = () => {

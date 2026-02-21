@@ -37,7 +37,7 @@ jobs:
   e2e-tests:
     needs: setup-matrix
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
@@ -76,7 +76,7 @@ jobs:
       - name: Build application
         run: pnpm build
         env:
-          PUBLIC_ENABLE_TURNSTILE: 'false'
+          PUBLIC_ENABLE_EXTERNAL_SCRIPTS: 'false'
 
       - name: Run E2E tests
         run: |
