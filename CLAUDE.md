@@ -145,7 +145,9 @@ git worktree remove ../exvs2-worktree  # 後片付け
 - **e2e.yml** - E2Eテスト（Playwright、非WebKit統合+WebKit個別の4並列、ブラウザキャッシュ付き、Node: `.node-version` 参照）
 - **playwright.config.ts** - Playwright設定（6ブラウザプロジェクト、webServer: pnpm preview）
 - **e2e/helpers.ts** - E2Eテスト共通ヘルパー（`BASE` 定数: サブパスプレフィックス）
+- **lighthouse.yml** - Lighthouse CI（PR・main push・週次スケジュール、PRコメント自動投稿、スコア低下時Issue自動作成）
 - **storybook.yml** - Storybookビルド（Node: `.node-version` 参照）
+- **lighthouserc.json** - Lighthouse CI設定（スコア閾値: SEO error 90, Performance/A11y warn 80, Best Practices warn 90）
 
 ### 依存関係管理
 
@@ -231,7 +233,7 @@ PatternList → PatternCard（各パターン表示）
  ↓
 #94 Pre-commitフック（Husky + lint-staged + ESLint + Prettier）
  ↓
-#91 Lighthouse CI（定期品質監査: SEO・パフォーマンス・アクセシビリティ）
+#91 Lighthouse CI（定期品質監査: SEO・パフォーマンス・アクセシビリティ）✅
  ↓
 #92 Claude Code開発体験の改善（ルール・メモリ・エージェント最適化）
  ↓
@@ -245,8 +247,8 @@ PatternList → PatternCard（各パターン表示）
 - **CI**: ユニットテスト（Vitest）、型チェック（tsc）、ビルド検証、E2Eテスト（Playwright、PRはnon-webkitのみ）、Storybookビルド（PRのみ）
 - **ローカル品質ゲート**: ESLint + Prettier（Husky + lint-staged でpre-commitフック実行）
 - **依存関係管理**: Renovate（patch自動マージ、minor・major・フレームワーク系は手動）
+- **品質監査**: Lighthouse CI（PR・main push・週次スケジュール、トップページ対象、3回実行中央値）
 - **最適化**: concurrency（連続プッシュ時の自動キャンセル）、paths-ignore
-- **未導入**: Lighthouse
 
 ## リリース・デプロイ ロードマップ
 

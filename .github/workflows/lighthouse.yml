@@ -1,0 +1,166 @@
+name: Lighthouse CI
+
+on:
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - 'docs/**'
+      - '.claude/**'
+      - '*.md'
+      - 'scripts/**'
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'docs/**'
+      - '.claude/**'
+      - '*.md'
+      - 'scripts/**'
+  schedule:
+    - cron: '0 0 * * 1' # 毎週月曜 UTC 0:00
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.node-version'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Run Lighthouse CI
+        id: lighthouse
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          configPath: ./lighthouserc.json
+          uploadArtifacts: true
+
+      - name: Format Lighthouse results
+        id: format
+        if: always() && github.event_name == 'pull_request' && steps.lighthouse.outcome != 'cancelled'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const resultsDir = '.lighthouseci';
+            const files = fs.readdirSync(resultsDir).filter(f => f.endsWith('.json') && f.startsWith('lhr-'));
+
+            if (files.length === 0) {
+              core.setOutput('comment', '');
+              return;
+            }
+
+            const lhr = JSON.parse(fs.readFileSync(`${resultsDir}/${files[files.length - 1]}`, 'utf8'));
+            const categories = lhr.categories;
+
+            const score = (cat) => {
+              const s = categories[cat]?.score;
+              return s != null ? Math.round(s * 100) : 'N/A';
+            };
+
+            const emoji = (s) => {
+              if (s === 'N/A') return '';
+              if (s >= 90) return '\u{1F7E2}';
+              if (s >= 50) return '\u{1F7E0}';
+              return '\u{1F534}';
+            };
+
+            const perf = score('performance');
+            const seo = score('seo');
+            const a11y = score('accessibility');
+            const bp = score('best-practices');
+
+            const body = [
+              '## Lighthouse Results',
+              '',
+              '| Category | Score |',
+              '|----------|-------|',
+              `| Performance | ${emoji(perf)} ${perf} |`,
+              `| SEO | ${emoji(seo)} ${seo} |`,
+              `| Accessibility | ${emoji(a11y)} ${a11y} |`,
+              `| Best Practices | ${emoji(bp)} ${bp} |`,
+              '',
+              `Page: \`/\` | Commit: \`${context.sha.substring(0, 7)}\``,
+            ].join('\n');
+
+            core.setOutput('comment', body);
+
+      - name: Comment Lighthouse results on PR
+        if: always() && github.event_name == 'pull_request' && steps.format.outputs.comment != ''
+        uses: actions/github-script@v7
+        env:
+          LIGHTHOUSE_COMMENT: ${{ steps.format.outputs.comment }}
+        with:
+          script: |
+            const body = process.env.LIGHTHOUSE_COMMENT;
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const botComment = comments.find(
+              (c) => c.user.type === 'Bot' && c.body.includes('## Lighthouse Results')
+            );
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
+
+      - name: Create issue on score drop (scheduled only)
+        if: always() && github.event_name == 'schedule' && steps.lighthouse.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const resultsDir = '.lighthouseci';
+            const files = fs.readdirSync(resultsDir).filter(f => f.endsWith('.json') && f.startsWith('lhr-'));
+
+            let details = 'Lighthouse CI のアサーション（閾値チェック）が失敗しました。';
+            if (files.length > 0) {
+              const lhr = JSON.parse(fs.readFileSync(`${resultsDir}/${files[files.length - 1]}`, 'utf8'));
+              const cats = lhr.categories;
+              const score = (cat) => cats[cat]?.score != null ? Math.round(cats[cat].score * 100) : 'N/A';
+              details += `\n\n| Category | Score |\n|----------|-------|\n| Performance | ${score('performance')} |\n| SEO | ${score('seo')} |\n| Accessibility | ${score('accessibility')} |\n| Best Practices | ${score('best-practices')} |`;
+            }
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Lighthouse: スコア低下検知 (${new Date().toISOString().split('T')[0]})`,
+              body: `## 定期 Lighthouse CI でスコア低下を検知\n\n${details}\n\n[Workflow Run](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})`,
+              labels: ['lighthouse'],
+            });
