@@ -79,6 +79,7 @@ git worktree remove ../exvs2-worktree  # 後片付け
   - PatternList.tsx - パターン一覧（全パターンをPatternCardで描画）
     - PatternCard.tsx - 個別パターンカード（ランク・撃墜順・コスト推移テーブル・画像エクスポート・SNSシェア）
 - **ShareButtons.tsx** - SNSシェアボタン（Twitter/X・LINE・Web Share API）
+- **ContactForm.tsx** - お問い合わせフォーム（zodバリデーション、Turnstile統合、フィーチャーフラグ制御）
 - CookieConsentBanner.tsx - Cookie同意バナー（広告Cookie同意/拒否）
 - ThemeToggle.tsx - ダーク/ライトモード切替
 - Tooltip.tsx - ツールチップ
@@ -99,6 +100,9 @@ git worktree remove ../exvs2-worktree  # 後片付け
 - savedFormations.ts - 保存編成管理（LocalStorage CRUD、最大10件）
 - urlSharing.ts - URL共有（編成・フィルター状態のURLパラメータ encode/decode）
 - imageExport.ts - 画像エクスポート（html-to-image によるPNG生成、Web Share共有）
+- contactConfig.ts - 問い合わせ設定（ENABLE_CONTACTフラグ、API URL、Turnstileサイトキー）
+- contactSchema.ts - 問い合わせバリデーション（zodスキーマ、カテゴリ定義）
+- contactApi.ts - 問い合わせAPIクライアント（Worker APIへのPOST、エラーコードマッピング）
 
 ### データ（src/data/）
 
@@ -118,6 +122,7 @@ git worktree remove ../exvs2-worktree  # 後片付け
 - **faq.astro** - よくある質問ページ（FAQPage + BreadcrumbList JSON-LD）
 - **privacy.astro** - プライバシーポリシーページ（BreadcrumbList JSON-LD）
 - **changelog.astro** - 更新履歴ページ（BreadcrumbList JSON-LD）
+- **contact.astro** - お問い合わせページ（ContactForm + BreadcrumbList JSON-LD）
 - **404.astro** - カスタム404ページ（トップページへの導線）
 
 > **注意**: 新しいページを追加した場合は、BaseLayout を使用し、JSON-LD 構造化データの追加・更新も検討すること

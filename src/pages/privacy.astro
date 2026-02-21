@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { ENABLE_AD_COOKIES, ENABLE_ANALYTICS } from '../lib/cookieConsent';
+import { ENABLE_CONTACT } from '../lib/contactConfig';
 import { CookieConsentBanner } from '../components/CookieConsentBanner';
 
 const base = import.meta.env.BASE_URL;
@@ -168,7 +169,19 @@ const siteBase = `${import.meta.env.SITE}${base}`;
 
       <section>
         <h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">お問い合わせ</h2>
-        <p>問い合わせ機能は現在準備中です。今しばらくお待ちください。</p>
+        {
+          ENABLE_CONTACT ? (
+            <p>
+              ご質問・ご意見がございましたら、
+              <a href={`${base}contact/`} class="text-blue-600 dark:text-blue-400 hover:underline">
+                お問い合わせページ
+              </a>
+              よりお気軽にご連絡ください。
+            </p>
+          ) : (
+            <p>問い合わせ機能は現在準備中です。今しばらくお待ちください。</p>
+          )
+        }
       </section>
 
       <section class="text-sm text-slate-500 dark:text-slate-400">
