@@ -1,6 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { ENABLE_AD_COOKIES, ENABLE_ANALYTICS } from '../lib/cookieConsent';
 import { CookieConsentBanner } from '../components/CookieConsentBanner';
+
+const base = import.meta.env.BASE_URL;
+const siteBase = `${import.meta.env.SITE}${base}`;
 ---
 
 <BaseLayout
@@ -9,21 +13,22 @@ import { CookieConsentBanner } from '../components/CookieConsentBanner';
 >
   <Fragment slot="head">
     <!-- JSON-LD 構造化データ -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "トップ", "item": "https://dowo.dev/" },
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'トップ', item: siteBase },
           {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "プライバシーポリシー",
-            "item": "https://dowo.dev/privacy/"
-          }
-        ]
-      }
-    </script>
+            '@type': 'ListItem',
+            position: 2,
+            name: 'プライバシーポリシー',
+            item: `${siteBase}privacy/`,
+          },
+        ],
+      })}
+    />
   </Fragment>
 
   <div class="container mx-auto px-4 py-8 max-w-3xl">
@@ -37,57 +42,111 @@ import { CookieConsentBanner } from '../components/CookieConsentBanner';
         <p>
           当サイト「EXVS2 コスト計算機」（以下、当サイト）は、機動戦士ガンダム EXTREME VS. 2
           のコスト計算ツールです。 当サイトのURL: <code
-            class="text-sm bg-slate-200 dark:bg-slate-700 px-1 rounded">https://dowo.dev</code
+            class="text-sm bg-slate-200 dark:bg-slate-700 px-1 rounded"
+            >https://dowo.dev/works/exvs2-cost-calculator/</code
           >
         </p>
       </section>
 
+      {
+        ENABLE_AD_COOKIES && (
+          <section>
+            <h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">
+              広告配信について
+            </h2>
+            <p>
+              当サイトでは、第三者配信の広告サービス「Google
+              AdSense（グーグルアドセンス）」を利用しています。
+            </p>
+            <p class="mt-2">
+              Google などの第三者配信事業者は、Cookie
+              を使用して、当サイトや他のウェブサイトへの過去のアクセス情報に基づいて広告を配信します。
+              Google が広告 Cookie
+              を使用することにより、当サイトや他のサイトにアクセスした際の情報に基づいて、Google
+              やそのパートナーは適切な広告を表示します。
+            </p>
+            <p class="mt-2">
+              パーソナライズ広告を無効にする場合は、
+              <a
+                href="https://www.google.com/settings/ads"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                Google 広告設定
+              </a>
+              から設定できます。また、
+              <a
+                href="https://www.aboutads.info/choices/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                aboutads.info
+              </a>
+              にアクセスすることで、第三者配信事業者の Cookie
+              を使用したパーソナライズ広告を無効にできます。
+            </p>
+          </section>
+        )
+      }
+
       <section>
         <h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">
-          広告配信について
+          アクセス解析について
         </h2>
         <p>
-          当サイトでは、第三者配信の広告サービス「Google
-          AdSense（グーグルアドセンス）」を利用しています。
+          当サイトでは、サイトの利用状況を把握し改善に役立てるため、以下のアクセス解析ツールを使用しています。
         </p>
-        <p class="mt-2">
-          Google などの第三者配信事業者は、Cookie
-          を使用して、当サイトや他のウェブサイトへの過去のアクセス情報に基づいて広告を配信します。
-          Google が広告 Cookie
-          を使用することにより、当サイトや他のサイトにアクセスした際の情報に基づいて、Google
-          やそのパートナーは適切な広告を表示します。
+        <h3 class="text-lg font-semibold mt-4 mb-2 text-slate-900 dark:text-slate-100">
+          Cloudflare Web Analytics
+        </h3>
+        <p>
+          Cloudflare Web Analytics はCookieを使用せず、個人を特定する情報を収集しません。
+          ページビュー数やアクセス元の国・ブラウザなどの基本的な統計情報のみを収集します。
         </p>
-        <p class="mt-2">
-          パーソナライズ広告を無効にする場合は、
-          <a
-            href="https://www.google.com/settings/ads"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-blue-600 dark:text-blue-400 hover:underline">Google 広告設定</a
-          >
-          から設定できます。 また、
-          <a
-            href="https://www.aboutads.info/choices/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-blue-600 dark:text-blue-400 hover:underline">aboutads.info</a
-          >
-          にアクセスすることで、第三者配信事業者の Cookie を使用したパーソナライズ広告を無効にできます。
-        </p>
+        {
+          ENABLE_ANALYTICS && (
+            <>
+              <h3 class="text-lg font-semibold mt-4 mb-2 text-slate-900 dark:text-slate-100">
+                Google アナリティクス 4（GA4）
+              </h3>
+              <p>
+                当サイトでは、Google LLC が提供する Google アナリティクス 4 を利用しています。 GA4
+                は Cookie を使用してサイトの利用状況を分析します。
+                収集されたデータは匿名化されており、個人を特定するものではありません。
+              </p>
+              <p class="mt-2">
+                GA4 による Cookie の使用を希望されない場合は、当サイトの Cookie
+                同意バナーで「拒否する」を選択するか、
+                <a
+                  href="https://tools.google.com/dlpage/gaoptout"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-blue-600 dark:text-blue-400 hover:underline"
+                >
+                  Google アナリティクス オプトアウト アドオン
+                </a>
+                をインストールすることで無効にできます。
+              </p>
+            </>
+          )
+        }
       </section>
 
       <section>
         <h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">
-          Cookie について
+          Cookie・LocalStorage について
         </h2>
         <p>
           Cookie とは、ウェブサイトがお客様のブラウザに送信する小さなテキストファイルです。
-          当サイトでは以下の目的で Cookie を使用しています。
+          当サイトでは以下の目的で Cookie および LocalStorage を使用しています。
         </p>
         <ul class="list-disc list-inside mt-2 space-y-1">
           <li>テーマ設定（ダークモード / ライトモード）の保存</li>
-          <li>編成データの保存（LocalStorage）</li>
-          <li>第三者配信事業者（Google AdSense）による広告配信</li>
+          <li>編成データ・お気に入り機体の保存</li>
+          {ENABLE_AD_COOKIES && <li>第三者配信事業者（Google AdSense）による広告配信</li>}
+          {ENABLE_ANALYTICS && <li>アクセス解析（Google アナリティクス 4）による利用状況の分析</li>}
         </ul>
         <p class="mt-2">
           ブラウザの設定により Cookie
@@ -109,20 +168,12 @@ import { CookieConsentBanner } from '../components/CookieConsentBanner';
 
       <section>
         <h2 class="text-xl font-semibold mb-3 text-slate-900 dark:text-slate-100">お問い合わせ</h2>
-        <p>
-          当サイトに関するお問い合わせは、
-          <a
-            href="https://github.com/dOwOd/exvs2-cost-calculator/issues"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-blue-600 dark:text-blue-400 hover:underline">GitHub Issues</a
-          >
-          よりお願いいたします。
-        </p>
+        <p>問い合わせ機能は現在準備中です。今しばらくお待ちください。</p>
       </section>
 
       <section class="text-sm text-slate-500 dark:text-slate-400">
         <p>制定日: 2026年2月10日</p>
+        <p>改定日: 2026年2月21日（アクセス解析に関する記載を追加）</p>
       </section>
     </div>
   </div>

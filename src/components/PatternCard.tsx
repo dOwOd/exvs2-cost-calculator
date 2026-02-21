@@ -11,6 +11,7 @@ import {
   generateFilename,
 } from '../lib/imageExport';
 import { InfoIcon } from './Tooltip';
+import { trackEvent } from '../lib/analytics';
 
 type PatternCardType = {
   pattern: EvaluatedPattern;
@@ -66,10 +67,12 @@ export const PatternCard = ({
     setIsExporting(true);
     try {
       const blob = await generatePatternCardImage(cardRef.current);
+      trackEvent('image_export', { rank });
       const filename = generateFilename(rank, formation);
       const costA = formation.unitA?.cost ?? 0;
       const costB = formation.unitB?.cost ?? 0;
       await shareImage(blob, filename, `EXVS2 パターン #${rank} (${costA}+${costB})`);
+      trackEvent('share_image', { rank });
     } catch (error) {
       // ユーザーが共有をキャンセルした場合はエラーを無視
       if (error instanceof Error && error.name !== 'AbortError') {
@@ -105,7 +108,7 @@ export const PatternCard = ({
         aria-expanded={isExpanded}
         onClick={onToggle}
         onKeyDown={handleKeyDown}
-        class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 cursor-pointer select-none"
+        class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-800 rounded"
       >
         <div class="flex items-center gap-2 sm:gap-3">
           {/* シェブロンアイコン（画像から除外） */}
@@ -193,6 +196,7 @@ export const PatternCard = ({
                     '_blank',
                     'noopener,noreferrer,width=600,height=400',
                   );
+                  trackEvent('share_twitter', { rank });
                 }}
                 title="Xでシェア"
                 class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
@@ -214,6 +218,7 @@ export const PatternCard = ({
                     '_blank',
                     'noopener,noreferrer,width=600,height=400',
                   );
+                  trackEvent('share_line', { rank });
                 }}
                 title="LINEでシェア"
                 class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
@@ -311,22 +316,35 @@ export const PatternCard = ({
               onScroll={handleScroll}
             >
               <table class="w-full text-sm sm:text-lg min-w-[500px]">
+                <caption class="sr-only">パターン #{rank} のコスト推移</caption>
                 <thead>
                   <tr class="border-b border-slate-300 dark:border-slate-600">
-                    <th class="text-left py-2 px-1 sm:px-2 text-slate-600 dark:text-slate-400 whitespace-nowrap">
+                    <th
+                      scope="col"
+                      class="text-left py-2 px-1 sm:px-2 text-slate-600 dark:text-slate-400 whitespace-nowrap"
+                    >
                       撃墜順
                     </th>
-                    <th class="text-left py-2 px-1 sm:px-2 text-slate-600 dark:text-slate-400">
+                    <th
+                      scope="col"
+                      class="text-left py-2 px-1 sm:px-2 text-slate-600 dark:text-slate-400"
+                    >
                       対象
                     </th>
-                    <th class="text-right py-2 px-1 sm:px-2 text-slate-600 dark:text-slate-400">
+                    <th
+                      scope="col"
+                      class="text-right py-2 px-1 sm:px-2 text-slate-600 dark:text-slate-400"
+                    >
                       <span class="flex items-center justify-end whitespace-nowrap">
                         <span class="lg:hidden">残コスト</span>
                         <span class="hidden lg:inline">チーム残コスト</span>
                         <InfoIcon tooltip="チーム全体の残りコスト（6000から開始、A/B共有）。0以下で敗北。" />
                       </span>
                     </th>
-                    <th class="text-right py-2 px-1 sm:px-2 text-slate-600 dark:text-slate-400">
+                    <th
+                      scope="col"
+                      class="text-right py-2 px-1 sm:px-2 text-slate-600 dark:text-slate-400"
+                    >
                       <span class="flex items-center justify-end whitespace-nowrap">
                         <span class="lg:hidden">耐久</span>
                         <span class="hidden lg:inline">リスポーン耐久</span>
@@ -336,11 +354,14 @@ export const PatternCard = ({
                         />
                       </span>
                     </th>
-                    <th class="text-center py-2 px-1 sm:px-2 text-slate-600 dark:text-slate-400">
+                    <th
+                      scope="col"
+                      class="text-center py-2 px-1 sm:px-2 text-slate-600 dark:text-slate-400"
+                    >
                       <span class="flex items-center justify-center">
                         状態
                         <InfoIcon
-                          tooltip="✓=通常 ⚠️=コストオーバー 🔄=復活あり 💀=敗北"
+                          tooltip="✓=通常 ⚠️=コストオーバー 🔄=復活あり 💥=敗北"
                           align="right"
                         />
                       </span>
@@ -351,6 +372,7 @@ export const PatternCard = ({
                   {pattern.transitions.map((trans) => (
                     <tr
                       key={trans.killCount}
+                      aria-label={`ステップ${trans.killCount}: ${trans.killedUnit}機撃墜${trans.isDefeat ? ' - 敗北' : trans.isPartialRevival ? ' - 復活あり' : trans.isOverCost ? ' - コストオーバー' : ''}`}
                       class={`border-b border-slate-200 dark:border-slate-700 ${
                         trans.isDefeat
                           ? 'bg-red-100 dark:bg-red-900/40'
@@ -380,7 +402,19 @@ export const PatternCard = ({
                           <div class="text-right font-mono text-slate-700 dark:text-slate-300">
                             {trans.remainingCost}
                           </div>
-                          <div class="bg-slate-200 dark:bg-slate-700 rounded-full h-2 sm:h-3 overflow-hidden">
+                          <div
+                            class="bg-slate-200 dark:bg-slate-700 rounded-full h-2 sm:h-3 overflow-hidden"
+                            role="img"
+                            aria-label={`残コスト ${trans.remainingCost}: ${
+                              trans.remainingCost <= minCost && trans.remainingCost > 0
+                                ? 'EXオーバーリミット発動可能'
+                                : trans.remainingCost <= 3000 && trans.remainingCost > 0
+                                  ? '注意'
+                                  : trans.isOverCost
+                                    ? 'コストオーバー'
+                                    : '通常'
+                            }`}
+                          >
                             <div
                               class={`h-full transition-all ${
                                 trans.remainingCost <= minCost && trans.remainingCost > 0
@@ -422,7 +456,7 @@ export const PatternCard = ({
                       <td class="py-2 px-1 sm:px-2 text-center whitespace-nowrap">
                         {trans.isDefeat ? (
                           <span class="text-red-600 dark:text-red-400 font-semibold">
-                            💀 <span class="hidden sm:inline">敗北</span>
+                            💥 <span class="hidden sm:inline">敗北</span>
                           </span>
                         ) : trans.isPartialRevival ? (
                           <span class="text-purple-600 dark:text-purple-400 font-semibold">

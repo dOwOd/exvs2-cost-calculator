@@ -29,6 +29,7 @@ export const HealthSelector = ({
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
 
   // 外部クリックで閉じる
   useEffect(() => {
@@ -38,6 +39,7 @@ export const HealthSelector = ({
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
         setFocusedIndex(-1);
+        setHoveredHealth(null);
       }
     };
 
@@ -92,6 +94,19 @@ export const HealthSelector = ({
     setHoveredHealth(null);
   };
 
+  // focusedIndex 変更時にスクロール追従 + ポップアップ表示
+  useEffect(() => {
+    if (!isOpen || focusedIndex < 0 || !listRef.current) return;
+    const item = listRef.current.children[focusedIndex] as HTMLElement | undefined;
+    if (!item) return;
+    item.scrollIntoView({ block: 'nearest' });
+
+    // キーボード操作時もポップアップを表示
+    const rect = item.getBoundingClientRect();
+    setHoveredHealth(healthOptions[focusedIndex]);
+    setPopupPosition({ top: rect.top, left: rect.right + 8 });
+  }, [focusedIndex, isOpen, healthOptions]);
+
   const handleKeyDown = (event: KeyboardEvent) => {
     if (!isOpen) {
       if (event.key === 'Enter' || event.key === ' ') {
@@ -121,6 +136,7 @@ export const HealthSelector = ({
         event.preventDefault();
         setIsOpen(false);
         setFocusedIndex(-1);
+        setHoveredHealth(null);
         buttonRef.current?.focus();
         break;
     }
@@ -138,7 +154,7 @@ export const HealthSelector = ({
         onKeyDown={handleKeyDown}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
-        class="min-h-[44px] px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200 rounded border border-slate-300 dark:border-slate-600 focus:border-blue-500 focus:outline-none w-full text-left flex justify-between items-center"
+        class="min-h-[44px] px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200 rounded border border-slate-300 dark:border-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-800 w-full text-left flex justify-between items-center"
       >
         <span>{selectedHealth ?? '耐久値を選択'}</span>
         <svg
@@ -153,6 +169,7 @@ export const HealthSelector = ({
 
       {isOpen && (
         <ul
+          ref={listRef}
           role="listbox"
           data-testid={
             testIdPrefix ? `health-selector-listbox-${testIdPrefix}` : 'health-selector-listbox'

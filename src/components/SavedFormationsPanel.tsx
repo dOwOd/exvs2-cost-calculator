@@ -5,6 +5,7 @@
 import { useState, useEffect } from 'preact/hooks';
 import type { SavedFormation, Formation } from '../lib/types';
 import { getSavedFormations, deleteSavedFormation, saveFormation } from '../lib/savedFormations';
+import { trackEvent } from '../lib/analytics';
 
 type SavedFormationsPanelProps = {
   formation: Formation;
@@ -34,6 +35,7 @@ export const SavedFormationsPanel = ({ formation, onLoad }: SavedFormationsPanel
     setSaveName('');
     setIsSaveDialogOpen(false);
     refreshList();
+    trackEvent('formation_save');
   };
 
   const handleDeleteConfirm = () => {
@@ -41,10 +43,12 @@ export const SavedFormationsPanel = ({ formation, onLoad }: SavedFormationsPanel
     deleteSavedFormation(deleteTarget.id);
     setDeleteTarget(null);
     refreshList();
+    trackEvent('formation_delete');
   };
 
   const handleLoad = (saved: SavedFormation) => {
     onLoad(saved.formation);
+    trackEvent('formation_load');
   };
 
   const formatDate = (timestamp: number): string => {

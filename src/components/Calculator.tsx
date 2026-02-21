@@ -2,7 +2,7 @@
  * メイン計算機コンポーネント（状態管理）
  */
 
-import { useState, useMemo } from 'preact/hooks';
+import { useState, useEffect, useMemo, useCallback } from 'preact/hooks';
 import type { Formation, UnitConfig } from '../lib/types';
 import { ErrorBoundary } from './ErrorBoundary';
 import { FormationPanel } from './FormationPanel';
@@ -10,6 +10,8 @@ import { SavedFormationsPanel } from './SavedFormationsPanel';
 import { ResultPanel } from './ResultPanel';
 import { ComparisonResultPanel } from './ComparisonResultPanel';
 import { useFormationEvaluation } from '../lib/useFormationEvaluation';
+import { encodeFormationToParams, decodeFormationFromParams } from '../lib/urlSharing';
+import { trackEvent } from '../lib/analytics';
 
 type CalculatorMode = 'normal' | 'comparison';
 
@@ -24,6 +26,9 @@ export const Calculator = () => {
   // --- 通常モード用 ---
   const [formation, setFormation] = useState<Formation>(EMPTY_FORMATION);
 
+  // --- URLフィルター状態（useEffectで復元） ---
+  const [urlFilterState, setUrlFilterState] = useState({ exOnly: false, firstKillFilter: '' });
+
   // --- 比較モード用（固定3スロット） ---
   const [compFormations, setCompFormations] = useState<[Formation, Formation, Formation]>([
     EMPTY_FORMATION,
@@ -31,6 +36,33 @@ export const Calculator = () => {
     EMPTY_FORMATION,
   ]);
   const [compCount, setCompCount] = useState(MIN_COMPARISON_FORMATIONS);
+
+  // --- マウント時にURLパラメータから編成を復元 ---
+  const [urlRestored, setUrlRestored] = useState(false);
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.toString()) {
+      const decoded = decodeFormationFromParams(params);
+      setFormation(decoded.formation);
+      setUrlFilterState({ exOnly: decoded.exOnly, firstKillFilter: decoded.firstKillFilter });
+    }
+    setUrlRestored(true);
+  }, []);
+
+  // --- URL同期（通常モードのみ、URL復元完了後） ---
+  const updateUrl = useCallback((f: Formation) => {
+    if (typeof window === 'undefined') return;
+    const params = encodeFormationToParams(f);
+    const search = params.toString();
+    const newUrl = search ? `${window.location.pathname}?${search}` : window.location.pathname;
+    window.history.replaceState(null, '', newUrl);
+  }, []);
+
+  useEffect(() => {
+    if (urlRestored && mode === 'normal') {
+      updateUrl(formation);
+    }
+  }, [formation, mode, updateUrl, urlRestored]);
 
   // --- 評価: 通常モード ---
   const normalEval = useFormationEvaluation(formation);
@@ -43,6 +75,16 @@ export const Calculator = () => {
     () => [compEval0, compEval1, compEval2],
     [compEval0, compEval1, compEval2],
   );
+
+  // --- 計算完了イベント送信（両機揃った時） ---
+  useEffect(() => {
+    if (formation.unitA && formation.unitB) {
+      trackEvent('calculate', {
+        cost_a: formation.unitA.cost,
+        cost_b: formation.unitB.cost,
+      });
+    }
+  }, [formation.unitA, formation.unitB]);
 
   // --- 通常モードのハンドラ ---
   const handleUnitAChange = (unit: UnitConfig | null) => {
@@ -101,12 +143,21 @@ export const Calculator = () => {
           </div>
 
           {/* モード切替 */}
-          <div class="mb-4 md:mb-6 flex gap-2" data-testid="mode-toggle">
+          <div
+            class="mb-4 md:mb-6 flex gap-2"
+            data-testid="mode-toggle"
+            role="group"
+            aria-label="モード切り替え"
+          >
             <button
               type="button"
               data-testid="mode-normal"
-              onClick={() => setMode('normal')}
-              class={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
+              onClick={() => {
+                setMode('normal');
+                trackEvent('mode_switch', { mode: 'normal' });
+              }}
+              aria-pressed={mode === 'normal'}
+              class={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-800 ${
                 mode === 'normal'
                   ? 'bg-blue-600 text-white'
                   : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600'
@@ -117,8 +168,12 @@ export const Calculator = () => {
             <button
               type="button"
               data-testid="mode-comparison"
-              onClick={() => setMode('comparison')}
-              class={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
+              onClick={() => {
+                setMode('comparison');
+                trackEvent('mode_switch', { mode: 'comparison' });
+              }}
+              aria-pressed={mode === 'comparison'}
+              class={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-800 ${
                 mode === 'comparison'
                   ? 'bg-blue-600 text-white'
                   : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600'
@@ -130,12 +185,14 @@ export const Calculator = () => {
 
           {/* 通常モード */}
           {mode === 'normal' && (
-            <div
+            <main
+              id="main"
+              tabIndex={-1}
               data-testid="main-layout"
-              class="grid grid-cols-1 lg:grid-cols-[400px_1fr] gap-4 md:gap-6"
+              class="grid grid-cols-1 lg:grid-cols-[400px_1fr] gap-4 md:gap-6 outline-none"
             >
               {/* 左カラム: 編成選択 + 保存編成 */}
-              <aside class="space-y-4 md:space-y-6">
+              <div class="space-y-4 md:space-y-6">
                 <FormationPanel
                   unitA={formation.unitA}
                   unitB={formation.unitB}
@@ -145,22 +202,24 @@ export const Calculator = () => {
                 <ErrorBoundary fallbackMessage="保存編成の読み込み中にエラーが発生しました">
                   <SavedFormationsPanel formation={formation} onLoad={handleLoadFormation} />
                 </ErrorBoundary>
-              </aside>
+              </div>
 
               {/* 右カラム: 結果表示 */}
-              <main>
+              <div>
                 <ResultPanel
                   patterns={normalEval.evaluatedPatterns}
                   formation={formation}
                   minimumDefeatHealth={normalEval.minimumDefeatHealth}
+                  initialExOnly={urlFilterState.exOnly}
+                  initialFirstKillFilter={urlFilterState.firstKillFilter}
                 />
-              </main>
-            </div>
+              </div>
+            </main>
           )}
 
           {/* 比較モード */}
           {mode === 'comparison' && (
-            <div data-testid="comparison-layout">
+            <main id="main" tabIndex={-1} data-testid="comparison-layout" class="outline-none">
               {/* 編成パネル群 */}
               <div class="mb-4 md:mb-6">
                 <div class="flex items-center justify-between mb-3">
@@ -243,7 +302,7 @@ export const Calculator = () => {
                 formations={compFormations.slice(0, compCount)}
                 evals={compEvals.slice(0, compCount)}
               />
-            </div>
+            </main>
           )}
         </div>
       </div>

@@ -3,10 +3,16 @@
  */
 
 import {
+  ENABLE_AD_COOKIES,
+  ENABLE_ANALYTICS,
+  GA4_MEASUREMENT_ID,
+  CF_ANALYTICS_TOKEN,
+  ENABLE_COOKIE_CONSENT,
   getCookieConsent,
   setCookieConsent,
   resetCookieConsent,
   isAdCookieAllowed,
+  isAnalyticsCookieAllowed,
 } from './cookieConsent';
 
 // LocalStorageをモック
@@ -29,6 +35,29 @@ const localStorageMock = (() => {
 
 Object.defineProperty(global, 'localStorage', {
   value: localStorageMock,
+});
+
+describe('フィーチャーフラグ', () => {
+  test('ENABLE_AD_COOKIES が false であること（広告未導入）', () => {
+    expect(ENABLE_AD_COOKIES).toBe(false);
+  });
+
+  test('ENABLE_ANALYTICS が true であること', () => {
+    expect(ENABLE_ANALYTICS).toBe(true);
+  });
+
+  test('GA4_MEASUREMENT_ID が設定されていること', () => {
+    expect(GA4_MEASUREMENT_ID).toBe('G-8WSG8F8W3F');
+  });
+
+  test('CF_ANALYTICS_TOKEN が設定されていること', () => {
+    expect(CF_ANALYTICS_TOKEN).not.toBe('');
+  });
+
+  test('ENABLE_COOKIE_CONSENT はCookie使用サービスが有効な場合に true', () => {
+    // ENABLE_ANALYTICS=true, GA4_MEASUREMENT_ID が設定済みなので true
+    expect(ENABLE_COOKIE_CONSENT).toBe(true);
+  });
 });
 
 describe('getCookieConsent', () => {
@@ -116,5 +145,26 @@ describe('isAdCookieAllowed', () => {
 
   test('undecided の場合は false を返す', () => {
     expect(isAdCookieAllowed()).toBe(false);
+  });
+});
+
+describe('isAnalyticsCookieAllowed', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  test('ENABLE_ANALYTICS=true かつ granted の場合は true を返す', () => {
+    setCookieConsent('granted');
+    // ENABLE_ANALYTICS は true なので granted なら true
+    expect(isAnalyticsCookieAllowed()).toBe(true);
+  });
+
+  test('denied の場合は false を返す', () => {
+    setCookieConsent('denied');
+    expect(isAnalyticsCookieAllowed()).toBe(false);
+  });
+
+  test('undecided の場合は false を返す', () => {
+    expect(isAnalyticsCookieAllowed()).toBe(false);
   });
 });

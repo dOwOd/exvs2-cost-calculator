@@ -2,22 +2,79 @@
  * 結果パネル（フィルター + パターンリスト）
  */
 
-import { useState } from 'preact/hooks';
+import { useState, useEffect, useCallback } from 'preact/hooks';
 import type { EvaluatedPattern, Formation } from '../lib/types';
 import { PatternList } from './PatternList';
 import { getTopPatterns, getEffectivePatterns } from '../lib/evaluators';
+import { encodeFormationToParams } from '../lib/urlSharing';
+import { trackEvent } from '../lib/analytics';
+
+type FirstKillFilter = 'all' | 'A' | 'B';
 
 type ResultPanelType = {
   patterns: EvaluatedPattern[];
   formation: Formation;
   minimumDefeatHealth: number;
+  initialExOnly?: boolean;
+  initialFirstKillFilter?: string;
 };
 
-export const ResultPanel = ({ patterns, formation, minimumDefeatHealth }: ResultPanelType) => {
-  const [showOnlyEXAvailable, setShowOnlyEXAvailable] = useState(false);
+/** クリップボードにテキストをコピーする（フォールバック付き） */
+const copyToClipboard = async (text: string): Promise<boolean> => {
+  if (navigator.clipboard) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      // clipboard API が拒否された場合、フォールバックへ
+    }
+  }
+  // フォールバック: execCommand
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  document.body.appendChild(textarea);
+  textarea.select();
+  try {
+    return document.execCommand('copy');
+  } finally {
+    document.body.removeChild(textarea);
+  }
+};
+
+export const ResultPanel = ({
+  patterns,
+  formation,
+  minimumDefeatHealth,
+  initialExOnly = false,
+  initialFirstKillFilter = '',
+}: ResultPanelType) => {
+  const [showOnlyEXAvailable, setShowOnlyEXAvailable] = useState(initialExOnly);
+  const [firstKillFilter, setFirstKillFilter] = useState<FirstKillFilter>(
+    initialFirstKillFilter === 'A' || initialFirstKillFilter === 'B'
+      ? initialFirstKillFilter
+      : 'all',
+  );
+  const [copyFeedback, setCopyFeedback] = useState(false);
+
+  // URL復元によるフィルターprops変更に追従
+  useEffect(() => {
+    setShowOnlyEXAvailable(initialExOnly);
+  }, [initialExOnly]);
+  useEffect(() => {
+    setFirstKillFilter(
+      initialFirstKillFilter === 'A' || initialFirstKillFilter === 'B'
+        ? initialFirstKillFilter
+        : 'all',
+    );
+  }, [initialFirstKillFilter]);
 
   // 両方選択済みかどうか
   const isFormationComplete = formation.unitA && formation.unitB;
+
+  // 異なるコストの編成かどうか（先落ちフィルター表示条件）
+  const isDifferentCost = isFormationComplete && formation.unitA!.cost !== formation.unitB!.cost;
 
   // 編成が不完全な場合はパターンを空にするガード
   const effectivePatterns = getEffectivePatterns(patterns, formation);
@@ -25,10 +82,49 @@ export const ResultPanel = ({ patterns, formation, minimumDefeatHealth }: Result
   // 総耐久最大でソート（同じ総耐久値内で高コスト先落ち優先）
   const sortedPatterns = getTopPatterns(effectivePatterns, formation);
 
-  // フィルタリング
-  const filteredPatterns = showOnlyEXAvailable
-    ? sortedPatterns.filter((p) => !p.isEXActivationFailure)
-    : sortedPatterns;
+  // フィルタリング（EXフィルター + 先落ちフィルター）
+  const filteredPatterns = sortedPatterns.filter((p) => {
+    if (showOnlyEXAvailable && p.isEXActivationFailure) return false;
+    if (firstKillFilter !== 'all' && p.transitions[0]?.killedUnit !== firstKillFilter) return false;
+    return true;
+  });
+
+  // フィルター変更時にURLを更新
+  const updateUrlWithFilters = useCallback(
+    (exOnly: boolean, fkFilter: FirstKillFilter) => {
+      if (typeof window === 'undefined') return;
+      const params = encodeFormationToParams(formation, {
+        exOnly: exOnly || undefined,
+        firstKillFilter: fkFilter !== 'all' ? fkFilter : undefined,
+      });
+      const search = params.toString();
+      const newUrl = search ? `${window.location.pathname}?${search}` : window.location.pathname;
+      window.history.replaceState(null, '', newUrl);
+    },
+    [formation],
+  );
+
+  const handleExFilterChange = (checked: boolean) => {
+    setShowOnlyEXAvailable(checked);
+    updateUrlWithFilters(checked, firstKillFilter);
+    trackEvent('filter_ex_toggle', { enabled: checked });
+  };
+
+  const handleFirstKillFilterChange = (value: FirstKillFilter) => {
+    setFirstKillFilter(value);
+    updateUrlWithFilters(showOnlyEXAvailable, value);
+    trackEvent('filter_first_kill', { value });
+  };
+
+  // URLコピーハンドラ
+  const handleCopyUrl = async () => {
+    const success = await copyToClipboard(window.location.href);
+    if (success) {
+      setCopyFeedback(true);
+      setTimeout(() => setCopyFeedback(false), 2000);
+      trackEvent('url_copy');
+    }
+  };
 
   // ガイダンスメッセージを生成
   const getGuidanceMessage = () => {
@@ -81,17 +177,18 @@ export const ResultPanel = ({ patterns, formation, minimumDefeatHealth }: Result
 
         {/* フィルター（両方選択済みの場合のみ表示） */}
         {isFormationComplete && (
-          <div class="space-y-3">
+          <fieldset class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-none p-0 m-0">
+            <legend class="sr-only">パターン表示フィルター</legend>
             <label class="flex items-center gap-3 cursor-pointer group">
               <div class="relative">
                 <input
                   type="checkbox"
                   data-testid="ex-filter-checkbox"
                   checked={showOnlyEXAvailable}
-                  onChange={(e) => setShowOnlyEXAvailable(e.currentTarget.checked)}
+                  onChange={(e) => handleExFilterChange(e.currentTarget.checked)}
                   class="sr-only peer"
                 />
-                <div class="w-6 h-6 border-2 border-slate-300 dark:border-slate-600 rounded-md bg-slate-100 dark:bg-slate-800 peer-checked:bg-blue-600 peer-checked:border-blue-600 transition-all duration-200 group-hover:border-slate-400 dark:group-hover:border-slate-500">
+                <div class="w-6 h-6 border-2 border-slate-300 dark:border-slate-600 rounded-md bg-slate-100 dark:bg-slate-800 peer-checked:bg-blue-600 peer-checked:border-blue-600 transition-all duration-200 group-hover:border-slate-400 dark:group-hover:border-slate-500 peer-focus-visible:ring-2 peer-focus-visible:ring-blue-500 peer-focus-visible:ring-offset-2 dark:peer-focus-visible:ring-offset-gray-800">
                   <svg
                     class={`w-full h-full text-white transition-all duration-200 ${showOnlyEXAvailable ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}
                     fill="none"
@@ -123,7 +220,87 @@ export const ResultPanel = ({ patterns, formation, minimumDefeatHealth }: Result
                 EXオーバーリミット発動可能のみ表示
               </span>
             </label>
-          </div>
+
+            <div class="flex items-center gap-3">
+              {/* 先落ちフィルター（異なるコスト編成時のみ表示） */}
+              {isDifferentCost && (
+                <div data-testid="first-kill-filter">
+                  <div class="text-xs text-slate-500 dark:text-slate-400 mb-1.5 sm:hidden">
+                    先撃墜フィルター
+                  </div>
+                  <div
+                    class="inline-flex rounded-lg bg-slate-200 dark:bg-slate-800 p-0.5"
+                    role="radiogroup"
+                    aria-label="先撃墜フィルター"
+                  >
+                    {(
+                      [
+                        ['all', 'すべて'],
+                        ['A', 'A先撃墜'],
+                        ['B', 'B先撃墜'],
+                      ] as const
+                    ).map(([value, label]) => (
+                      <button
+                        key={value}
+                        type="button"
+                        role="radio"
+                        aria-checked={firstKillFilter === value}
+                        data-testid={`first-kill-filter-${value.toLowerCase()}`}
+                        onClick={() => handleFirstKillFilterChange(value as FirstKillFilter)}
+                        class={`px-3 py-1 text-sm font-medium rounded-md transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-800 ${
+                          firstKillFilter === value
+                            ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 shadow-sm'
+                            : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
+                        }`}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* URL共有ボタン */}
+              <button
+                type="button"
+                data-testid="copy-url-button"
+                onClick={handleCopyUrl}
+                class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 transition-colors text-sm shrink-0"
+                title="この編成のURLをコピー"
+              >
+                {copyFeedback ? (
+                  <>
+                    <svg
+                      class="w-4 h-4 text-green-600 dark:text-green-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    <span class="text-green-600 dark:text-green-400">コピーしました</span>
+                  </>
+                ) : (
+                  <>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+                      />
+                    </svg>
+                    <span class="hidden sm:inline">URLをコピー</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </fieldset>
         )}
       </div>
 

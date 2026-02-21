@@ -2,6 +2,13 @@
 
 機動戦士ガンダム EXVS2 のコスト計算ツール
 
+## 共有設定
+
+`.claude/rules/` と `.claude/skills/` の一部は [claude-shared](https://github.com/dOwOd/claude-shared) からシンボリックリンクで参照している。
+
+- **共有ファイルの変更**: `~/Development/claude-shared/` 側を編集・コミットする
+- **プロジェクト固有の上書き**: シンボリックリンクを削除してローカルファイルに置き換える
+
 ## Gitワークフロー
 
 - Issue/機能ごとに必ず `main` から新しいブランチを作成する。`main` に直接コミットしない
@@ -85,10 +92,12 @@ git worktree remove ../exvs2-worktree  # 後片付け
 - useFormationEvaluation.ts - 編成評価フック（編成→評価パターン・最短敗北耐久を算出）
 - useTheme.ts - テーマ管理フック
 - useCookieConsent.ts - Cookie同意フック（カスタムイベントでコンポーネント間同期）
-- cookieConsent.ts - Cookie同意状態管理（LocalStorage CRUD）
+- **analytics.ts** - アナリティクス（GA4動的ロード、consent-gated初期化、型付きイベント送信）
+- cookieConsent.ts - Cookie同意状態管理（LocalStorage CRUD、アナリティクス設定フラグ）
 - recentHistory.ts - 最近の編成履歴管理
 - favoriteSuits.ts - お気に入り機体管理（LocalStorage CRUD、最大20件、カスタムイベント同期）
 - savedFormations.ts - 保存編成管理（LocalStorage CRUD、最大10件）
+- urlSharing.ts - URL共有（編成・フィルター状態のURLパラメータ encode/decode）
 - imageExport.ts - 画像エクスポート（html-to-image によるPNG生成、Web Share共有）
 
 ### データ（src/data/）
@@ -96,6 +105,7 @@ git worktree remove ../exvs2-worktree  # 後片付け
 - **overCostHealthTable.ts** - コストオーバー時の復帰耐久値テーブル
 - mobileSuitsData.ts - 機体データ（名前・コスト・耐久値）
 - faqs.ts - FAQデータ（カテゴリ別グルーピング、型定義、ヘルパー関数）
+- changelog.ts - リリースノートデータ（型定義、バージョン別変更履歴）
 
 ### レイアウト（src/layouts/）
 
@@ -107,8 +117,12 @@ git worktree remove ../exvs2-worktree  # 後片付け
 - **guide.astro** - コスト管理ガイドページ（BreadcrumbList JSON-LD）
 - **faq.astro** - よくある質問ページ（FAQPage + BreadcrumbList JSON-LD）
 - **privacy.astro** - プライバシーポリシーページ（BreadcrumbList JSON-LD）
+- **changelog.astro** - 更新履歴ページ（BreadcrumbList JSON-LD）
+- **404.astro** - カスタム404ページ（トップページへの導線）
 
 > **注意**: 新しいページを追加した場合は、BaseLayout を使用し、JSON-LD 構造化データの追加・更新も検討すること
+
+> **注意**: 内部リンクは `import.meta.env.BASE_URL` を使用すること（ハードコードしない）。E2Eテストでは `e2e/helpers.ts` の `BASE` 定数を使用
 
 ### スクリプト（scripts/）
 
@@ -116,18 +130,21 @@ git worktree remove ../exvs2-worktree  # 後片付け
 
 ### 設定・静的ファイル
 
-- **astro.config.mjs** - Astro設定（site, integrations: preact + sitemap）
+- **astro.config.mjs** - Astro設定（site, base: サブパスデプロイ用, integrations: preact + sitemap）
 - **eslint.config.js** - ESLint設定（flat config、TypeScript + Astro + Prettier連携）
 - **.prettierrc** - Prettier設定（セミコロン、シングルクォート、100文字幅）
 - **.husky/pre-commit** - pre-commitフック（lint-staged実行）
 - **.node-version** - Node.js バージョン一元管理（CI・Docker・ローカル共通）
 - **public/robots.txt** - クローラー指示（Sitemap URL含む）
+- **public/manifest.json** - PWAマニフェスト（start_url・アイコンパスにbase pathを含む）
 - **public/ogp.png** - OGP画像（1200x630px、generate-ogp.mjsで生成）
 
 ### CI/CD（.github/workflows/）
 
 - **ci.yml** - ユニットテスト（Vitest）・型チェック・ビルド検証（Node: `.node-version` 参照）
 - **e2e.yml** - E2Eテスト（Playwright、非WebKit統合+WebKit個別の4並列、ブラウザキャッシュ付き、Node: `.node-version` 参照）
+- **playwright.config.ts** - Playwright設定（6ブラウザプロジェクト、webServer: pnpm preview）
+- **e2e/helpers.ts** - E2Eテスト共通ヘルパー（`BASE` 定数: サブパスプレフィックス）
 - **storybook.yml** - Storybookビルド（Node: `.node-version` 参照）
 - **renovate-review.yml** - Renovate PRレビュー（Claude Code Actionで依存関係PRに自動コメント）
 
@@ -172,6 +189,8 @@ PatternList → PatternCard（各パターン表示）
 
 `.claude/agents/` にカスタムエージェント定義を配置。プロジェクト単位でチームを構成する。
 
+### exvs2（開発チーム）
+
 - **lead.md** - チームリーダー（タスク分割・割当、統合・レビュー、Git/PR管理、CI/CD設定）
 - **logic.md** - ゲームロジック＆テスト担当（`src/lib/`, `src/data/`, テストファイル）
 - **ui.md** - UIコンポーネント担当（`src/components/`）
@@ -179,16 +198,25 @@ PatternList → PatternCard（各パターン表示）
 - **refactor.md** - DRYリファクタリング担当（重複検出、共通関数切り出し、コンポーネント化）
 - **qa.md** - 品質保証担当（ユニットテスト、E2Eテスト、Lighthouse、仕様整合性検証）
 
+### exvs2-infra（インフラチーム）
+
+- **infra-lead.md** - インフラチームリーダー（タスク統括、調査・設計の統合、Issue作成、デプロイ管理）
+- **researcher.md** - 技術調査担当（Cloudflare Workers、外部API、セキュリティのベストプラクティス収集）
+- **architect.md** - アーキテクチャ設計担当（拡張性重視の設計、型定義、ディレクトリ構成、ミドルウェアパターン）
+
 ### チーム運用
 
-- チーム名: `exvs2`（プロジェクト固定、Issueごとに作り直さない）
+- 開発チーム名: `exvs2`（フロントエンド・ゲームロジック）
+- インフラチーム名: `exvs2-infra`（サーバーレスAPI・インフラ）
+- 各チームはプロジェクト固定、Issueごとに作り直さない
 - Issueはタスクとして管理し、同じチーム内で処理する
-- セッション開始時に `TeamCreate(team_name: "exvs2")` で起動
+- セッション開始時に対象チームを `TeamCreate` で起動
 
 ## スキル
 
 - `/team` - エージェントチームを起動してIssueに取り組む（例: `/team #42`）
 - `/commit` - コミット規約に従ったコミット作成
+- `/release` - リリース準備（バージョン更新・changelog追記・タグ作成・プッシュ）
 - `/docs` - セッション中の変更に基づいてドキュメントを更新
 
 ## チェックリスト
@@ -225,6 +253,25 @@ PatternList → PatternCard（各パターン表示）
 - **依存関係管理**: Renovate（minor/patch自動マージ、major・フレームワーク系は手動）+ Claude Codeレビュー
 - **最適化**: concurrency（連続プッシュ時の自動キャンセル）、paths-ignore
 - **未導入**: Lighthouse
+
+## リリース・デプロイ ロードマップ
+
+```
+#139 バージョン管理・表示とリリースノート（/changelog）構築
+ ↓  package.json version → 0.1.0、ビルド時埋め込み、/changelog ページ
+#136 Cloudflare Pages デプロイ（dowo.dev/works/exvs2-cost-calculator/）
+ ↓  タグプッシュ（v*） → GitHub Actions → Wrangler でデプロイ
+ ↓  本番URL確定 → Turnstile・CORS設定が可能に
+#129 問い合わせ機能（Phase 1: Worker → Phase 2: /contact → Phase 3: 結合テスト）
+```
+
+### バージョニング方針
+
+- **セマンティックバージョニング**（semver: `MAJOR.MINOR.PATCH`）
+- 初回リリース: `v0.1.0`（主要機能が揃った段階で `v1.0.0` を検討）
+- Git タグ: `v0.1.0` 形式
+- サイト上にバージョン番号を表示し、`/changelog` へリンク
+- リリースノートはサイト内 `/changelog` で公開（リポジトリがプライベートのため GitHub Releases は不可）
 
 ## ドキュメント更新確認
 

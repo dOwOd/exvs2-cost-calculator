@@ -86,7 +86,7 @@ export default defineConfig({
   // 開発サーバーの自動起動
   webServer: {
     command: 'pnpm preview',
-    url: 'http://localhost:4321',
+    url: 'http://localhost:4321/works/exvs2-cost-calculator/',
     reuseExistingServer: !process.env.CI,
   },
 });

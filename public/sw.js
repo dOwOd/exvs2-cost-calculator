@@ -3,16 +3,19 @@
 
 const CACHE_NAME = 'exvs2-calculator-v2';
 
+// Base path (matches astro.config.mjs base)
+const BASE = '/works/exvs2-cost-calculator';
+
 // キャッシュするリソース（静的ファイル）
 const STATIC_ASSETS = [
-  '/',
-  '/manifest.json',
-  '/favicon.svg',
-  '/favicon.ico',
-  '/icons/icon-192x192.png',
-  '/icons/icon-512x512.png',
-  '/icons/icon-180x180.png',
-  '/icons/maskable-icon-512x512.png',
+  `${BASE}/`,
+  `${BASE}/manifest.json`,
+  `${BASE}/favicon.svg`,
+  `${BASE}/favicon.ico`,
+  `${BASE}/icons/icon-192x192.png`,
+  `${BASE}/icons/icon-512x512.png`,
+  `${BASE}/icons/icon-180x180.png`,
+  `${BASE}/icons/maskable-icon-512x512.png`,
 ];
 
 // インストール時: 静的アセットをキャッシュ
@@ -108,11 +111,11 @@ const staleWhileRevalidate = async (request) => {
 // 静的アセットかどうかを判定
 const isStaticAsset = (pathname) => {
   // Astroのビルド出力（ハッシュ付きファイル）
-  if (pathname.startsWith('/_astro/')) {
+  if (pathname.startsWith(`${BASE}/_astro/`)) {
     return true;
   }
   // アイコン
-  if (pathname.startsWith('/icons/')) {
+  if (pathname.startsWith(`${BASE}/icons/`)) {
     return true;
   }
   // その他の静的ファイル

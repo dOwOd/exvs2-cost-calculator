@@ -3,10 +3,11 @@
  */
 
 import { test, expect } from '@playwright/test';
+import { BASE } from './helpers';
 
 test.describe('編成選択と結果表示', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
+    await page.goto(`${BASE}/`);
   });
 
   test('コスト選択ボタンが表示される', async ({ page }) => {

@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import Header from '../components/Header.astro';
+import { ENABLE_AD_COOKIES, AD_PUBLISHER_ID, CF_ANALYTICS_TOKEN } from '../lib/cookieConsent';
 
 interface Props {
   title: string;
@@ -10,20 +11,25 @@ interface Props {
 
 const { title, description, ogType = 'website' } = Astro.props;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
-const ogImageUrl = new URL('/ogp.png', Astro.site).href;
+const ogImageUrl = new URL(`${import.meta.env.BASE_URL}ogp.png`, Astro.site).href;
+const showAds = ENABLE_AD_COOKIES && AD_PUBLISHER_ID !== '';
+const showCfAnalytics = CF_ANALYTICS_TOKEN !== '';
 ---
 
 <!doctype html>
 <html lang="ja">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
+    <link rel="icon" href={`${import.meta.env.BASE_URL}favicon.ico`} />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Google Search Console -->
+    <meta name="google-site-verification" content="a6gnyRHWrRd2TuQK0nTw5vNXPTtc8-yiD-EzLC0biv8" />
 
     <!-- OGP -->
     <meta property="og:title" content={title} />
@@ -68,10 +74,37 @@ const ogImageUrl = new URL('/ogp.png', Astro.site).href;
       })();
     </script>
 
+    {
+      showAds && (
+        <script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${AD_PUBLISHER_ID}`}
+          crossorigin="anonymous"
+        />
+      )
+    }
+
     <slot name="head" />
+
+    {/* Cloudflare Web Analytics (Cookie不要 - トークン設定時のみロード) */}
+    {
+      showCfAnalytics && (
+        <script
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={`{"token":"${CF_ANALYTICS_TOKEN}"}`}
+        />
+      )
+    }
   </head>
   <body class="bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-slate-100 min-h-screen">
     <Header />
     <slot />
+
+    {/* GA4 初期化 (consent-gated) */}
+    <script>
+      import { initAnalytics } from '../lib/analytics';
+      initAnalytics();
+    </script>
   </body>
 </html>

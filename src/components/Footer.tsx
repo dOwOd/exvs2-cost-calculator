@@ -3,13 +3,16 @@
  */
 
 import { GitHubIcon } from './icons/GitHubIcon';
+import { ENABLE_COOKIE_CONSENT } from '../lib/cookieConsent';
 import { useCookieConsent } from '../lib/useCookieConsent';
 
+const base = import.meta.env.BASE_URL;
+
 const siteLinks = [
-  { href: '/', label: 'コスト計算' },
-  { href: '/guide/', label: 'ガイド' },
-  { href: '/faq/', label: 'FAQ' },
-  { href: '/privacy/', label: 'プライバシーポリシー' },
+  { href: base, label: 'コスト計算' },
+  { href: `${base}guide/`, label: 'ガイド' },
+  { href: `${base}faq/`, label: 'FAQ' },
+  { href: `${base}privacy/`, label: 'プライバシーポリシー' },
 ];
 
 const linkClass = 'hover:text-blue-600 dark:hover:text-blue-400 transition-colors';
@@ -36,7 +39,7 @@ export const Footer = () => {
                     </a>
                   </li>
                 ))}
-                {status !== 'undecided' && (
+                {ENABLE_COOKIE_CONSENT && status !== 'undecided' && (
                   <li>
                     <button type="button" onClick={reset} class={linkClass}>
                       Cookie設定
@@ -71,7 +74,10 @@ export const Footer = () => {
             </a>
           </div>
           <div class="text-xs text-slate-400 dark:text-slate-500">
-            © {currentYear} EXVS2 コスト計算機
+            <a href={`${base}changelog/`} class={linkClass}>
+              v{__APP_VERSION__}
+            </a>
+            <span class="mx-1">&middot;</span>© {currentYear} EXVS2 コスト計算機
           </div>
         </div>
       </div>

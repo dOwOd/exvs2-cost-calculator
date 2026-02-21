@@ -6,6 +6,7 @@
  */
 
 import { test, expect } from '@playwright/test';
+import { BASE } from './helpers';
 
 test.describe('PWA機能', () => {
   // Service WorkerのテストはChromiumのみで実行
@@ -15,7 +16,7 @@ test.describe('PWA機能', () => {
   );
 
   test('Service Workerが正常に登録される', async ({ page }) => {
-    await page.goto('/');
+    await page.goto(`${BASE}/`);
 
     // Service Workerが登録されるまで待機
     const swRegistered = await page.evaluate(async () => {
@@ -45,7 +46,7 @@ test.describe('PWA機能', () => {
 
   test('manifest.jsonが正しく読み込まれる', async ({ page }) => {
     // manifest.jsonを直接取得
-    const response = await page.goto('/manifest.json');
+    const response = await page.goto(`${BASE}/manifest.json`);
     expect(response?.status()).toBe(200);
 
     const manifest = await response?.json();
@@ -53,7 +54,7 @@ test.describe('PWA機能', () => {
     // 必須フィールドの確認
     expect(manifest.name).toBe('EXVS2 コスト計算機');
     expect(manifest.short_name).toBe('EXVS2計算機');
-    expect(manifest.start_url).toBe('/');
+    expect(manifest.start_url).toBe(`${BASE}/`);
     expect(manifest.display).toBe('standalone');
     expect(manifest.theme_color).toBe('#0f172a');
     expect(manifest.icons).toHaveLength(3);
@@ -61,10 +62,10 @@ test.describe('PWA機能', () => {
 
   test('PWA用アイコンが存在する', async ({ page }) => {
     const iconPaths = [
-      '/icons/icon-192x192.png',
-      '/icons/icon-512x512.png',
-      '/icons/icon-180x180.png',
-      '/icons/maskable-icon-512x512.png',
+      `${BASE}/icons/icon-192x192.png`,
+      `${BASE}/icons/icon-512x512.png`,
+      `${BASE}/icons/icon-180x180.png`,
+      `${BASE}/icons/maskable-icon-512x512.png`,
     ];
 
     for (const path of iconPaths) {
@@ -76,7 +77,7 @@ test.describe('PWA機能', () => {
 
   test('オフラインでもページが表示される', async ({ page, context }) => {
     // 1. オンラインでページにアクセス（キャッシュを作成）
-    await page.goto('/');
+    await page.goto(`${BASE}/`);
 
     // ページが完全にロードされるまで待機
     await expect(page.locator('h1')).toContainText('EXVS2');
@@ -104,7 +105,7 @@ test.describe('PWA機能', () => {
 
   test('オフラインでも機体選択が動作する', async ({ page, context }) => {
     // 1. オンラインでページにアクセス
-    await page.goto('/');
+    await page.goto(`${BASE}/`);
 
     // Service Workerがアクティブになるまで待機
     await page.evaluate(async () => {

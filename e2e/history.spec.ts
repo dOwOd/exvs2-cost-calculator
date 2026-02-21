@@ -3,12 +3,13 @@
  */
 
 import { test, expect } from '@playwright/test';
+import { BASE } from './helpers';
 
 test.describe('最近使用した機体の履歴', () => {
   test.beforeEach(async ({ page, context }) => {
     // LocalStorageをクリア
     await context.clearCookies();
-    await page.goto('/');
+    await page.goto(`${BASE}/`);
     await page.evaluate(() => localStorage.clear());
   });
 
