@@ -38,44 +38,8 @@
 - **UIカタログ**: [Storybook](https://storybook.js.org)
 - **コード品質**: ESLint + Prettier（Husky + lint-staged でpre-commit実行）
 - **パッケージマネージャー**: [pnpm](https://pnpm.io)
-- **開発環境**: Docker
 
-## 🐳 Docker での起動
-
-### 前提条件
-
-- Docker
-- Docker Compose
-
-### 開発環境の起動
-
-```bash
-# 開発サーバーを起動
-docker compose up dev
-```
-
-→ http://localhost:4321 でアクセス
-
-### Docker環境でのコマンド実行
-
-```bash
-# 依存関係のインストール
-docker compose exec dev pnpm install
-
-# テスト実行
-docker compose exec dev pnpm test
-
-# シェルに入る
-docker compose exec dev sh
-```
-
-### コンテナの停止
-
-```bash
-docker compose down
-```
-
-## 💻 ローカル開発（Docker なし）
+## 💻 開発
 
 ### 前提条件
 
