@@ -50,8 +50,8 @@ describe('フィーチャーフラグ', () => {
     expect(GA4_MEASUREMENT_ID).toBe('G-8WSG8F8W3F');
   });
 
-  test('CF_ANALYTICS_TOKEN が空文字であること（デプロイ前）', () => {
-    expect(CF_ANALYTICS_TOKEN).toBe('');
+  test('CF_ANALYTICS_TOKEN が設定されていること', () => {
+    expect(CF_ANALYTICS_TOKEN).not.toBe('');
   });
 
   test('ENABLE_COOKIE_CONSENT はCookie使用サービスが有効な場合に true', () => {
