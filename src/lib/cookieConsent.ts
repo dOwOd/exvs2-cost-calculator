@@ -18,8 +18,8 @@ export const AD_PUBLISHER_ID = '';
 /** アナリティクス（GA4）のフィーチャーフラグ */
 export const ENABLE_ANALYTICS = true;
 
-/** GA4 Measurement ID（デプロイ後にGA4ダッシュボードから取得して設定） */
-export const GA4_MEASUREMENT_ID = '';
+/** GA4 Measurement ID */
+export const GA4_MEASUREMENT_ID = 'G-8WSG8F8W3F';
 
 /** Cloudflare Web Analytics トークン（デプロイ後にCFダッシュボードから取得して設定） */
 export const CF_ANALYTICS_TOKEN = '';
