@@ -1,5 +1,6 @@
 ---
 import { ThemeToggle } from './ThemeToggle';
+import { ENABLE_CONTACT } from '../lib/contactConfig';
 
 const base = import.meta.env.BASE_URL;
 
@@ -7,6 +8,7 @@ const navItems = [
   { href: base, label: 'コスト計算' },
   { href: `${base}guide/`, label: 'ガイド' },
   { href: `${base}faq/`, label: 'FAQ' },
+  ...(ENABLE_CONTACT ? [{ href: `${base}contact/`, label: 'お問い合わせ' }] : []),
 ];
 
 const currentPath = Astro.url.pathname;
