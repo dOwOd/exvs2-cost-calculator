@@ -102,8 +102,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build
-        run: pnpm build
+      - name: Build (preview)
+        run: pnpm astro build --site https://preview.pages.dev --base /
 
       - name: Deploy preview to Cloudflare Pages
         id: deploy
@@ -120,7 +120,7 @@ jobs:
             const body = [
               '## Preview Deployment',
               '',
-              `Preview URL: ${process.env.DEPLOYMENT_URL}/works/exvs2-cost-calculator/`,
+              `Preview URL: ${process.env.DEPLOYMENT_URL}`,
               '',
               `Commit: \`${context.sha.substring(0, 7)}\``,
             ].join('\n');
