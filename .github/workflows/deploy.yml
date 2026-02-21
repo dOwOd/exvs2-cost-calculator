@@ -120,7 +120,7 @@ jobs:
             const body = [
               '## Preview Deployment',
               '',
-              `Preview URL: ${process.env.DEPLOYMENT_URL}`,
+              `Preview URL: ${process.env.DEPLOYMENT_URL}/works/exvs2-cost-calculator/`,
               '',
               `Commit: \`${context.sha.substring(0, 7)}\``,
             ].join('\n');
