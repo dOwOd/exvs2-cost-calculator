@@ -38,8 +38,8 @@ Object.defineProperty(global, 'localStorage', {
 });
 
 describe('フィーチャーフラグ', () => {
-  test('ENABLE_AD_COOKIES が false であること（広告未導入）', () => {
-    expect(ENABLE_AD_COOKIES).toBe(false);
+  test('ENABLE_AD_COOKIES が true であること（AdSense導入済み）', () => {
+    expect(ENABLE_AD_COOKIES).toBe(true);
   });
 
   test('ENABLE_ANALYTICS が true であること', () => {
