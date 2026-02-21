@@ -1,8 +1,9 @@
 {
   "ci": {
     "collect": {
-      "staticDistDir": "./dist",
-      "url": ["/works/exvs2-cost-calculator/"],
+      "startServerCommand": "pnpm preview",
+      "startServerReadyPattern": "Local",
+      "url": ["http://localhost:4321/works/exvs2-cost-calculator/"],
       "numberOfRuns": 3
     },
     "assert": {
