@@ -19,10 +19,10 @@ export const AD_PUBLISHER_ID = '';
 export const ENABLE_ANALYTICS = true;
 
 /** GA4 Measurement ID */
-export const GA4_MEASUREMENT_ID = 'G-8WSG8F8W3F';
+export const GA4_MEASUREMENT_ID: string = 'G-8WSG8F8W3F';
 
 /** Cloudflare Web Analytics トークン（デプロイ後にCFダッシュボードから取得して設定） */
-export const CF_ANALYTICS_TOKEN = '';
+export const CF_ANALYTICS_TOKEN: string = '';
 
 /**
  * Cookie同意バナーの表示が必要か
