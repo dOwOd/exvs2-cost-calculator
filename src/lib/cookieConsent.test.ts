@@ -46,8 +46,8 @@ describe('フィーチャーフラグ', () => {
     expect(ENABLE_ANALYTICS).toBe(true);
   });
 
-  test('GA4_MEASUREMENT_ID が空文字であること（デプロイ前）', () => {
-    expect(GA4_MEASUREMENT_ID).toBe('');
+  test('GA4_MEASUREMENT_ID が設定されていること', () => {
+    expect(GA4_MEASUREMENT_ID).toBe('G-8WSG8F8W3F');
   });
 
   test('CF_ANALYTICS_TOKEN が空文字であること（デプロイ前）', () => {
@@ -55,8 +55,8 @@ describe('フィーチャーフラグ', () => {
   });
 
   test('ENABLE_COOKIE_CONSENT はCookie使用サービスが有効な場合に true', () => {
-    // 現在: ENABLE_AD_COOKIES=false, GA4_MEASUREMENT_ID='' なので false
-    expect(ENABLE_COOKIE_CONSENT).toBe(false);
+    // ENABLE_ANALYTICS=true, GA4_MEASUREMENT_ID が設定済みなので true
+    expect(ENABLE_COOKIE_CONSENT).toBe(true);
   });
 });
 
