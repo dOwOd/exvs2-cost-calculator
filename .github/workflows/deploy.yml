@@ -29,6 +29,33 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Validate release versions
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          PKG_VERSION=$(node -p "require('./package.json').version")
+          # changelog.ts の最新バージョンを取得（先頭の version フィールド）
+          CHANGELOG_VERSION=$(grep -m1 "version:" src/data/changelog.ts | sed "s/.*'\(.*\)'.*/\1/")
+
+          echo "Tag version:       $TAG_VERSION"
+          echo "package.json:      $PKG_VERSION"
+          echo "changelog.ts:      $CHANGELOG_VERSION"
+
+          ERRORS=""
+          if [ "$TAG_VERSION" != "$PKG_VERSION" ]; then
+            ERRORS="${ERRORS}\n- package.json version ($PKG_VERSION) does not match tag ($TAG_VERSION)"
+          fi
+          if [ "$TAG_VERSION" != "$CHANGELOG_VERSION" ]; then
+            ERRORS="${ERRORS}\n- changelog.ts version ($CHANGELOG_VERSION) does not match tag ($TAG_VERSION)"
+          fi
+
+          if [ -n "$ERRORS" ]; then
+            echo ""
+            echo "::error::Release version mismatch detected:$(echo -e "$ERRORS")"
+            exit 1
+          fi
+
+          echo "All versions match: $TAG_VERSION"
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
 
