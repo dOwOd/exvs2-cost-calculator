@@ -146,7 +146,6 @@ git worktree remove ../exvs2-worktree  # 後片付け
 - **playwright.config.ts** - Playwright設定（6ブラウザプロジェクト、webServer: pnpm preview）
 - **e2e/helpers.ts** - E2Eテスト共通ヘルパー（`BASE` 定数: サブパスプレフィックス）
 - **storybook.yml** - Storybookビルド（Node: `.node-version` 参照）
-- **renovate-review.yml** - Renovate PRレビュー（Claude Code Actionで依存関係PRに自動コメント）
 
 ### 依存関係管理
 
@@ -250,7 +249,7 @@ PatternList → PatternCard（各パターン表示）
 
 - **CI**: ユニットテスト（Vitest）、型チェック（tsc）、ビルド検証、E2Eテスト（Playwright、PRはnon-webkitのみ）、Storybookビルド（PRのみ）
 - **ローカル品質ゲート**: ESLint + Prettier（Husky + lint-staged でpre-commitフック実行）
-- **依存関係管理**: Renovate（patch自動マージ、minor・major・フレームワーク系は手動）+ Claude Codeレビュー
+- **依存関係管理**: Renovate（patch自動マージ、minor・major・フレームワーク系は手動）
 - **最適化**: concurrency（連続プッシュ時の自動キャンセル）、paths-ignore
 - **未導入**: Lighthouse
 
