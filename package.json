@@ -50,7 +50,7 @@
     "@resvg/resvg-js": "^2.6.2",
     "@storybook/addon-essentials": "^8.6.14",
     "@storybook/addon-themes": "^8.6.14",
-    "@storybook/preact": "8.6.14",
+    "@storybook/preact": "8.6.17",
     "@storybook/preact-vite": "^8.6.14",
     "@testing-library/preact": "^3.2.4",
     "@typescript-eslint/eslint-plugin": "^8.55.0",
