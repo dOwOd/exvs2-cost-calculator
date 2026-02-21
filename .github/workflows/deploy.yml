@@ -34,7 +34,7 @@ jobs:
           TAG_VERSION="${GITHUB_REF_NAME#v}"
           PKG_VERSION=$(node -p "require('./package.json').version")
           # changelog.ts の最新バージョンを取得（先頭の version フィールド）
-          CHANGELOG_VERSION=$(grep -m1 "version:" src/data/changelog.ts | sed "s/.*'\(.*\)'.*/\1/")
+          CHANGELOG_VERSION=$(grep -m1 "version: '" src/data/changelog.ts | sed "s/.*'\(.*\)'.*/\1/")
 
           echo "Tag version:       $TAG_VERSION"
           echo "package.json:      $PKG_VERSION"
