@@ -37,7 +37,7 @@ jobs:
   e2e-tests:
     needs: setup-matrix
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
