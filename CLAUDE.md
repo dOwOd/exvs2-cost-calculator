@@ -147,6 +147,10 @@ git worktree remove ../exvs2-worktree  # 後片付け
 - **e2e/helpers.ts** - E2Eテスト共通ヘルパー（`BASE` 定数: サブパスプレフィックス）
 - **storybook.yml** - Storybookビルド（Node: `.node-version` 参照）
 
+### 依存関係管理
+
+- **renovate.json** - Renovate設定（patch自動マージ、minor・major・Astro・Preactは手動レビュー、週末スケジュール）
+
 > **注意**: Node.js バージョンは `.node-version` で一元管理。ワークフローでは `node-version-file: '.node-version'` を使用すること
 
 ### Docker
@@ -245,8 +249,9 @@ PatternList → PatternCard（各パターン表示）
 
 - **CI**: ユニットテスト（Vitest）、型チェック（tsc）、ビルド検証、E2Eテスト（Playwright、PRはnon-webkitのみ）、Storybookビルド（PRのみ）
 - **ローカル品質ゲート**: ESLint + Prettier（Husky + lint-staged でpre-commitフック実行）
+- **依存関係管理**: Renovate（patch自動マージ、minor・major・フレームワーク系は手動）
 - **最適化**: concurrency（連続プッシュ時の自動キャンセル）、paths-ignore
-- **未導入**: 依存関係自動更新、Lighthouse
+- **未導入**: Lighthouse
 
 ## リリース・デプロイ ロードマップ
 
