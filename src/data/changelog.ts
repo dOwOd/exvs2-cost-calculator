@@ -17,6 +17,12 @@ export type ReleaseEntry = {
 
 export const releases: ReleaseEntry[] = [
   {
+    version: '0.2.0',
+    date: '2026-02-21',
+    summary: 'Google AdSense導入',
+    changes: [{ type: 'Add', description: 'Google AdSense導入（広告配信基盤・Cookie同意連携）' }],
+  },
+  {
     version: '0.1.0',
     date: '2026-02-21',
     summary: '初回リリース',
