@@ -8,53 +8,59 @@ import { getAvailableHealthOptions, getAllMobileSuitNames } from '../data/mobile
 import { HealthDropdownPopup } from './HealthDropdownPopup';
 
 /**
- * テキストがオーバーフロー時にスクロールアニメーションで全体を表示する
- * - マウント後2秒待機 → 左へスライド → 2秒停止 → 右へ戻る を繰り返す
- * - スクロール速度は一定（テキスト長に依存しない）
+ * テキストがオーバーフロー時にループスクロールで全体を表示する
+ * - マウント後2秒待機 → 左へ一定速度でスクロール → 先頭に戻りシームレスにループ
+ * - テキストを複製し、末尾→先頭が途切れなく繋がる
  * - オーバーフローしないテキストはアニメーションなしで表示
  */
 const SCROLL_SPEED = 60; // px/s（スクロール速度）
-const PAUSE_DURATION = 2; // 秒（開始・折返しの停止時間）
+const PAUSE_DURATION = 2; // 秒（ループ先頭での停止時間）
+const LOOP_GAP = 48; // px（テキスト末尾と複製先頭の間隔）
 
 const ScrollingLabel = ({ text, className }: { text: string; className: string }) => {
   const containerRef = useRef<HTMLSpanElement>(null);
-  const textRef = useRef<HTMLSpanElement>(null);
+  const trackRef = useRef<HTMLSpanElement>(null);
+  const measureRef = useRef<HTMLSpanElement>(null);
+  const [isOverflow, setIsOverflow] = useState(false);
 
+  // オーバーフロー検出
   useEffect(() => {
     const container = containerRef.current;
-    const textEl = textRef.current;
-    if (!container || !textEl || !textEl.animate) return;
+    const measure = measureRef.current;
+    if (!container || !measure) return;
+    setIsOverflow(measure.offsetWidth > container.clientWidth);
+  }, [text]);
 
-    const overflowAmount = textEl.scrollWidth - container.clientWidth;
-    if (overflowAmount <= 0) return;
+  // ループアニメーション設定
+  useEffect(() => {
+    if (!isOverflow) return;
+    const track = trackRef.current;
+    const measure = measureRef.current;
+    if (!track || !measure || !track.animate) return;
 
-    // オーバーフロー量に応じてスクロール時間を算出（速度一定）
-    const scrollTime = Math.max(1, overflowAmount / SCROLL_SPEED);
-    const totalDuration = (PAUSE_DURATION + scrollTime) * 2;
+    const textWidth = measure.offsetWidth;
+    const scrollDistance = textWidth + LOOP_GAP;
+    const scrollTime = scrollDistance / SCROLL_SPEED;
+    const totalDuration = PAUSE_DURATION + scrollTime;
+    const pauseOffset = PAUSE_DURATION / totalDuration;
 
-    // キーフレームのオフセットを動的に計算
-    const pauseEnd = PAUSE_DURATION / totalDuration;
-    const scrollEnd = (PAUSE_DURATION + scrollTime) / totalDuration;
-    const pause2End = (PAUSE_DURATION * 2 + scrollTime) / totalDuration;
-
-    const animation = textEl.animate(
+    const animation = track.animate(
       [
         { transform: 'translateX(0)', offset: 0 },
-        { transform: 'translateX(0)', offset: pauseEnd, easing: 'ease-in-out' },
-        { transform: `translateX(-${overflowAmount}px)`, offset: scrollEnd },
-        { transform: `translateX(-${overflowAmount}px)`, offset: pause2End, easing: 'ease-in-out' },
-        { transform: 'translateX(0)', offset: 1 },
+        { transform: 'translateX(0)', offset: pauseOffset },
+        { transform: `translateX(-${scrollDistance}px)`, offset: 1 },
       ],
       { duration: totalDuration * 1000, iterations: Infinity },
     );
 
     return () => animation.cancel();
-  }, [text]);
+  }, [isOverflow, text]);
 
   return (
     <span ref={containerRef} class={`block overflow-hidden text-xs ${className}`}>
-      <span ref={textRef} class="inline-block whitespace-nowrap">
-        {text}
+      <span ref={trackRef} class="inline-block whitespace-nowrap">
+        <span ref={measureRef}>{text}</span>
+        {isOverflow && <span style={{ marginLeft: `${LOOP_GAP}px` }}>{text}</span>}
       </span>
     </span>
   );
