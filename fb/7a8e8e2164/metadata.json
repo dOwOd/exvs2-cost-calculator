@@ -3,8 +3,9 @@
   "checkpoint_id": "fb7a8e8e2164",
   "strategy": "manual-commit",
   "branch": "fix/issue-179-cookie-banner-flicker",
-  "checkpoints_count": 1,
+  "checkpoints_count": 2,
   "files_touched": [
+    "src/components/HealthSelector.tsx",
     "src/components/__tests__/HealthSelector.test.tsx"
   ],
   "sessions": [
@@ -14,13 +15,20 @@
       "context": "/fb/7a8e8e2164/0/context.md",
       "content_hash": "/fb/7a8e8e2164/0/content_hash.txt",
       "prompt": "/fb/7a8e8e2164/0/prompt.txt"
+    },
+    {
+      "metadata": "/fb/7a8e8e2164/1/metadata.json",
+      "transcript": "/fb/7a8e8e2164/1/full.jsonl",
+      "context": "/fb/7a8e8e2164/1/context.md",
+      "content_hash": "/fb/7a8e8e2164/1/content_hash.txt",
+      "prompt": "/fb/7a8e8e2164/1/prompt.txt"
     }
   ],
   "token_usage": {
-    "input_tokens": 21,
-    "cache_creation_tokens": 26181,
-    "cache_read_tokens": 679830,
-    "output_tokens": 1547,
-    "api_call_count": 16
+    "input_tokens": 42,
+    "cache_creation_tokens": 56993,
+    "cache_read_tokens": 1429749,
+    "output_tokens": 2232,
+    "api_call_count": 32
   }
 }
