@@ -12,6 +12,7 @@ const siteLinks = [
   { href: base, label: 'コスト計算' },
   { href: `${base}guide/`, label: 'ガイド' },
   { href: `${base}faq/`, label: 'FAQ' },
+  { href: `${base}changelog/`, label: '更新履歴' },
   { href: `${base}privacy/`, label: 'プライバシーポリシー' },
 ];
 
@@ -61,7 +62,7 @@ export const Footer = () => {
               class={`flex items-center gap-1.5 ${linkClass}`}
             >
               <GitHubIcon width={16} height={16} />
-              GitHub
+              開発者
             </a>
             <span class="text-slate-300 dark:text-slate-600">|</span>
             <a
@@ -74,10 +75,11 @@ export const Footer = () => {
             </a>
           </div>
           <div class="text-xs text-slate-400 dark:text-slate-500">
+            © {currentYear} EXVS2 コスト計算機
+            <span class="mx-1">&middot;</span>
             <a href={`${base}changelog/`} class={linkClass}>
               v{__APP_VERSION__}
             </a>
-            <span class="mx-1">&middot;</span>© {currentYear} EXVS2 コスト計算機
           </div>
         </div>
       </div>
