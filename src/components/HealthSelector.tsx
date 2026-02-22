@@ -259,9 +259,9 @@ export const HealthSelector = ({
               <span>{health}</span>
               <ScrollingLabel
                 text={getAllMobileSuitNames(cost, health).join('、')}
-                className={
+                className={`md:hidden ${
                   health === selectedHealth ? 'text-blue-100' : 'text-slate-500 dark:text-slate-400'
-                }
+                }`}
               />
             </li>
           ))}
