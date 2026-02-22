@@ -58,66 +58,143 @@ export const calculateBarWidths = (
   return numericValues.map((v) => (v !== null && v > 0 ? (minVal / v) * 100 : null));
 };
 
-/** 比較指標の行ラベルと値を生成 */
-const MetricRow = ({
+/** 編成ごとの色（Tailwindパージ対策: クラス名を完全に記載） */
+const FORMATION_COLORS = [
+  {
+    bar: 'bg-blue-500 dark:bg-blue-400',
+    text: 'text-blue-600 dark:text-blue-400',
+    border: 'border-blue-500',
+  },
+  {
+    bar: 'bg-emerald-500 dark:bg-emerald-400',
+    text: 'text-emerald-600 dark:text-emerald-400',
+    border: 'border-emerald-500',
+  },
+  {
+    bar: 'bg-amber-500 dark:bg-amber-400',
+    text: 'text-amber-600 dark:text-amber-400',
+    border: 'border-amber-500',
+  },
+];
+
+/** 横棒グラフの指標ブロック */
+const MetricBarChart = ({
   label,
   values,
+  formationLabels,
   highlightBest,
 }: {
   label: string;
   values: (string | number)[];
+  formationLabels: string[];
   highlightBest?: 'max' | 'min';
 }) => {
-  const numericValues = values.map((v) => (typeof v === 'number' ? v : NaN));
-  const bestValue =
-    highlightBest === 'max'
-      ? Math.max(...numericValues.filter((n) => !isNaN(n)))
-      : highlightBest === 'min'
-        ? Math.min(...numericValues.filter((n) => !isNaN(n) && n > 0))
-        : null;
-
   const barWidths = calculateBarWidths(values, highlightBest);
 
   return (
-    <tr class="border-b border-slate-200 dark:border-slate-700">
-      <td class="py-2 px-2 sm:px-3 text-sm text-slate-600 dark:text-slate-400 font-medium whitespace-nowrap">
-        {label}
-      </td>
-      {values.map((val, i) => {
-        const isBest =
-          bestValue !== null &&
-          typeof val === 'number' &&
-          val === bestValue &&
-          numericValues.filter((n) => n === bestValue).length === 1;
-        const barWidth = barWidths[i];
-        // highlightBest がある場合はテキストの isBest と統一、ない場合（EX発動可能）は100%バーを最良扱い
-        const isBestBar = highlightBest ? isBest : barWidth !== null && barWidth >= 100;
-        return (
-          <td
-            key={i}
-            class={`py-2 px-2 sm:px-3 text-sm font-mono text-right ${
-              isBest
-                ? 'text-blue-600 dark:text-blue-400 font-semibold'
-                : 'text-slate-700 dark:text-slate-300'
-            }`}
-          >
-            {val}
-            {barWidth !== null && (
-              <div class="flex justify-end mt-1">
-                <div class="w-6 h-8 bg-slate-200 dark:bg-slate-700 rounded-sm overflow-hidden flex items-end">
+    <div data-testid="metric-bar-chart">
+      <div class="flex items-baseline gap-2 mb-1.5">
+        <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">{label}</span>
+        {highlightBest === 'min' && (
+          <span class="text-xs text-slate-500 dark:text-slate-500">小さいほど良い</span>
+        )}
+      </div>
+      <div class="space-y-1.5">
+        {values.map((val, i) => {
+          const barWidth = barWidths[i];
+          return (
+            <div key={i} class="flex items-center gap-2">
+              <span class="text-xs text-slate-500 dark:text-slate-500 w-8 sm:w-12 shrink-0 truncate">
+                {formationLabels[i]}
+              </span>
+              {barWidth !== null ? (
+                <div class="flex-1 h-6 sm:h-7 bg-slate-200 dark:bg-slate-700 rounded overflow-hidden">
                   <div
-                    class={`w-full rounded-sm transition-all ${
-                      isBestBar ? 'bg-blue-500 dark:bg-blue-400' : 'bg-slate-400 dark:bg-slate-500'
-                    }`}
-                    style={`height: ${Math.round(barWidth)}%`}
+                    class={`h-full rounded transition-all ${FORMATION_COLORS[i % FORMATION_COLORS.length].bar}`}
+                    style={`width: ${Math.round(barWidth)}%`}
                   />
                 </div>
-              </div>
-            )}
-          </td>
-        );
-      })}
-    </tr>
+              ) : (
+                <div class="flex-1 h-6 sm:h-7" />
+              )}
+              <span
+                class={`text-sm font-mono w-14 sm:w-20 text-right shrink-0 ${
+                  barWidth !== null && barWidth >= 100
+                    ? FORMATION_COLORS[i % FORMATION_COLORS.length].text + ' font-semibold'
+                    : 'text-slate-700 dark:text-slate-300'
+                }`}
+              >
+                {val}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+/** サマリーカード */
+const SummaryCard = ({
+  index,
+  formation,
+  metrics,
+  isComplete,
+}: {
+  index: number;
+  formation: Formation;
+  metrics: {
+    totalHealthRange: { min: number; max: number };
+    minimumDefeatHealth: number;
+    exAvailableCount: number;
+    totalPatternCount: number;
+  };
+  isComplete: boolean;
+}) => {
+  const color = FORMATION_COLORS[index % FORMATION_COLORS.length];
+  if (!isComplete) {
+    return (
+      <div class="bg-slate-50 dark:bg-slate-800 rounded-lg p-3 text-center text-sm text-slate-500 dark:text-slate-500">
+        未設定
+      </div>
+    );
+  }
+  const healthRange =
+    metrics.totalHealthRange.min === metrics.totalHealthRange.max
+      ? `${metrics.totalHealthRange.max}`
+      : `${metrics.totalHealthRange.min}~${metrics.totalHealthRange.max}`;
+
+  return (
+    <div class={`bg-slate-50 dark:bg-slate-800 rounded-lg p-3 border-l-4 ${color.border}`}>
+      <div class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">
+        編成 {index + 1}
+        {formation.unitA && formation.unitB && (
+          <span class="ml-1 font-normal text-xs text-slate-500 dark:text-slate-500">
+            ({formation.unitA.cost}+{formation.unitB.cost})
+          </span>
+        )}
+      </div>
+      <div class="space-y-0.5 text-sm">
+        <div class="flex justify-between">
+          <span class="text-slate-500 dark:text-slate-500">耐久</span>
+          <span class="font-mono text-slate-700 dark:text-slate-300">{healthRange}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-500 dark:text-slate-500">最短敗北</span>
+          <span class="font-mono text-slate-700 dark:text-slate-300">
+            {metrics.minimumDefeatHealth > 0 ? metrics.minimumDefeatHealth : '-'}
+          </span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-500 dark:text-slate-500">EX</span>
+          <span class="font-mono text-slate-700 dark:text-slate-300">
+            {metrics.totalPatternCount > 0
+              ? `${metrics.exAvailableCount}/${metrics.totalPatternCount}`
+              : '-'}
+          </span>
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -193,62 +270,62 @@ export const ComparisonResultPanel = ({ formations, evals }: ComparisonResultPan
 
   return (
     <div data-testid="comparison-result-panel" class="bg-slate-100 dark:bg-slate-900 rounded-lg">
-      {/* 比較指標サマリー */}
+      {/* 比較指標 */}
       {hasAnyComplete && (
         <div class="p-3 sm:p-4 border-b border-slate-200 dark:border-slate-700">
           <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">比較指標</h3>
-          <div class="overflow-x-auto">
-            <table data-testid="comparison-metrics-table" class="w-full text-sm">
-              <thead>
-                <tr class="border-b border-slate-300 dark:border-slate-600">
-                  <th class="py-2 px-2 sm:px-3 text-left text-slate-600 dark:text-slate-400"></th>
-                  {formations.map((f, i) => (
-                    <th
-                      key={i}
-                      class="py-2 px-2 sm:px-3 text-right text-slate-600 dark:text-slate-400 font-medium"
-                    >
-                      <div class="flex flex-col items-end gap-0.5">
-                        <span>編成 {i + 1}</span>
-                        {f.unitA && f.unitB && (
-                          <span class="text-xs font-normal text-slate-500 dark:text-slate-500">
-                            {f.unitA.cost}+{f.unitB.cost}
-                          </span>
-                        )}
-                      </div>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                <MetricRow
-                  label="総耐久（最大）"
-                  values={allMetrics.map((m) =>
-                    m.totalPatternCount > 0 ? m.totalHealthRange.max : '-',
-                  )}
-                  highlightBest="max"
-                />
-                <MetricRow
-                  label="総耐久（最小）"
-                  values={allMetrics.map((m) =>
-                    m.totalPatternCount > 0 ? m.totalHealthRange.min : '-',
-                  )}
-                  highlightBest="max"
-                />
-                <MetricRow
-                  label="最短敗北耐久"
-                  values={allMetrics.map((m) =>
-                    m.minimumDefeatHealth > 0 ? m.minimumDefeatHealth : '-',
-                  )}
-                  highlightBest="min"
-                />
-                <MetricRow
-                  label="EX発動可能"
-                  values={allMetrics.map((m) =>
-                    m.totalPatternCount > 0 ? `${m.exAvailableCount}/${m.totalPatternCount}` : '-',
-                  )}
-                />
-              </tbody>
-            </table>
+
+          {/* サマリーカード */}
+          <div
+            data-testid="comparison-summary-cards"
+            class={`grid gap-2 sm:gap-3 mb-4 ${
+              formations.length === 3 ? 'grid-cols-2 sm:grid-cols-3' : 'grid-cols-2'
+            }`}
+          >
+            {processedData.map((data, i) => (
+              <SummaryCard
+                key={i}
+                index={i}
+                formation={data.formation}
+                metrics={data.metrics}
+                isComplete={data.isComplete}
+              />
+            ))}
+          </div>
+
+          {/* 横棒グラフ */}
+          <div data-testid="comparison-metrics-charts" class="space-y-4">
+            <MetricBarChart
+              label="総耐久（最大）"
+              values={allMetrics.map((m) =>
+                m.totalPatternCount > 0 ? m.totalHealthRange.max : '-',
+              )}
+              formationLabels={formations.map((_, i) => `編成${i + 1}`)}
+              highlightBest="max"
+            />
+            <MetricBarChart
+              label="総耐久（最小）"
+              values={allMetrics.map((m) =>
+                m.totalPatternCount > 0 ? m.totalHealthRange.min : '-',
+              )}
+              formationLabels={formations.map((_, i) => `編成${i + 1}`)}
+              highlightBest="max"
+            />
+            <MetricBarChart
+              label="最短敗北耐久"
+              values={allMetrics.map((m) =>
+                m.minimumDefeatHealth > 0 ? m.minimumDefeatHealth : '-',
+              )}
+              formationLabels={formations.map((_, i) => `編成${i + 1}`)}
+              highlightBest="min"
+            />
+            <MetricBarChart
+              label="EX発動可能"
+              values={allMetrics.map((m) =>
+                m.totalPatternCount > 0 ? `${m.exAvailableCount}/${m.totalPatternCount}` : '-',
+              )}
+              formationLabels={formations.map((_, i) => `編成${i + 1}`)}
+            />
           </div>
         </div>
       )}
