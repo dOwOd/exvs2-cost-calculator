@@ -65,7 +65,7 @@ git worktree remove ../exvs2-worktree  # 後片付け
 
 ### コンポーネント（src/components/）
 
-- **Header.astro** - サイト共通ヘッダー（ロゴ、ナビリンク、ThemeToggle統合、現在ページハイライト）
+- **Header.astro** - サイト共通ヘッダー（ロゴ、ナビリンク、ThemeToggle統合、現在ページハイライト、ENABLE_CONTACTで問い合わせリンク制御、モバイルでナビ横スクロール）
 - **ErrorBoundary.tsx** - エラーバウンダリ（Preact class component、フォールバックUI表示）
 - **Calculator.tsx** - メインコンポーネント（状態管理、通常/比較モード切替、編成→計算→結果の統括、ErrorBoundaryでラップ）
 - **FormationPanel.tsx** - 編成パネル（A機/B機のコスト・耐久選択）
@@ -94,7 +94,7 @@ git worktree remove ../exvs2-worktree  # 後片付け
 - useTheme.ts - テーマ管理フック
 - useCookieConsent.ts - Cookie同意フック（カスタムイベントでコンポーネント間同期）
 - **analytics.ts** - アナリティクス（GA4動的ロード、consent-gated初期化、型付きイベント送信）
-- cookieConsent.ts - Cookie同意状態管理（LocalStorage CRUD、アナリティクス設定フラグ）
+- cookieConsent.ts - Cookie同意状態管理（LocalStorage CRUD、アナリティクス設定フラグ、ENABLE_EXTERNAL_SCRIPTSで外部スクリプト制御）
 - recentHistory.ts - 最近の編成履歴管理
 - favoriteSuits.ts - お気に入り機体管理（LocalStorage CRUD、最大20件、カスタムイベント同期）
 - savedFormations.ts - 保存編成管理（LocalStorage CRUD、最大10件）
@@ -147,8 +147,8 @@ git worktree remove ../exvs2-worktree  # 後片付け
 ### CI/CD（.github/workflows/）
 
 - **ci.yml** - ユニットテスト（Vitest）・型チェック・ビルド検証（Node: `.node-version` 参照）
-- **e2e.yml** - E2Eテスト（Playwright、非WebKit統合+WebKit個別の4並列、ブラウザキャッシュ付き、Node: `.node-version` 参照）
-- **playwright.config.ts** - Playwright設定（6ブラウザプロジェクト、webServer: pnpm preview）
+- **e2e.yml** - E2Eテスト（Playwright、非WebKit統合+WebKit個別の4並列、ブラウザキャッシュ付き、Node: `.node-version` 参照、`PUBLIC_ENABLE_EXTERNAL_SCRIPTS=false`で外部スクリプト無効化）
+- **playwright.config.ts** - Playwright設定（6ブラウザプロジェクト、webServer: pnpm preview、storageStateでCookie同意バナー非表示）
 - **e2e/helpers.ts** - E2Eテスト共通ヘルパー（`BASE` 定数: サブパスプレフィックス）
 - **lighthouse.yml** - Lighthouse CI（PR・main push・週次スケジュール、PRコメント自動投稿、スコア低下時Issue自動作成）
 - **storybook.yml** - Storybookビルド（Node: `.node-version` 参照）
@@ -263,7 +263,7 @@ PatternList → PatternCard（各パターン表示）
 #136 Cloudflare Pages デプロイ（dowo.dev/works/exvs2-cost-calculator/）
  ↓  タグプッシュ（v*） → GitHub Actions → Wrangler でデプロイ
  ↓  本番URL確定 → Turnstile・CORS設定が可能に
-#129 問い合わせ機能（Phase 1: Worker → Phase 2: /contact → Phase 3: 結合テスト）
+#129 問い合わせ機能（Phase 1: Worker → Phase 2: /contact → Phase 3: 有効化）✅
 ```
 
 ### バージョニング方針
