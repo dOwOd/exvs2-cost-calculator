@@ -23,6 +23,41 @@ type ComparisonResultPanelType = {
   evals: FormationEvalResult[];
 };
 
+/** バーの幅（%）を計算する */
+export const calculateBarWidths = (
+  values: (string | number)[],
+  highlightBest?: 'max' | 'min',
+): (number | null)[] => {
+  if (!highlightBest) {
+    // EX発動可能: "3/5" 形式 → 分子を抽出して比較
+    const numerators = values.map((v) => {
+      if (typeof v === 'string' && v.includes('/')) {
+        const parsed = parseInt(v, 10);
+        return isNaN(parsed) ? null : parsed;
+      }
+      return null;
+    });
+    const validNumerators = numerators.filter((n): n is number => n !== null);
+    if (validNumerators.length === 0) return values.map(() => null);
+    const maxNumerator = Math.max(...validNumerators);
+    if (maxNumerator === 0) return values.map(() => null);
+    return numerators.map((n) => (n !== null ? (n / maxNumerator) * 100 : null));
+  }
+
+  const numericValues = values.map((v) => (typeof v === 'number' ? v : null));
+  const validValues = numericValues.filter((n): n is number => n !== null && n > 0);
+  if (validValues.length === 0) return values.map(() => null);
+
+  if (highlightBest === 'max') {
+    const maxVal = Math.max(...validValues);
+    return numericValues.map((v) => (v !== null && v > 0 ? (v / maxVal) * 100 : null));
+  }
+
+  // highlightBest === 'min': 小さい方が良い → 反転
+  const minVal = Math.min(...validValues);
+  return numericValues.map((v) => (v !== null && v > 0 ? (minVal / v) * 100 : null));
+};
+
 /** 比較指標の行ラベルと値を生成 */
 const MetricRow = ({
   label,
@@ -41,6 +76,8 @@ const MetricRow = ({
         ? Math.min(...numericValues.filter((n) => !isNaN(n) && n > 0))
         : null;
 
+  const barWidths = calculateBarWidths(values, highlightBest);
+
   return (
     <tr class="border-b border-slate-200 dark:border-slate-700">
       <td class="py-2 px-2 sm:px-3 text-sm text-slate-600 dark:text-slate-400 font-medium whitespace-nowrap">
@@ -52,6 +89,9 @@ const MetricRow = ({
           typeof val === 'number' &&
           val === bestValue &&
           numericValues.filter((n) => n === bestValue).length === 1;
+        const barWidth = barWidths[i];
+        // highlightBest がある場合はテキストの isBest と統一、ない場合（EX発動可能）は100%バーを最良扱い
+        const isBestBar = highlightBest ? isBest : barWidth !== null && barWidth >= 100;
         return (
           <td
             key={i}
@@ -62,6 +102,16 @@ const MetricRow = ({
             }`}
           >
             {val}
+            {barWidth !== null && (
+              <div class="bg-slate-200 dark:bg-slate-700 rounded-full h-1.5 overflow-hidden mt-1">
+                <div
+                  class={`h-full rounded-full transition-all ${
+                    isBestBar ? 'bg-blue-500 dark:bg-blue-400' : 'bg-slate-400 dark:bg-slate-500'
+                  }`}
+                  style={`width: ${Math.round(barWidth)}%`}
+                />
+              </div>
+            )}
           </td>
         );
       })}
