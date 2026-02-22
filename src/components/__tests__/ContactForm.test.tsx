@@ -166,6 +166,19 @@ describe('ContactForm', () => {
         expect(screen.getByText('3/2000')).toBeTruthy();
       });
     });
+
+    test('ENABLE_EXTERNAL_SCRIPTS=false のときTurnstileコンテナが表示されない', () => {
+      mockConfig.ENABLE_EXTERNAL_SCRIPTS = false;
+      render(<ContactForm />);
+      expect(screen.queryByTestId('turnstile-container')).toBeNull();
+    });
+
+    test('ENABLE_EXTERNAL_SCRIPTS=true かつ TURNSTILE_SITE_KEY 設定時にTurnstileコンテナが表示される', () => {
+      mockConfig.ENABLE_EXTERNAL_SCRIPTS = true;
+      mockConfig.TURNSTILE_SITE_KEY = 'test-site-key';
+      render(<ContactForm />);
+      expect(screen.getByTestId('turnstile-container')).toBeTruthy();
+    });
   });
 
   describe('API送信', () => {
