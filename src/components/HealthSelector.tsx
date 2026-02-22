@@ -10,8 +10,12 @@ import { HealthDropdownPopup } from './HealthDropdownPopup';
 /**
  * テキストがオーバーフロー時にスクロールアニメーションで全体を表示する
  * - マウント後2秒待機 → 左へスライド → 2秒停止 → 右へ戻る を繰り返す
+ * - スクロール速度は一定（テキスト長に依存しない）
  * - オーバーフローしないテキストはアニメーションなしで表示
  */
+const SCROLL_SPEED = 60; // px/s（スクロール速度）
+const PAUSE_DURATION = 2; // 秒（開始・折返しの停止時間）
+
 const ScrollingLabel = ({ text, className }: { text: string; className: string }) => {
   const containerRef = useRef<HTMLSpanElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
@@ -24,15 +28,24 @@ const ScrollingLabel = ({ text, className }: { text: string; className: string }
     const overflowAmount = textEl.scrollWidth - container.clientWidth;
     if (overflowAmount <= 0) return;
 
+    // オーバーフロー量に応じてスクロール時間を算出（速度一定）
+    const scrollTime = Math.max(1, overflowAmount / SCROLL_SPEED);
+    const totalDuration = (PAUSE_DURATION + scrollTime) * 2;
+
+    // キーフレームのオフセットを動的に計算
+    const pauseEnd = PAUSE_DURATION / totalDuration;
+    const scrollEnd = (PAUSE_DURATION + scrollTime) / totalDuration;
+    const pause2End = (PAUSE_DURATION * 2 + scrollTime) / totalDuration;
+
     const animation = textEl.animate(
       [
         { transform: 'translateX(0)', offset: 0 },
-        { transform: 'translateX(0)', offset: 0.25, easing: 'ease-in-out' },
-        { transform: `translateX(-${overflowAmount}px)`, offset: 0.5 },
-        { transform: `translateX(-${overflowAmount}px)`, offset: 0.75, easing: 'ease-in-out' },
+        { transform: 'translateX(0)', offset: pauseEnd, easing: 'ease-in-out' },
+        { transform: `translateX(-${overflowAmount}px)`, offset: scrollEnd },
+        { transform: `translateX(-${overflowAmount}px)`, offset: pause2End, easing: 'ease-in-out' },
         { transform: 'translateX(0)', offset: 1 },
       ],
-      { duration: 8000, iterations: Infinity },
+      { duration: totalDuration * 1000, iterations: Infinity },
     );
 
     return () => animation.cancel();
