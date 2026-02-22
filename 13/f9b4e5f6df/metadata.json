@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.4.5",
+  "checkpoint_id": "13f9b4e5f6df",
+  "strategy": "manual-commit",
+  "branch": "fix/issue-181-health-selector-mobile",
+  "checkpoints_count": 2,
+  "files_touched": [
+    "CLAUDE.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/13/f9b4e5f6df/0/metadata.json",
+      "transcript": "/13/f9b4e5f6df/0/full.jsonl",
+      "context": "/13/f9b4e5f6df/0/context.md",
+      "content_hash": "/13/f9b4e5f6df/0/content_hash.txt",
+      "prompt": "/13/f9b4e5f6df/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 169,
+    "cache_creation_tokens": 213162,
+    "cache_read_tokens": 12241274,
+    "output_tokens": 18880,
+    "api_call_count": 121
+  }
+}
