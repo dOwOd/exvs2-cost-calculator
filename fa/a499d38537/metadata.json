@@ -3,7 +3,7 @@
   "checkpoint_id": "faa499d38537",
   "strategy": "manual-commit",
   "branch": "feature/issue-182-comparison-bar-chart",
-  "checkpoints_count": 1,
+  "checkpoints_count": 4,
   "files_touched": [
     "src/components/ComparisonResultPanel.tsx",
     "src/components/__tests__/ComparisonResultPanel.test.tsx"
@@ -15,13 +15,20 @@
       "context": "/fa/a499d38537/0/context.md",
       "content_hash": "/fa/a499d38537/0/content_hash.txt",
       "prompt": "/fa/a499d38537/0/prompt.txt"
+    },
+    {
+      "metadata": "/fa/a499d38537/1/metadata.json",
+      "transcript": "/fa/a499d38537/1/full.jsonl",
+      "context": "/fa/a499d38537/1/context.md",
+      "content_hash": "/fa/a499d38537/1/content_hash.txt",
+      "prompt": "/fa/a499d38537/1/prompt.txt"
     }
   ],
   "token_usage": {
-    "input_tokens": 177,
-    "cache_creation_tokens": 214708,
-    "cache_read_tokens": 13140410,
-    "output_tokens": 19032,
-    "api_call_count": 127
+    "input_tokens": 264,
+    "cache_creation_tokens": 281939,
+    "cache_read_tokens": 17930188,
+    "output_tokens": 25738,
+    "api_call_count": 203
   }
 }

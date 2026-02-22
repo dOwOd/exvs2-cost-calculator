@@ -1,0 +1,32 @@
+{
+  "cli_version": "0.4.5",
+  "checkpoint_id": "faa499d38537",
+  "session_id": "e791a7e7-3730-4a19-8c07-16adfd088462",
+  "strategy": "manual-commit",
+  "created_at": "2026-02-22T15:26:27.44677Z",
+  "branch": "feature/issue-182-comparison-bar-chart",
+  "checkpoints_count": 3,
+  "files_touched": [
+    "src/components/ComparisonResultPanel.tsx",
+    "src/components/__tests__/ComparisonResultPanel.test.tsx"
+  ],
+  "agent": "Claude Code",
+  "turn_id": "e9406f64fb08",
+  "token_usage": {
+    "input_tokens": 87,
+    "cache_creation_tokens": 67231,
+    "cache_read_tokens": 4789778,
+    "output_tokens": 6706,
+    "api_call_count": 76
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-02-22T15:26:27.379829Z",
+    "agent_lines": 133,
+    "human_added": 6,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 139,
+    "agent_percentage": 95.68345323741008
+  },
+  "transcript_path": ".claude/projects/-Users-sksn-Development-exvs2-cost-calculator/e791a7e7-3730-4a19-8c07-16adfd088462.jsonl"
+}
