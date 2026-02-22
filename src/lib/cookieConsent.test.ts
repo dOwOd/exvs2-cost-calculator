@@ -3,6 +3,7 @@
  */
 
 import {
+  ENABLE_EXTERNAL_SCRIPTS,
   ENABLE_AD_COOKIES,
   ENABLE_ANALYTICS,
   GA4_MEASUREMENT_ID,
@@ -38,6 +39,12 @@ Object.defineProperty(global, 'localStorage', {
 });
 
 describe('フィーチャーフラグ', () => {
+  test('ENABLE_EXTERNAL_SCRIPTS はデフォルトで true（env未設定時=本番動作）', () => {
+    // PUBLIC_ENABLE_EXTERNAL_SCRIPTS が未設定の場合、外部スクリプトは有効
+    // E2Eテスト時のみ 'false' を設定して無効化する
+    expect(ENABLE_EXTERNAL_SCRIPTS).toBe(true);
+  });
+
   test('ENABLE_AD_COOKIES が true であること（AdSense導入済み）', () => {
     expect(ENABLE_AD_COOKIES).toBe(true);
   });

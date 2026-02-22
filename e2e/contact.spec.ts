@@ -1,8 +1,9 @@
 /**
  * E2Eテスト: お問い合わせページ
  *
- * ENABLE_CONTACT = false の状態でのテスト。
- * フォーム送信のE2Eテストは Phase 1（Worker API）完了後に追加する。
+ * ENABLE_CONTACT = true の状態でのテスト。
+ * 外部スクリプトは PUBLIC_ENABLE_EXTERNAL_SCRIPTS=false でビルド時に無効化。
+ * フォーム送信（API連携）のテストは Phase 3 結合テストで本番環境にて実施。
  */
 
 import { test, expect } from '@playwright/test';
@@ -10,6 +11,8 @@ import { BASE } from './helpers';
 
 test.describe('お問い合わせページ', () => {
   test.beforeEach(async ({ page }) => {
+    // API リクエストをブロック（E2E では API 連携をテストしない）
+    await page.route(/dowo-api/, (route) => route.abort());
     await page.goto(`${BASE}/contact/`);
   });
 
@@ -18,13 +21,67 @@ test.describe('お問い合わせページ', () => {
       await expect(page.locator('h1')).toHaveText('お問い合わせ');
     });
 
-    test('準備中メッセージが表示される（ENABLE_CONTACT = false）', async ({ page }) => {
-      await expect(page.locator('[data-testid="contact-disabled"]')).toBeVisible();
-      await expect(page.getByText('問い合わせ機能は現在準備中です。')).toBeVisible();
+    test('フォームが表示される', async ({ page }) => {
+      await expect(page.locator('[data-testid="contact-form"]')).toBeVisible();
     });
 
-    test('フォームは表示されない（ENABLE_CONTACT = false）', async ({ page }) => {
-      await expect(page.locator('[data-testid="contact-form"]')).toHaveCount(0);
+    test('全フィールドが表示される', async ({ page }) => {
+      await expect(page.locator('label', { hasText: 'お名前' })).toBeVisible();
+      await expect(page.locator('label', { hasText: 'メールアドレス' })).toBeVisible();
+      await expect(page.locator('label', { hasText: 'カテゴリ' })).toBeVisible();
+      await expect(page.locator('label', { hasText: 'お問い合わせ内容' })).toBeVisible();
+    });
+
+    test('送信ボタンが表示される', async ({ page }) => {
+      await expect(page.locator('[data-testid="submit-button"]')).toBeVisible();
+      await expect(page.locator('[data-testid="submit-button"]')).toHaveText('送信する');
+    });
+
+    test('カテゴリの選択肢が4つ表示される', async ({ page }) => {
+      const select = page.locator('#contact-category');
+      const options = select.locator('option');
+      // placeholder + 4 categories
+      await expect(options).toHaveCount(5);
+    });
+
+    test('文字数カウンターが表示される', async ({ page }) => {
+      await expect(page.getByText('0/2000')).toBeVisible();
+    });
+  });
+
+  test.describe('バリデーション', () => {
+    test('空のフォームを送信するとエラーが表示される', async ({ page }) => {
+      await page.locator('[data-testid="submit-button"]').click();
+
+      await expect(page.getByText('お名前を入力してください')).toBeVisible();
+      await expect(page.getByText('カテゴリを選択してください')).toBeVisible();
+      await expect(page.getByText('お問い合わせ内容を入力してください')).toBeVisible();
+    });
+
+    test('不正なメールアドレスでエラーが表示される', async ({ page }) => {
+      await page.locator('#contact-name').fill('テスト');
+      await page.locator('#contact-email').fill('invalid');
+      await page.locator('#contact-category').selectOption('bug');
+      await page.locator('#contact-message').fill('テスト内容');
+
+      await page.locator('[data-testid="submit-button"]').click();
+
+      await expect(page.getByText('メールアドレスの形式が正しくありません')).toBeVisible();
+    });
+
+    test('フィールド入力時にエラーがクリアされる', async ({ page }) => {
+      // エラーを発生させる
+      await page.locator('[data-testid="submit-button"]').click();
+      await expect(page.getByText('お名前を入力してください')).toBeVisible();
+
+      // 名前を入力するとエラーがクリアされる
+      await page.locator('#contact-name').fill('テスト');
+      await expect(page.getByText('お名前を入力してください')).not.toBeVisible();
+    });
+
+    test('メッセージ入力で文字数カウンターが更新される', async ({ page }) => {
+      await page.locator('#contact-message').fill('テスト');
+      await expect(page.getByText('3/2000')).toBeVisible();
     });
   });
 
@@ -51,14 +108,45 @@ test.describe('お問い合わせページ', () => {
     });
   });
 
+  test.describe('ヘッダーナビゲーション', () => {
+    test('ヘッダーにお問い合わせリンクが表示される', async ({ page }) => {
+      const nav = page.locator('nav[aria-label="メインナビゲーション"]');
+      await expect(nav.locator('a', { hasText: 'お問い合わせ' })).toBeVisible();
+    });
+
+    test('お問い合わせページでナビリンクがハイライトされる', async ({ page }) => {
+      const nav = page.locator('nav[aria-label="メインナビゲーション"]');
+      const contactLink = nav.locator('a', { hasText: 'お問い合わせ' });
+      await expect(contactLink).toHaveAttribute('aria-current', 'page');
+    });
+  });
+
   test.describe('ダークモード', () => {
-    test('ダークモードで準備中メッセージが表示される', async ({ page }) => {
+    test('ダークモードでフォームが正しく表示される', async ({ page }) => {
       await page.evaluate(() => localStorage.setItem('theme', 'dark'));
       await page.reload();
-      await page.waitForLoadState('networkidle');
 
       await expect(page.locator('html')).toHaveClass(/dark/);
-      await expect(page.locator('[data-testid="contact-disabled"]')).toBeVisible();
+      await expect(page.locator('[data-testid="contact-form"]')).toBeVisible();
+    });
+  });
+
+  test.describe('アクセシビリティ', () => {
+    test('必須フィールドにaria-invalid属性が設定される', async ({ page }) => {
+      // 送信してエラーを発生させる
+      await page.locator('[data-testid="submit-button"]').click();
+
+      await expect(page.locator('#contact-name')).toHaveAttribute('aria-invalid', 'true');
+      await expect(page.locator('#contact-category')).toHaveAttribute('aria-invalid', 'true');
+      await expect(page.locator('#contact-message')).toHaveAttribute('aria-invalid', 'true');
+    });
+
+    test('エラーメッセージにrole="alert"が設定される', async ({ page }) => {
+      await page.locator('[data-testid="submit-button"]').click();
+
+      const alerts = page.locator('[role="alert"]');
+      const count = await alerts.count();
+      expect(count).toBeGreaterThanOrEqual(3);
     });
   });
 });

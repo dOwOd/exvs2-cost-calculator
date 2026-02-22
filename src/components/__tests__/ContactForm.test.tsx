@@ -11,6 +11,7 @@ import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/pr
 const mockConfig = vi.hoisted(() => ({
   ENABLE_CONTACT: false,
   TURNSTILE_SITE_KEY: '',
+  ENABLE_EXTERNAL_SCRIPTS: false,
   CONTACT_API_URL: 'https://api.example.com/contact',
 }));
 
@@ -23,6 +24,12 @@ vi.mock('../../lib/contactConfig', () => ({
   },
   get CONTACT_API_URL() {
     return mockConfig.CONTACT_API_URL;
+  },
+}));
+
+vi.mock('../../lib/cookieConsent', () => ({
+  get ENABLE_EXTERNAL_SCRIPTS() {
+    return mockConfig.ENABLE_EXTERNAL_SCRIPTS;
   },
 }));
 
@@ -44,6 +51,7 @@ beforeEach(() => {
   mockSubmitContact.mockReset();
   mockConfig.ENABLE_CONTACT = false;
   mockConfig.TURNSTILE_SITE_KEY = '';
+  mockConfig.ENABLE_EXTERNAL_SCRIPTS = false;
 });
 
 afterEach(() => {
@@ -158,11 +166,25 @@ describe('ContactForm', () => {
         expect(screen.getByText('3/2000')).toBeTruthy();
       });
     });
+
+    test('ENABLE_EXTERNAL_SCRIPTS=false のときTurnstileコンテナが表示されない', () => {
+      mockConfig.ENABLE_EXTERNAL_SCRIPTS = false;
+      render(<ContactForm />);
+      expect(screen.queryByTestId('turnstile-container')).toBeNull();
+    });
+
+    test('ENABLE_EXTERNAL_SCRIPTS=true かつ TURNSTILE_SITE_KEY 設定時にTurnstileコンテナが表示される', () => {
+      mockConfig.ENABLE_EXTERNAL_SCRIPTS = true;
+      mockConfig.TURNSTILE_SITE_KEY = 'test-site-key';
+      render(<ContactForm />);
+      expect(screen.getByTestId('turnstile-container')).toBeTruthy();
+    });
   });
 
   describe('API送信', () => {
     beforeEach(() => {
       mockConfig.ENABLE_CONTACT = true;
+      mockConfig.ENABLE_EXTERNAL_SCRIPTS = true;
     });
 
     const fillForm = () => {

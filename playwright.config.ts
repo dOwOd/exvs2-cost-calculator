@@ -37,6 +37,17 @@ export default defineConfig({
 
     // 並列実行時の安定性向上
     actionTimeout: 10000,
+
+    // Cookie同意バナーを非表示にする（E2Eテスト対象外）
+    storageState: {
+      cookies: [],
+      origins: [
+        {
+          origin: 'http://localhost:4321',
+          localStorage: [{ name: 'exvs2-cookie-consent', value: 'denied' }],
+        },
+      ],
+    },
   },
 
   // expectのタイムアウト（デフォルト5000ms→10000ms）

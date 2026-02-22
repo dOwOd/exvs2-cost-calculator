@@ -4,6 +4,14 @@
  */
 
 /**
+ * 外部スクリプト有効フラグ
+ * E2E テスト時は PUBLIC_ENABLE_EXTERNAL_SCRIPTS=false でビルドして無効化する。
+ * AdSense・CF Web Analytics・Turnstile のスクリプト読み込みを制御する。
+ */
+export const ENABLE_EXTERNAL_SCRIPTS: boolean =
+  import.meta.env.PUBLIC_ENABLE_EXTERNAL_SCRIPTS !== 'false';
+
+/**
  * 広告Cookie機能のフィーチャーフラグ
  * 広告導入時に true に変更するだけでCookie同意バナー・設定が有効になる
  */

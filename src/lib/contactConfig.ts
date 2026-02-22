@@ -1,8 +1,8 @@
-/** 問い合わせ機能のフィーチャーフラグ（Phase 1 完了後に true に変更） */
-export const ENABLE_CONTACT = false;
+/** 問い合わせ機能のフィーチャーフラグ */
+export const ENABLE_CONTACT = true;
 
-/** Worker API の URL（Phase 1 デプロイ後に設定） */
-export const CONTACT_API_URL: string = '';
+/** Worker API の URL */
+export const CONTACT_API_URL: string = 'https://dowo-api.l-doaod.workers.dev/api/contact';
 
-/** Turnstile サイトキー（Cloudflare Dashboard で取得後に設定） */
-export const TURNSTILE_SITE_KEY: string = '';
+/** Turnstile サイトキー */
+export const TURNSTILE_SITE_KEY: string = '0x4AAAAAACgPadjBI8z4wZmk';
