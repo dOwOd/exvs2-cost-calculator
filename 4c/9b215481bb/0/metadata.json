@@ -1,0 +1,31 @@
+{
+  "cli_version": "0.4.5",
+  "checkpoint_id": "4c9b215481bb",
+  "session_id": "3118cfdc-9ba5-4f5b-b972-799d06ab4cf8",
+  "strategy": "manual-commit",
+  "created_at": "2026-02-22T15:24:00.821024Z",
+  "branch": "fix/issue-180-mobile-nav-hamburger",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "src/components/Header.astro"
+  ],
+  "agent": "Claude Code",
+  "turn_id": "dceb20317a34",
+  "token_usage": {
+    "input_tokens": 54,
+    "cache_creation_tokens": 94687,
+    "cache_read_tokens": 2591365,
+    "output_tokens": 10878,
+    "api_call_count": 43
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-02-22T15:24:00.694176Z",
+    "agent_lines": 0,
+    "human_added": 2,
+    "human_modified": 33,
+    "human_removed": 0,
+    "total_committed": 2,
+    "agent_percentage": 0
+  },
+  "transcript_path": ".claude/projects/-Users-sksn-Development-exvs2-cost-calculator/3118cfdc-9ba5-4f5b-b972-799d06ab4cf8.jsonl"
+}
