@@ -4,8 +4,48 @@
 
 import { useState, useRef, useEffect } from 'preact/hooks';
 import type { CostType, HealthType } from '../lib/types';
-import { getAvailableHealthOptions, formatMobileSuitNames } from '../data/mobileSuitsData';
+import { getAvailableHealthOptions, getAllMobileSuitNames } from '../data/mobileSuitsData';
 import { HealthDropdownPopup } from './HealthDropdownPopup';
+
+/**
+ * テキストがオーバーフロー時にスクロールアニメーションで全体を表示する
+ * - マウント後2秒待機 → 左へスライド → 2秒停止 → 右へ戻る を繰り返す
+ * - オーバーフローしないテキストはアニメーションなしで表示
+ */
+const ScrollingLabel = ({ text, className }: { text: string; className: string }) => {
+  const containerRef = useRef<HTMLSpanElement>(null);
+  const textRef = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    const textEl = textRef.current;
+    if (!container || !textEl || !textEl.animate) return;
+
+    const overflowAmount = textEl.scrollWidth - container.clientWidth;
+    if (overflowAmount <= 0) return;
+
+    const animation = textEl.animate(
+      [
+        { transform: 'translateX(0)', offset: 0 },
+        { transform: 'translateX(0)', offset: 0.25, easing: 'ease-in-out' },
+        { transform: `translateX(-${overflowAmount}px)`, offset: 0.5 },
+        { transform: `translateX(-${overflowAmount}px)`, offset: 0.75, easing: 'ease-in-out' },
+        { transform: 'translateX(0)', offset: 1 },
+      ],
+      { duration: 8000, iterations: Infinity },
+    );
+
+    return () => animation.cancel();
+  }, [text]);
+
+  return (
+    <span ref={containerRef} class={`block overflow-hidden text-xs ${className}`}>
+      <span ref={textRef} class="inline-block whitespace-nowrap">
+        {text}
+      </span>
+    </span>
+  );
+};
 
 type HealthSelectorType = {
   cost: CostType;
@@ -198,13 +238,12 @@ export const HealthSelector = ({
               }`}
             >
               <span>{health}</span>
-              <span
-                class={`text-xs truncate ${
+              <ScrollingLabel
+                text={getAllMobileSuitNames(cost, health).join('、')}
+                className={
                   health === selectedHealth ? 'text-blue-100' : 'text-slate-500 dark:text-slate-400'
-                }`}
-              >
-                {formatMobileSuitNames(cost, health)}
-              </span>
+                }
+              />
             </li>
           ))}
         </ul>
