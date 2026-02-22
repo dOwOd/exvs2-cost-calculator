@@ -1,0 +1,35 @@
+{
+  "cli_version": "0.4.5",
+  "checkpoint_id": "4998915339b9",
+  "session_id": "f7cea2e5-7ece-40fa-80e2-2a48d6c395c3",
+  "strategy": "manual-commit",
+  "created_at": "2026-02-22T13:55:59.161699Z",
+  "branch": "update/issue-183-favicon",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "public/favicon.ico",
+    "public/favicon.svg"
+  ],
+  "agent": "Claude Code",
+  "turn_id": "cfa338da11cb",
+  "transcript_identifier_at_start": "5bfd44b6-dd2a-41f4-b492-3164e53f0daf",
+  "checkpoint_transcript_start": 2542,
+  "transcript_lines_at_start": 2542,
+  "token_usage": {
+    "input_tokens": 120,
+    "cache_creation_tokens": 255112,
+    "cache_read_tokens": 8587295,
+    "output_tokens": 8632,
+    "api_call_count": 76
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-02-22T13:55:58.389734Z",
+    "agent_lines": 18,
+    "human_added": 155,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 173,
+    "agent_percentage": 10.404624277456648
+  },
+  "transcript_path": ".claude/projects/-Users-sksn-Development-exvs2-cost-calculator/f7cea2e5-7ece-40fa-80e2-2a48d6c395c3.jsonl"
+}
