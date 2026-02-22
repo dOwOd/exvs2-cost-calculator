@@ -4,7 +4,7 @@
 
 import { useState, useRef, useEffect } from 'preact/hooks';
 import type { CostType, HealthType } from '../lib/types';
-import { getAvailableHealthOptions } from '../data/mobileSuitsData';
+import { getAvailableHealthOptions, formatMobileSuitNames } from '../data/mobileSuitsData';
 import { HealthDropdownPopup } from './HealthDropdownPopup';
 
 type HealthSelectorType = {
@@ -189,7 +189,7 @@ export const HealthSelector = ({
               onClick={() => handleSelect(health)}
               onMouseEnter={(e) => handleMouseEnter(health, e as unknown as MouseEvent)}
               onMouseLeave={handleMouseLeave}
-              class={`min-h-[44px] px-4 py-2 cursor-pointer flex items-center ${
+              class={`min-h-[44px] px-4 py-2 cursor-pointer flex flex-col justify-center ${
                 health === selectedHealth
                   ? 'bg-blue-600 text-white'
                   : index === focusedIndex
@@ -197,7 +197,14 @@ export const HealthSelector = ({
                     : 'text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-600'
               }`}
             >
-              {health}
+              <span>{health}</span>
+              <span
+                class={`text-xs truncate ${
+                  health === selectedHealth ? 'text-blue-100' : 'text-slate-500 dark:text-slate-400'
+                }`}
+              >
+                {formatMobileSuitNames(cost, health)}
+              </span>
             </li>
           ))}
         </ul>
