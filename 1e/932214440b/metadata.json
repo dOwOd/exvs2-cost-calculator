@@ -1,0 +1,27 @@
+{
+  "cli_version": "0.4.5",
+  "checkpoint_id": "1e932214440b",
+  "strategy": "manual-commit",
+  "branch": "fix/issue-180-mobile-nav-hamburger",
+  "checkpoints_count": 2,
+  "files_touched": [
+    "src/pages/index.astro",
+    "src/pages/privacy.astro"
+  ],
+  "sessions": [
+    {
+      "metadata": "/1e/932214440b/0/metadata.json",
+      "transcript": "/1e/932214440b/0/full.jsonl",
+      "context": "/1e/932214440b/0/context.md",
+      "content_hash": "/1e/932214440b/0/content_hash.txt",
+      "prompt": "/1e/932214440b/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 139,
+    "cache_creation_tokens": 127474,
+    "cache_read_tokens": 8780279,
+    "output_tokens": 15178,
+    "api_call_count": 102
+  }
+}
