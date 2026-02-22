@@ -9,7 +9,7 @@ import { useCookieConsent } from '../lib/useCookieConsent';
 const base = import.meta.env.BASE_URL;
 
 const siteLinks = [
-  { href: base, label: 'コスト計算' },
+  { href: base, label: 'トップ' },
   { href: `${base}guide/`, label: 'ガイド' },
   { href: `${base}faq/`, label: 'FAQ' },
   { href: `${base}changelog/`, label: '更新履歴' },
@@ -29,7 +29,7 @@ export const Footer = () => {
         <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
           <div>
             <p class="text-sm text-slate-600 dark:text-slate-300 mb-2">
-              機動戦士ガンダム EXVS2の撃墜順コスト計算ツール
+              機動戦士ガンダム EXVS2の撃墜順コスト計算機
             </p>
             <nav aria-label="フッターナビゲーション">
               <ul class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-500 dark:text-slate-400">

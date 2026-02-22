@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- E: top-left (red - matching logo crimson) -->
+  <text x="4" y="63" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="81" fill="#d42626">E</text>
+
+  <!-- X: top-right (red) -->
+  <text x="64" y="63" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="81" fill="#d42626">X</text>
+
+  <!-- V: bottom-left (blue - matching logo deep blue) -->
+  <text x="4" y="123" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="81" fill="#1845b0">V</text>
+
+  <!-- S: bottom-right (blue) -->
+  <text x="66" y="123" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="81" fill="#1845b0">S</text>
+
+  <!-- 2: center (orange-gold) -->
+  <text x="64" y="65" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="110" fill="#e89400" text-anchor="middle" dominant-baseline="central">2</text>
+</svg>

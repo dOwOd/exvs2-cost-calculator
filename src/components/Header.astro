@@ -5,7 +5,7 @@ import { ENABLE_CONTACT } from '../lib/contactConfig';
 const base = import.meta.env.BASE_URL;
 
 const navItems = [
-  { href: base, label: 'コスト計算' },
+  { href: base, label: 'トップ' },
   { href: `${base}guide/`, label: 'ガイド' },
   { href: `${base}faq/`, label: 'FAQ' },
   ...(ENABLE_CONTACT ? [{ href: `${base}contact/`, label: 'お問い合わせ' }] : []),
@@ -35,7 +35,7 @@ const isCurrentPage = (href: string) => {
           href={base}
           class="flex items-center gap-1.5 text-lg font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors whitespace-nowrap shrink-0"
         >
-          <img src={`${base}favicon.svg`} alt="" width="28" height="28" class="shrink-0" />
+          <img src={`${base}logo.svg`} alt="" width="28" height="28" class="shrink-0" />
           EXVS2 コスト計算機
         </a>
 
