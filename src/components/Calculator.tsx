@@ -135,7 +135,7 @@ export const Calculator = () => {
         <div class="container mx-auto p-3 sm:p-4 md:p-6">
           <div class="mb-4 md:mb-8">
             <h1 class="text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">
-              EXVS2 コスト計算機
+              撃墜順パターン計算
             </h1>
             <p class="text-slate-600 dark:text-slate-400 text-sm sm:text-base">
               編成を選択して最適な撃墜順パターンを確認
