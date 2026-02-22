@@ -31,9 +31,11 @@ vi.mock('../../lib/cookieConsent', () => ({
 }));
 
 // useCookieConsent フックのモック
+import type { CookieConsentStatus } from '../../lib/cookieConsent';
+
 const mockUseCookieConsent = vi.hoisted(() =>
   vi.fn(() => ({
-    status: 'undecided' as const,
+    status: 'undecided' as CookieConsentStatus,
     ready: false,
     grant: vi.fn(),
     deny: vi.fn(),
