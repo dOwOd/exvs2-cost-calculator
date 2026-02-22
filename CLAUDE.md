@@ -65,7 +65,7 @@ git worktree remove ../exvs2-worktree  # 後片付け
 
 ### コンポーネント（src/components/）
 
-- **Header.astro** - サイト共通ヘッダー（ロゴ、ナビリンク、ThemeToggle統合、現在ページハイライト、ENABLE_CONTACTで問い合わせリンク制御、モバイルでナビ横スクロール）
+- **Header.astro** - サイト共通ヘッダー（ロゴ、ナビリンク、ThemeToggle統合、現在ページハイライト、ENABLE_CONTACTで問い合わせリンク制御、モバイルでハンバーガーメニュー）
 - **ErrorBoundary.tsx** - エラーバウンダリ（Preact class component、フォールバックUI表示）
 - **Calculator.tsx** - メインコンポーネント（状態管理、通常/比較モード切替、編成→計算→結果の統括、ErrorBoundaryでラップ）
 - **FormationPanel.tsx** - 編成パネル（A機/B機のコスト・耐久選択）
