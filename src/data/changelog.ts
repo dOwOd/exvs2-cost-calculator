@@ -17,6 +17,16 @@ export type ReleaseEntry = {
 
 export const releases: ReleaseEntry[] = [
   {
+    version: '0.3.0',
+    date: '2026-02-22',
+    summary: '問い合わせページ追加',
+    changes: [
+      { type: 'Add', description: '問い合わせページを追加' },
+      { type: 'Add', description: 'ヘッダーに「お問い合わせ」ナビリンクを追加' },
+      { type: 'Fix', description: 'モバイル表示時のヘッダーナビゲーション溢れを修正' },
+    ],
+  },
+  {
     version: '0.2.0',
     date: '2026-02-21',
     summary: 'Google AdSense導入',
