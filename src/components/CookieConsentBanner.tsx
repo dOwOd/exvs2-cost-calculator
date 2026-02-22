@@ -20,9 +20,9 @@ const getBannerText = (): string => {
 };
 
 export const CookieConsentBanner = () => {
-  const { status, grant, deny } = useCookieConsent();
+  const { status, ready, grant, deny } = useCookieConsent();
 
-  if (!ENABLE_COOKIE_CONSENT || status !== 'undecided') {
+  if (!ready || !ENABLE_COOKIE_CONSENT || status !== 'undecided') {
     return null;
   }
 

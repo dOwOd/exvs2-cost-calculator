@@ -11,10 +11,12 @@ const CONSENT_CHANGE_EVENT = 'cookie-consent-change';
 
 export const useCookieConsent = () => {
   const [status, setStatus] = useState<CookieConsentStatus>('undecided');
+  const [ready, setReady] = useState(false);
 
-  // 初期化
+  // 初期化（SSG/SSRではuseEffectが実行されないため、readyはfalseのまま）
   useEffect(() => {
     setStatus(getCookieConsent());
+    setReady(true);
   }, []);
 
   // 他コンポーネントからの変更を監視
@@ -47,6 +49,7 @@ export const useCookieConsent = () => {
 
   return {
     status,
+    ready,
     grant,
     deny,
     reset,
