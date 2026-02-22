@@ -3,7 +3,7 @@
   "checkpoint_id": "4998915339b9",
   "strategy": "manual-commit",
   "branch": "update/issue-183-favicon",
-  "checkpoints_count": 1,
+  "checkpoints_count": 35,
   "files_touched": [
     "public/favicon.ico",
     "public/favicon.svg"
@@ -15,13 +15,20 @@
       "context": "/49/98915339b9/0/context.md",
       "content_hash": "/49/98915339b9/0/content_hash.txt",
       "prompt": "/49/98915339b9/0/prompt.txt"
+    },
+    {
+      "metadata": "/49/98915339b9/1/metadata.json",
+      "transcript": "/49/98915339b9/1/full.jsonl",
+      "context": "/49/98915339b9/1/context.md",
+      "content_hash": "/49/98915339b9/1/content_hash.txt",
+      "prompt": "/49/98915339b9/1/prompt.txt"
     }
   ],
   "token_usage": {
-    "input_tokens": 120,
-    "cache_creation_tokens": 255112,
-    "cache_read_tokens": 8587295,
-    "output_tokens": 8632,
-    "api_call_count": 76
+    "input_tokens": 2243,
+    "cache_creation_tokens": 423212,
+    "cache_read_tokens": 22098575,
+    "output_tokens": 24258,
+    "api_call_count": 237
   }
 }
