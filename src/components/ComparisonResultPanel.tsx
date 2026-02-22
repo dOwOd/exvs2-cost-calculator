@@ -103,13 +103,15 @@ const MetricRow = ({
           >
             {val}
             {barWidth !== null && (
-              <div class="bg-slate-200 dark:bg-slate-700 rounded-full h-1.5 overflow-hidden mt-1">
-                <div
-                  class={`h-full rounded-full transition-all ${
-                    isBestBar ? 'bg-blue-500 dark:bg-blue-400' : 'bg-slate-400 dark:bg-slate-500'
-                  }`}
-                  style={`width: ${Math.round(barWidth)}%`}
-                />
+              <div class="flex justify-end mt-1">
+                <div class="w-6 h-8 bg-slate-200 dark:bg-slate-700 rounded-sm overflow-hidden flex items-end">
+                  <div
+                    class={`w-full rounded-sm transition-all ${
+                      isBestBar ? 'bg-blue-500 dark:bg-blue-400' : 'bg-slate-400 dark:bg-slate-500'
+                    }`}
+                    style={`height: ${Math.round(barWidth)}%`}
+                  />
+                </div>
               </div>
             )}
           </td>
