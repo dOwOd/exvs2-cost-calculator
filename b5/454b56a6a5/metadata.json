@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.4.5",
+  "checkpoint_id": "b5454b56a6a5",
+  "strategy": "manual-commit",
+  "branch": "feature/issue-182-comparison-bar-chart",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "src/components/ComparisonResultPanel.tsx"
+  ],
+  "sessions": [
+    {
+      "metadata": "/b5/454b56a6a5/0/metadata.json",
+      "transcript": "/b5/454b56a6a5/0/full.jsonl",
+      "context": "/b5/454b56a6a5/0/context.md",
+      "content_hash": "/b5/454b56a6a5/0/content_hash.txt",
+      "prompt": "/b5/454b56a6a5/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 177,
+    "cache_creation_tokens": 214708,
+    "cache_read_tokens": 13140410,
+    "output_tokens": 19032,
+    "api_call_count": 127
+  }
+}
