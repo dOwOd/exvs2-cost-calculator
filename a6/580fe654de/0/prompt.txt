@@ -1,0 +1,170 @@
+Implement the following plan:
+
+# Issue #181: スマホでの耐久値選択時の機体名表示を改善
+
+## Context
+
+耐久値選択ドロップダウンで、PCではホバーで機体名ポップアップが表示されるが、スマホではホバー操作がないためタップ時に一瞬表示されて消えてしまう。スマホでも耐久値と機体の対応を確認しやすくする。
+
+## アプローチ: ドロップダウン項目に機体名をインライン表示
+
+各耐久値オプションの下に、小さなフォントで機体名をコンパクト表示する。
+
+```
+┌───────────────────────────┐
+│ 720                       │
+│ ゴッドガンダム、マスター… 他10機 │  ← text-xs, truncate
+├───────────────────────────┤
+│ 680                       │
+│ νガンダム、Hi-νガンダム 他22機  │
+└───────────────────────────┘
+```
+
+- 既存の `formatMobileSuitNames(cost, health)` をそのまま活用（最大2機体名 + 残り数）
+- PCのホバーポップアップ（全機体名表示）はそのまま維持
+
+## 変更ファイル
+
+### 1. `src/components/HealthSelector.tsx`
+
+- `formatMobileSuitNames` を `mobileSuitsData` からインポート追加
+- `<li>` の内容を2行構成に変更:
+  - 1行目: 耐久値（既存）
+  - 2行目: `formatMobileSuitNames(cost, health)` を `text-xs truncate` で表示
+- 選択状態（`bg-blue-600`）では `text-blue-100` で視認性確保
+- `flex items-center` → 縦並びレイアウトに変更（2行表示のため）
+
+### 2. `src/components/__tests__/HealthSelector.test.tsx`（新規）
+
+テストケース:
+1. 各耐久値オプションに機体名がインライン表示される
+2. 残り機体数が「他X機」形式で表示される
+3. 1機のみの耐久値では「他」表示がない
+4. 選択状態でも機体名が表示される
+5. ドロップダウンの開閉が正常に動作する
+
+## 変更しないファイル
+
+- `HealthDropdownPopup.tsx` - PC向けホバーポップアップはそのまま維持
+
+## 検証
+
+```bash
+pnpm test                    # ユニットテスト
+pnpm lint                    # ESLint
+pnpm build && pnpm test:e2e  # E2E（既存テストが壊れないことを確認）
+pnpm dev                     # 実機確認（スマホ or DevTools モバイルビュー）
+```
+
+
+If you need specific details from before exiting plan mode (like exact code snippets, error messages, or content you generated), read the full transcript at: /Users/sksn/.REDACTED.jsonl
+
+If this plan can be broken down into multiple independent tasks, consider using the TeamCreate tool to create a team and parallelize the work.
+
+---
+
+コミットして
+
+---
+
+Base directory for this skill: /Users/sksn/Development/exvs2-cost-calculator/.claude/skills/commit
+
+# コミットスキル
+
+このスキルは、プロジェクトのコミット規約に従ったコミットを作成します。
+
+## コミットルール
+
+- **1つの論理的変更につき1コミット**
+- コミットメッセージ形式: `Type: Subject`
+- Type: Add, Fix, Update, Remove, Refactor, Test, Docs, Chore
+- **プッシュはしない**（ユーザーが手動で行う）
+
+## Type一覧
+
+- **Add**: 新機能追加
+- **Fix**: バグ修正
+- **Update**: 既存機能の更新・変更
+- **Remove**: 機能・コードの削除
+- **Refactor**: リファクタリング
+- **Test**: テスト追加・修正
+- **Docs**: ドキュメント変更
+- **Chore**: ビルド、設定ファイルなど
+
+## コミット前の確認
+
+コミット前にプロジェクトの CLAUDE.md に記載されたテストコマンドを実行し、すべてのテストがパスすることを確認してください。
+
+## コミット後: PR概要の自動更新
+
+コミット成功後、以下の手順でオープンPRのbodyを自動更新する:
+
+1. `gh pr view --json number,body 2>/dev/null` で現在のブランチにオープンPRがあるか確認
+2. PRが存在しない場合はスキップ
+3. PRが存在する場合:
+   a. `git log main..HEAD --oneline` で全コミットを取得
+   b. `git diff main...HEAD --stat` で変更ファイル一覧を取得
+   c. 全コミットの内容を分析し、PR bodyの `## Summary` セクションを再生成
+   d. 既存bodyの `## Summary` セクションのみ置換する（`## Test plan` 等の他セクションは維持）
+   e. `gh pr edit {number} --body "..."` でPR bodyを更新
+4. PR bodyの更新結果をユーザーに報告する
+
+---
+
+最初、該当機体に表示されたあと数秒後に該当機体のテキストが左へスライドし、残りの機体も表示させることは出来る？
+
+---
+
+動き出しません。どういう操作をしたら動く？
+
+---
+
+PCではなくモバイルで見ていますが動きません。他◯機と出ます。もともとスマホで表示しきれない場合は他◯機と出ていたが、これが今回の修正によって左へスクロールして残りの機体も表示されるということで合っているよね？私の言っている箇所と別の箇所を修正していませんよね？
+
+---
+
+イメージどおりです。コミットして
+
+---
+
+Base directory for this skill: /Users/sksn/Development/exvs2-cost-calculator/.claude/skills/commit
+
+# コミットスキル
+
+このスキルは、プロジェクトのコミット規約に従ったコミットを作成します。
+
+## コミットルール
+
+- **1つの論理的変更につき1コミット**
+- コミットメッセージ形式: `Type: Subject`
+- Type: Add, Fix, Update, Remove, Refactor, Test, Docs, Chore
+- **プッシュはしない**（ユーザーが手動で行う）
+
+## Type一覧
+
+- **Add**: 新機能追加
+- **Fix**: バグ修正
+- **Update**: 既存機能の更新・変更
+- **Remove**: 機能・コードの削除
+- **Refactor**: リファクタリング
+- **Test**: テスト追加・修正
+- **Docs**: ドキュメント変更
+- **Chore**: ビルド、設定ファイルなど
+
+## コミット前の確認
+
+コミット前にプロジェクトの CLAUDE.md に記載されたテストコマンドを実行し、すべてのテストがパスすることを確認してください。
+
+## コミット後: PR概要の自動更新
+
+コミット成功後、以下の手順でオープンPRのbodyを自動更新する:
+
+1. `gh pr view --json number,body 2>/dev/null` で現在のブランチにオープンPRがあるか確認
+2. PRが存在しない場合はスキップ
+3. PRが存在する場合:
+   a. `git log main..HEAD --oneline` で全コミットを取得
+   b. `git diff main...HEAD --stat` で変更ファイル一覧を取得
+   c. 全コミットの内容を分析し、PR bodyの `## Summary` セクションを再生成
+   d. 既存bodyの `## Summary` セクションのみ置換する（`## Test plan` 等の他セクションは維持）
+   e. `gh pr edit {number} --body "..."` でPR bodyを更新
+4. PR bodyの更新結果をユーザーに報告する

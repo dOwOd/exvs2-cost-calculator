@@ -1,0 +1,27 @@
+{
+  "cli_version": "0.4.5",
+  "checkpoint_id": "a6580fe654de",
+  "strategy": "manual-commit",
+  "branch": "fix/issue-179-cookie-banner-flicker",
+  "checkpoints_count": 3,
+  "files_touched": [
+    "src/components/HealthSelector.tsx",
+    "src/components/__tests__/HealthSelector.test.tsx"
+  ],
+  "sessions": [
+    {
+      "metadata": "/a6/580fe654de/0/metadata.json",
+      "transcript": "/a6/580fe654de/0/full.jsonl",
+      "context": "/a6/580fe654de/0/context.md",
+      "content_hash": "/a6/580fe654de/0/content_hash.txt",
+      "prompt": "/a6/580fe654de/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 52,
+    "cache_creation_tokens": 56152,
+    "cache_read_tokens": 2276279,
+    "output_tokens": 10911,
+    "api_call_count": 38
+  }
+}
