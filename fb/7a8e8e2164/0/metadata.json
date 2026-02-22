@@ -1,0 +1,32 @@
+{
+  "cli_version": "0.4.5",
+  "checkpoint_id": "fb7a8e8e2164",
+  "session_id": "0fd4735a-59f2-43ad-ba5c-5a3264a475d5",
+  "strategy": "manual-commit",
+  "created_at": "2026-02-22T14:30:29.769679Z",
+  "branch": "fix/issue-179-cookie-banner-flicker",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "src/components/__tests__/HealthSelector.test.tsx"
+  ],
+  "agent": "Claude Code",
+  "turn_id": "4c53833cda49",
+  "transcript_identifier_at_start": "9342171d-98c4-43c5-aae6-194b5f6f5ae1",
+  "token_usage": {
+    "input_tokens": 21,
+    "cache_creation_tokens": 26181,
+    "cache_read_tokens": 679830,
+    "output_tokens": 1547,
+    "api_call_count": 16
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-02-22T14:30:29.745449Z",
+    "agent_lines": 92,
+    "human_added": 10,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 102,
+    "agent_percentage": 90.19607843137256
+  },
+  "transcript_path": ".claude/projects/-Users-sksn-Development-exvs2-cost-calculator/0fd4735a-59f2-43ad-ba5c-5a3264a475d5.jsonl"
+}
