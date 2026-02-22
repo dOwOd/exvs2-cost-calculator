@@ -4,8 +4,67 @@
 
 import { useState, useRef, useEffect } from 'preact/hooks';
 import type { CostType, HealthType } from '../lib/types';
-import { getAvailableHealthOptions, formatMobileSuitNames } from '../data/mobileSuitsData';
+import { getAvailableHealthOptions, getAllMobileSuitNames } from '../data/mobileSuitsData';
 import { HealthDropdownPopup } from './HealthDropdownPopup';
+
+/**
+ * テキストがオーバーフロー時にループスクロールで全体を表示する
+ * - マウント後2秒待機 → 左へ一定速度でスクロール → 先頭に戻りシームレスにループ
+ * - テキストを複製し、末尾→先頭が途切れなく繋がる
+ * - オーバーフローしないテキストはアニメーションなしで表示
+ */
+const SCROLL_SPEED = 60; // px/s（スクロール速度）
+const PAUSE_DURATION = 2; // 秒（ループ先頭での停止時間）
+const LOOP_GAP = 48; // px（テキスト末尾と複製先頭の間隔）
+
+const ScrollingLabel = ({ text, className }: { text: string; className: string }) => {
+  const containerRef = useRef<HTMLSpanElement>(null);
+  const trackRef = useRef<HTMLSpanElement>(null);
+  const measureRef = useRef<HTMLSpanElement>(null);
+  const [isOverflow, setIsOverflow] = useState(false);
+
+  // オーバーフロー検出
+  useEffect(() => {
+    const container = containerRef.current;
+    const measure = measureRef.current;
+    if (!container || !measure) return;
+    setIsOverflow(measure.offsetWidth > container.clientWidth);
+  }, [text]);
+
+  // ループアニメーション設定
+  useEffect(() => {
+    if (!isOverflow) return;
+    const track = trackRef.current;
+    const measure = measureRef.current;
+    if (!track || !measure || !track.animate) return;
+
+    const textWidth = measure.offsetWidth;
+    const scrollDistance = textWidth + LOOP_GAP;
+    const scrollTime = scrollDistance / SCROLL_SPEED;
+    const totalDuration = PAUSE_DURATION + scrollTime;
+    const pauseOffset = PAUSE_DURATION / totalDuration;
+
+    const animation = track.animate(
+      [
+        { transform: 'translateX(0)', offset: 0 },
+        { transform: 'translateX(0)', offset: pauseOffset },
+        { transform: `translateX(-${scrollDistance}px)`, offset: 1 },
+      ],
+      { duration: totalDuration * 1000, iterations: Infinity },
+    );
+
+    return () => animation.cancel();
+  }, [isOverflow, text]);
+
+  return (
+    <span ref={containerRef} class={`block overflow-hidden text-xs ${className}`}>
+      <span ref={trackRef} class="inline-block whitespace-nowrap">
+        <span ref={measureRef}>{text}</span>
+        {isOverflow && <span style={{ marginLeft: `${LOOP_GAP}px` }}>{text}</span>}
+      </span>
+    </span>
+  );
+};
 
 type HealthSelectorType = {
   cost: CostType;
@@ -198,13 +257,12 @@ export const HealthSelector = ({
               }`}
             >
               <span>{health}</span>
-              <span
-                class={`text-xs truncate ${
+              <ScrollingLabel
+                text={getAllMobileSuitNames(cost, health).join('、')}
+                className={`md:hidden ${
                   health === selectedHealth ? 'text-blue-100' : 'text-slate-500 dark:text-slate-400'
                 }`}
-              >
-                {formatMobileSuitNames(cost, health)}
-              </span>
+              />
             </li>
           ))}
         </ul>

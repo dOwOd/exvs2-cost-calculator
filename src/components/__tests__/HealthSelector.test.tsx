@@ -6,7 +6,7 @@
 
 import { render, screen, fireEvent, cleanup } from '@testing-library/preact';
 import { HealthSelector } from '../HealthSelector';
-import { formatMobileSuitNames } from '../../data/mobileSuitsData';
+import { getAllMobileSuitNames } from '../../data/mobileSuitsData';
 import type { CostType, HealthType } from '../../lib/types';
 
 afterEach(cleanup);
@@ -23,33 +23,26 @@ const openDropdown = () => {
 
 describe('HealthSelector', () => {
   describe('機体名インライン表示', () => {
-    test('各耐久値オプションに機体名がインライン表示される', () => {
+    test('各耐久値オプションに全機体名がインライン表示される', () => {
       render(<HealthSelector {...defaultProps} />);
       openDropdown();
 
       const option720 = screen.getByTestId('health-option-720');
-      const expectedNames = formatMobileSuitNames(3000, 720);
+      const allNames = getAllMobileSuitNames(3000, 720);
       expect(option720.textContent).toContain('720');
-      expect(option720.textContent).toContain(expectedNames);
+      // 全機体名が含まれている（「他X機」ではなく実際の名前）
+      for (const name of allNames) {
+        expect(option720.textContent).toContain(name);
+      }
     });
 
-    test('残り機体数が「他X機」形式で表示される', () => {
+    test('全機体名が「、」区切りで表示される', () => {
       render(<HealthSelector {...defaultProps} />);
       openDropdown();
 
-      // コスト3000の耐久値720は多数の機体が該当するため「他X機」が表示される
-      const option720 = screen.getByTestId('health-option-720');
-      expect(option720.textContent).toMatch(/他\d+機/);
-    });
-
-    test('少数機体の耐久値では「他」表示がない', () => {
-      render(<HealthSelector {...defaultProps} />);
-      openDropdown();
-
-      // コスト3000の耐久値800はゴッドガンダム、マスターガンダムの2機のみ
       const option800 = screen.getByTestId('health-option-800');
-      expect(option800.textContent).toContain('ゴッドガンダム');
-      expect(option800.textContent).not.toMatch(/他\d+機/);
+      // コスト3000の耐久値800はゴッドガンダム、マスターガンダムの2機
+      expect(option800.textContent).toContain('ゴッドガンダム、マスターガンダム');
     });
 
     test('選択状態でも機体名が表示される', () => {
@@ -58,8 +51,10 @@ describe('HealthSelector', () => {
 
       const option720 = screen.getByTestId('health-option-720');
       expect(option720.textContent).toContain('720');
-      const expectedNames = formatMobileSuitNames(3000, 720);
-      expect(option720.textContent).toContain(expectedNames);
+      const allNames = getAllMobileSuitNames(3000, 720);
+      for (const name of allNames) {
+        expect(option720.textContent).toContain(name);
+      }
     });
   });
 
